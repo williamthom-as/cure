@@ -1,0 +1,35 @@
+{
+  "replacements" : [
+    {
+      "column" : "bill/PayerAccountId",
+      "strategy" : {
+        "name": "full",
+        "options" : {}
+      },
+      "generator" : {
+        "name" : "placeholder",
+        "options" : {
+          "name" : "$account_number"
+        }
+      }
+    },{
+      "column" : "lineItem/ResourceId",
+      "strategy" : {
+        "name": "regex",
+        "options" : {
+          "regex" : ""
+        }
+      },
+      "generator" : {
+        "name": "number",
+        "options" : {
+          "length" : 12
+        }
+      }
+    }
+  ],
+  "placeholders" : {
+    "$account_number" : "1234567891234"
+  }
+
+}
