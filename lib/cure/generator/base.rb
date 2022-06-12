@@ -42,6 +42,27 @@ module Cure
 
     end
 
+    class RedactGenerator < Base
+
+      private
+
+      def _generate
+        "XXXXX"
+      end
+
+    end
+
+    # TODO
+    class CharacterGenerator < Base
+
+      private
+
+      def _generate
+        # 1.upto(@options["length"] || rand(0..9)).map { rand(1..9) }.join("").to_i
+      end
+
+    end
+
     class PlaceholderGenerator < Base
 
       private
@@ -58,8 +79,21 @@ module Cure
 
       private
 
-      def _generate(_opts={})
+      def _generate
         SecureRandom.uuid.to_s
+      end
+
+    end
+
+    require "faker"
+
+    # TODO
+    class FakerGenerator < Base
+
+      private
+
+      def _generate(_opts={})
+        # faker code
       end
 
     end
