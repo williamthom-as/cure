@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module Cure
-  module ObjectHelpers
+  module CSVHelpers
+
+  #  Read/Write CSVs
 
   end
 end

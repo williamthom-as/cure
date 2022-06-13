@@ -1,22 +1,34 @@
-# Cure
+Cure
+===
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/cure`. To experiment with that code, run `bin/console` for an interactive prompt.
+Cure is a simple tool to **remove/redact/anonymize** and **replace** private information in a spreadsheet.
+It has been written to anonymize private cloud billing data for use in public demo environments.
 
-TODO: Delete this and the text above, and describe your gem
+It has several key features:
+- Define either full or regex match groups replacements.
+- Choose from many strategies to replace anonymous data - random number sequences, GUIDs, placeholders, multipliers amongst many others.
+- **Existing generated values are stored and recalled** so once a replacement is defined, it is kept around for other columns to use.
+  - For example, once a replacement **Account Number** is generated, any further use of that number sequence is other columns will be used, keeping data real(ish) and functional in a relational sense.
 
-## Installation
+## Use Cases
 
-Install the gem and add to the application's Gemfile by executing:
-
-    $ bundle add cure
-
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-    $ gem install cure
+- Strip out personal data from a spreadsheet that may be used for public demo.
 
 ## Usage
 
-TODO: Write usage instructions here
+TODO
+
+## Example
+
+TODO
+
+## Installation
+
+TODO
+
+## Getting started
+
+TODO
 
 ## Development
 
@@ -26,7 +38,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/cure. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/cure/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/williamthom-as/cure. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/cure/blob/master/CODE_OF_CONDUCT.md).
 
 ## License
 
