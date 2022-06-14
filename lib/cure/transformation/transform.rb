@@ -7,21 +7,21 @@ module Cure
       # @return [Array<Candidate>]
       attr_accessor :candidates
 
-      # @return [Hash]
-      attr_accessor :column_headers
-
       # @param [Array<Candidate>] candidates
-      # @param [Hash] column_headers
-      def initialize(candidates, column_headers)
+      def initialize(candidates)
         @candidates = candidates
-        @column_headers = column_headers
       end
 
+      def run(csv_file_location, &block)
+        Rcsv.parse(read_file(csv_file_location), {}, &block)
+      end
+
+      # @param [Hash] column_headers
       # @param [Array] row
       # @return [Array]
-      def transform(row)
+      def transform(column_headers, row)
         @candidates.each do |candidate|
-          column_idx = @column_headers[candidate.column.to_sym]
+          column_idx = column_headers[candidate.column.to_sym]
           next unless column_idx
 
           existing_value = row[column_idx]

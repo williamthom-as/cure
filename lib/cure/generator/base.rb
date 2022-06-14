@@ -7,7 +7,7 @@ module Cure
       # @return [Hash]
       attr_accessor :options
 
-      def initialize(options)
+      def initialize(options={})
         @options = options
       end
 
@@ -47,7 +47,7 @@ module Cure
       private
 
       def _generate
-        "XXXXX"
+        "XXX"
       end
 
     end
@@ -63,12 +63,13 @@ module Cure
 
     end
 
+    # TODO
     class PlaceholderGenerator < Base
 
       private
 
       def _generate(opts={})
-        0.upto(opts[:length] || rand(0..9)).map { rand(1..10) }.join("").to_i
+        # 0.upto(opts[:length] || rand(0..9)).map { rand(1..10) }.join("").to_i
       end
 
     end

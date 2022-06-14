@@ -50,26 +50,31 @@ module Cure
       # @param [Generator::Base] generator
       # @return [String]
       def extract(source_value, generator)
-        existing = retrieve_history(source_value)
-        return existing if existing
+        extracted_value = _retrieve_value(source_value)
 
-        value = _retrieve_value(generator, source_value)
-        store_history(source_value, value)
+        existing = retrieve_history(extracted_value)
+        return _replace_value(source_value, existing) if existing
+
+        generated_value = generator.generate.to_s
+        value = _replace_value(source_value, generated_value)
+
+        store_history(extracted_value, generated_value)
 
         value
       end
 
       private
 
-      # @param [Generator::Base] _generator
       # @param [String] _source_value
-      def _retrieve_value(_generator, _source_value)
+      def _retrieve_value(_source_value)
         raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
 
-      # @return [Boolean]
-      def use_existing
-        !!@options[:use_existing]
+      # @param [String] _source_value
+      # @param [String] _generated_value
+      # @return [String]
+      def _replace_value(_source_value, _generated_value)
+        raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
 
     end
@@ -78,23 +83,41 @@ module Cure
 
       private
 
-      # @param [Generator::Base] generator
+      # @param [String] source_value
+      # @return [String]
+      def _retrieve_value(source_value)
+        source_value
+      end
+
       # @param [String] _source_value
-      def _retrieve_value(generator, _source_value)
-        generator.generate
+      # @param [String] generated_value
+      # @return [String]
+      def _replace_value(_source_value, generated_value)
+        generated_value
       end
 
     end
 
     class RegexStrategy < Base
+
       # gsub catchment group
-      # @param [Generator::Base] generator
       # @param [String] source_value
-      def _retrieve_value(generator, source_value)
+      def _retrieve_value(source_value)
         m = /#{@options["regex_cg"]}/.match(source_value)
         return unless m.instance_of?(MatchData)
 
-        source_value.gsub(m[1], generator.generate.to_s)
+        m[1]
+        # source_value.gsub(m[1], generator.generate.to_s)
+      end
+
+      # @param [String] source_value
+      # @param [String] generated_value
+      # @return [String]
+      def _replace_value(source_value, generated_value)
+        m = /#{@options["regex_cg"]}/.match(source_value)
+        return unless m.instance_of?(MatchData)
+
+        source_value.gsub(m[1], generated_value)
       end
     end
 

@@ -98,10 +98,10 @@ RSpec.describe Cure::Transformation::Candidate do
       candidate = Cure::Transformation::Candidate.new.from_json(regex_config)
       val = candidate.perform("arn:aws:kms:ap-southeast-2:111111111111:key/e8192ac9-1111-1111-1111-42f9b7e18937")
       val_two = candidate.perform("arn:aws:kms:ap-southeast-2:111111111111:key/e8192ac9-1111-1111-1111-42f9b7e18937")
-      val_three = candidate.perform("i-02332ae0ee")
+      val_three = candidate.perform("i-11111111")
 
       expect(val).to eq(val_two)
-      expect(val_three).to_not eq("i-02332ae0ee")
+      expect(val_three).to_not eq("i-11111111")
     end
 
   end
