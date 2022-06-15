@@ -1,0 +1,18 @@
+{
+  "candidates": [{
+    "column" : "test_column",
+    "translations" : [{
+      "strategy" : {
+        "name": "full",
+        "options" : {}
+      },
+      "generator" : {
+        "name" : "number",
+        "options" : {
+          "length" : 12
+        }
+      }
+    }]
+  }],
+  "placeholders" : []
+}

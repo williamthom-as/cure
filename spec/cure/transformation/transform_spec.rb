@@ -1,31 +1,23 @@
 # frozen_string_literal: true
-#
+require "json"
 require "cure/transformation/candidate"
 
 RSpec.describe Cure::Transformation::Transform do
 
-  column_headers = {
-    "abc": 1,
-    "def": 2
-  }
+  before :all do
+    @source_file_loc = "../../spec/cure/test_files/test_csv_file.csv"
+    template_file_loc = "./spec/cure/test_files/test_template.json"
 
-  mock_csv_row = [1, 2]
+    json = JSON.parse(File.read(template_file_loc))
+    candidates = json["candidates"].map { |x| Cure::Transformation::Candidate.new.from_json(x) }
+
+    @transform = Cure::Transformation::Transform.new(candidates)
+  end
 
   describe "#transform" do
     it "should load appropriately" do
-      # candidate = Cure::Transformation::Candidate.new
-      # candidate.column = "abc"
-      # candidate.strategy = "replace"
-      # candidate.generator = "number"
-      # candidate.options = {}
-      #
-      #
-      # tt = Cure::Transformation::Transform.new([candidate], column_headers)
-      # expect(tt.class).to eq(Cure::Transformation::Transform)
-      #
-      # new_row = tt.transform(mock_csv_row)
-      # puts new_row
+      result = @transform.extract(@source_file_loc)
+      result
     end
   end
-
 end

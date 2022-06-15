@@ -2,6 +2,7 @@
 
 require "cure/object_helpers"
 require "cure/strategy/base"
+require "cure/generator/base"
 require "cure/log"
 
 module Cure
