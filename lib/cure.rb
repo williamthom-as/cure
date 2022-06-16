@@ -2,8 +2,6 @@
 
 require "cure/version"
 require "cure/log"
-require "cure/object_helpers"
-
 require "cure/transformation/transform"
 require "logger"
 

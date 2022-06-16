@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "json"
 require "cure/transformation/candidate"
 
@@ -16,8 +17,9 @@ RSpec.describe Cure::Transformation::Transform do
 
   describe "#transform" do
     it "should load appropriately" do
-      result = @transform.extract(@source_file_loc)
-      result
+      result = @transform.extract_from_file(@source_file_loc)
+      expect(result.row_count).to eq(4)
+      expect(result.transformed_rows.map { |a| a[0] }.uniq.length).to eq(1)
     end
   end
 end

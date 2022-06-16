@@ -8,6 +8,7 @@ module Cure
   module Transformation
     class Transform
       include Log
+      include FileHelpers
 
       # @return [Array<Candidate>]
       attr_accessor :candidates
@@ -18,11 +19,17 @@ module Cure
       end
 
       # @param [String] csv_file_location
-      # @return [ProcessorContext]
-      def extract(csv_file_location)
-        ctx = ProcessorContext.new(csv_file_location)
+      # @return [TransformContext]
+      def extract_from_file(csv_file_location)
+        file_contents = read_file(csv_file_location)
+        extract_from_contents(file_contents)
+      end
 
-        parse_file(ctx, header: :none) do |row|
+      # @param [String] file_contents
+      # @return [TransformContext]
+      def extract_from_contents(file_contents)
+        ctx = TransformContext.new
+        parse_content(ctx, file_contents, header: :none) do |row|
           if ctx.row_count == 1
             ctx.extract_column_headers(row)
             next
@@ -37,16 +44,17 @@ module Cure
 
       private
 
-      # @param [ProcessorContext] ctx
+      # @param [TransformContext] ctx
+      # @param [String] file_contents
       # @param [Proc] _block
       # @param [Hash] opts
       # @yield [Array] row
-      # @yield [ProcessorContext] ctx
-      # @return [ProcessorContext]
-      def parse_file(ctx, opts={}, &_block)
+      # @yield [TransformContext] ctx
+      # @return [TransformContext]
+      def parse_content(ctx, file_contents, opts={}, &_block)
         return nil unless block_given?
 
-        Rcsv.parse(ctx.open_file, opts) do |row|
+        Rcsv.parse(file_contents, opts) do |row|
           ctx.row_count += 1
           yield row
         end
@@ -71,18 +79,15 @@ module Cure
       end
     end
 
-    class ProcessorContext
+    class TransformContext
       include FileHelpers
-      include Log
 
-      attr_accessor :csv_file_location,
-                    :row_count,
+      attr_accessor :row_count,
                     :transformed_rows,
                     :column_headers,
                     :column_type_definitions
 
-      def initialize(csv_file_location)
-        @csv_file_location = csv_file_location
+      def initialize
         @row_count = 0
         @transformed_rows = []
         @column_headers = {}
@@ -120,10 +125,6 @@ module Cure
       end
       # rubocop:enable Metrics/CyclomaticComplexity
 
-      # @return [String]
-      def open_file
-        read_file(@csv_file_location)
-      end
     end
   end
 end

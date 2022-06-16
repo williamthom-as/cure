@@ -28,6 +28,8 @@ module Cure
       # @param [String] file_extension
       def write_to_file(file_path, file_name, file_extension, contents)
         file_location = "#{file_path}/#{file_name || Time.now.utc.strftime("%Y-%m-%dT%H:%M:%S%-z")}"
+        clean_dir(file_path)
+
         with_file(file_location, file_extension) do |file|
           file.write(contents)
         end
