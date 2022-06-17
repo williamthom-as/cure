@@ -69,7 +69,7 @@ module Cure
       private
 
       def _generate
-        value = placeholders[@options["value"]]
+        value = config.placeholders[@options["value"]]
         value || raise("Missing placeholder value. Available candidates: [#{config.placeholders.join(", ")}]")
       end
 
