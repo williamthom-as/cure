@@ -63,13 +63,14 @@ module Cure
 
     end
 
-    # TODO
     class PlaceholderGenerator < Base
+      include Configuration
 
       private
 
-      def _generate(opts={})
-        # 0.upto(opts[:length] || rand(0..9)).map { rand(1..10) }.join("").to_i
+      def _generate
+        value = placeholders[@options["value"]]
+        value || raise("Missing placeholder value. Available candidates: [#{config.placeholders.join(", ")}]")
       end
 
     end

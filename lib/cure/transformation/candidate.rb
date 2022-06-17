@@ -21,11 +21,13 @@ module Cure
       # @return [List<Translation>]
       attr_reader :translations
 
+      attr_reader :no_match_translation
+
       # @param [String] source_value
       # @return [String]
       # Transforms the existing value
       def perform(source_value)
-        Cure.logger.info("Performing substitution for [#{@column}] with [#{@translations.length}] translations")
+        # log_debug("Performing substitution for [#{@column}] with [#{@translations.length}] translations")
         value = source_value
 
         @translations.each do |translation|
@@ -33,11 +35,21 @@ module Cure
           value = temp if temp
         end
 
+        if value == source_value
+          log_debug("No translation made for #{value} [#{source_value}]")
+          value = @no_match_translation&.extract(source_value)
+          log_debug("Translated to #{value} from [#{source_value}]")
+        end
+
         value
       end
 
       def translations=(opts)
         @translations = opts.map { |o| Translation.new.from_hash(o) }
+      end
+
+      def no_match_translation=(opts)
+        @no_match_translation = Translation.new.from_hash(opts)
       end
 
     end

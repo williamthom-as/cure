@@ -19,8 +19,28 @@ module Cure
       ConfigurationSource.instance.load_config(request_config)
     end
 
+    # @return [Config]
+    def create_config(source_file_location, template, output_dir)
+      Config.new(source_file_location, template, output_dir)
+    end
+
     class Config
-      attr_accessor :source_file, :template_file, :output_dir
+
+      attr_accessor :source_file_location, :template, :output_dir
+
+      # @param [String] source_file_location
+      # @param [Hash] template
+      # @param [String] output_dir
+      def initialize(source_file_location, template, output_dir)
+        @source_file_location = source_file_location
+        @template = template
+        @output_dir = output_dir
+      end
+
+      def placeholders
+        @template["placeholders"] || []
+      end
+
     end
 
     class ConfigurationSource

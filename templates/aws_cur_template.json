@@ -1,0 +1,93 @@
+{
+  "candidates" : [
+    {
+      "column" : "bill/PayerAccountId",
+      "translations" : [{
+        "strategy" : {
+          "name": "full",
+          "options" : {}
+        },
+        "generator" : {
+          "name" : "number",
+          "options" : {
+            "length" : 6
+          }
+        }
+      }]
+    },
+    {
+      "column" : "lineItem/ResourceId",
+      "translations" : [{
+        "strategy" : {
+          "name": "regex",
+          "options" : {
+            "regex_cg" : "^arn:aws:.*:(.*):.*$"
+          }
+        },
+        "generator" : {
+          "name" : "number",
+          "options" : {
+            "length" : 6
+          }
+        }
+      },{
+        "strategy" : {
+          "name": "regex",
+          "options" : {
+            "regex_cg" : "^.*:.*\/(.*)$"
+          }
+        },
+        "generator" : {
+          "name" : "guid",
+          "options" : {
+            "length" : 48
+          }
+        }
+      },{
+        "strategy" : {
+          "name": "regex",
+          "options" : {
+            "regex_cg" : "^i-(.*)"
+          }
+        },
+        "generator" : {
+          "name" : "number",
+          "options" : {
+            "length" : 6
+          }
+        }
+      }],
+      "no_match_translation" : {
+        "strategy" : {
+          "name": "full",
+          "options" : {}
+        },
+        "generator" : {
+          "name" : "guid",
+          "options" : {
+            "length" : 24
+          }
+        }
+      }
+    },
+    {
+      "column" : "lineItem/UsageAccountId",
+      "translations" : [{
+        "strategy" : {
+          "name": "full",
+          "options" : {}
+        },
+        "generator" : {
+          "name" : "number",
+          "options" : {
+            "length" : 6
+          }
+        }
+      }]
+    }
+  ],
+  "placeholders" : {
+    "$account_number" : "1234567891234"
+  }
+}
+

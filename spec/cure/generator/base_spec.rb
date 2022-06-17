@@ -101,3 +101,28 @@ RSpec.describe Cure::Generator::Base do
   end
 
 end
+
+class MockClass
+  include Cure::Configuration
+end
+
+RSpec.describe Cure::Generator::PlaceholderGenerator do
+
+  before :all do
+    @generator = Cure::Generator::PlaceholderGenerator.new({"value" => "$account_number"})
+    # MockClass.new.register_config()
+  end
+
+  describe "#new" do
+    it "should load options" do
+      expect(@generator.options).to eq({"value" => "$account_number"})
+    end
+  end
+
+  describe "#generate" do
+    it "should raise if called on base class" do
+      expect(@generator.generate).to eq("12345")
+    end
+  end
+
+end

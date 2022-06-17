@@ -7,12 +7,22 @@ module Cure
   module Export
     class Exporter
       include Cure::FileHelpers
+      include Log
+
+      def self.export_ctx(ctx, output_dir, file_name)
+        column_headers = ctx.column_headers.keys
+
+        exporter = Exporter.new
+        exporter.export(output_dir, file_name, ctx.transformed_rows, column_headers)
+      end
 
       # @param [Array] rows
-      # @param [Hash] column_headers
-      def export(output_dir, file_name, rows, column_headers)
+      # @param [Array] columns
+      def export(output_dir, file_name, rows, columns)
+        log_info("Exporting file to [#{output_dir}/#{file_name}] with #{rows.length} rows")
+
         file_contents = []
-        file_contents << column_headers.keys.join(",")
+        file_contents << columns.join(",")
 
         rows.each do |row|
           file_contents << row.join(",")

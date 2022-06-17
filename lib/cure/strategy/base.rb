@@ -43,7 +43,6 @@ module Cure
 
       def initialize(options)
         @options = options
-        @history = {}
       end
 
       # @param [String] source_value
@@ -118,6 +117,24 @@ module Cure
         return unless m.instance_of?(MatchData)
 
         source_value.gsub(m[1], generated_value)
+      end
+    end
+
+    class MatchStrategy < Base
+
+      # gsub catchment group
+      # @param [String] source_value
+      def _retrieve_value(source_value)
+        @options["match"] || nil if source_value.include? @options["match"]
+      end
+
+      # @param [String] source_value
+      # @param [String] generated_value
+      # @return [String]
+      def _replace_value(source_value, generated_value)
+        return unless source_value.include? @options["match"]
+
+        source_value.gsub(@options["match"], generated_value)
       end
     end
 

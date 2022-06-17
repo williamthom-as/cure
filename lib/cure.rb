@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
-require "cure/version"
 require "cure/log"
+require "cure/config"
+require "cure/version"
+
+require "cure/file_helpers"
 require "cure/transformation/transform"
+
+require "cure/main"
+
 require "logger"
 
 module Cure
