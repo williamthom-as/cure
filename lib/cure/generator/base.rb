@@ -52,17 +52,6 @@ module Cure
 
     end
 
-    # TODO
-    class CharacterGenerator < Base
-
-      private
-
-      def _generate
-        # 1.upto(@options["length"] || rand(0..9)).map { rand(1..9) }.join("").to_i
-      end
-
-    end
-
     class PlaceholderGenerator < Base
       include Configuration
 
@@ -94,8 +83,19 @@ module Cure
 
       private
 
-      def _generate(_opts={})
+      def _generate
         # faker code
+      end
+
+    end
+
+    # TODO
+    class CharacterGenerator < Base
+
+      private
+
+      def _generate
+        # 1.upto(@options["length"] || rand(0..9)).map { rand(1..9) }.join("").to_i
       end
 
     end

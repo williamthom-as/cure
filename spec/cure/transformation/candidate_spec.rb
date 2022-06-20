@@ -19,6 +19,18 @@ RSpec.describe Cure::Transformation::Candidate do
           "options" : {
             "length" : 12
           }
+        },
+        "no_match_translation" : {
+          "strategy" : {
+            "name": "full",
+            "options" : {}
+          },
+          "generator" : {
+            "name" : "guid",
+            "options" : {
+              "length" : 24
+            }
+          }
         }
      }]
     }
@@ -46,10 +58,21 @@ RSpec.describe Cure::Transformation::Candidate do
     end
   end
 
-
   regex_config = %(
     {
       "column" : "lineItem/ResourceId",
+      "no_match_translation" : {
+        "strategy" : {
+          "name": "full",
+          "options" : {}
+        },
+        "generator" : {
+          "name" : "guid",
+          "options" : {
+            "length" : 24
+          }
+        }
+      },
       "translations" : [{
         "strategy" : {
           "name": "regex",
@@ -99,9 +122,12 @@ RSpec.describe Cure::Transformation::Candidate do
       val = candidate.perform("arn:aws:kms:ap-southeast-2:111111111111:key/e8192ac9-1111-1111-1111-42f9b7e18937")
       val_two = candidate.perform("arn:aws:kms:ap-southeast-2:111111111111:key/e8192ac9-1111-1111-1111-42f9b7e18937")
       val_three = candidate.perform("i-11111111")
+      val_four = candidate.perform("ABCNOMATCHFORME")
+
 
       expect(val).to eq(val_two)
       expect(val_three).to_not eq("i-11111111")
+      expect(val_four.length).to eq(36)
     end
 
   end

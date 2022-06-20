@@ -1,21 +1,6 @@
 {
   "candidates" : [
     {
-      "column" : "bill/PayerAccountId",
-      "translations" : [{
-        "strategy" : {
-          "name": "full",
-          "options" : {}
-        },
-        "generator" : {
-          "name" : "number",
-          "options" : {
-            "length" : 6
-          }
-        }
-      }]
-    },
-    {
       "column" : "lineItem/ResourceId",
       "translations" : [{
         "strategy" : {
@@ -71,6 +56,21 @@
       }
     },
     {
+      "column" : "bill/PayerAccountId",
+      "translations" : [{
+        "strategy" : {
+          "name": "full",
+          "options" : {}
+        },
+        "generator" : {
+          "name" : "number",
+          "options" : {
+            "length" : 6
+          }
+        }
+      }]
+    },
+    {
       "column" : "lineItem/UsageAccountId",
       "translations" : [{
         "strategy" : {
@@ -88,6 +88,9 @@
   ],
   "placeholders" : {
     "$account_number" : "1234567891234"
-  }
+  },
+  "column_blacklist" : [
+
+  ]
 }
 
