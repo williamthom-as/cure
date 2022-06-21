@@ -2,24 +2,36 @@
 require "json"
 require "cure/config"
 
-class MockClass
-  include Cure::Configuration
-end
+RSpec.describe Cure::Main do
 
+  describe "#init" do
+    it "should set up the main service" do
+      source_file_loc = "../../spec/cure/test_files/test_csv_file.csv"
+      template_file_loc = "../../spec/cure/test_files/test_template.json"
+      tmp_location = "/tmp/cure"
 
-RSpec.describe Cure::Configuration do
+      main = Cure::Main.init(template_file_loc, source_file_loc, tmp_location)
+      expect(main.is_initialised).to eq(true)
+      expect(main.transformer).to_not be(nil)
 
-  describe "#register_config" do
-    it "should register config" do
-      config = Cure::Configuration::Config.new("abc", {}, "ghi")
+      config = main.config
+      expect(config.source_file_location).to eq(source_file_loc)
+      expect(config.template.class).to eq(Hash)
+      expect(config.output_dir).to eq(tmp_location)
+    end
+  end
 
-      mc = MockClass.new
-      mc.register_config(config)
+  describe "#build_ctx" do
+    it "should build ctx" do
+      source_file_loc = "../../spec/cure/test_files/test_csv_file.csv"
+      template_file_loc = "../../spec/cure/test_files/test_template.json"
+      tmp_location = "/tmp/cure"
 
-      expect(mc.config.class).to eq(Cure::Configuration::Config)
-      expect(mc.config.source_file_location).to eq(config.source_file_location)
-      expect(mc.config.template).to eq(config.template)
-      expect(mc.config.output_dir).to eq(config.output_dir)
+      main = Cure::Main.init(template_file_loc, source_file_loc, tmp_location)
+      ctx = main.build_ctx
+
+      expect(ctx.column_headers).to eq({"test_column" => 0, "test_column2" => 1})
+      expect(ctx.row_count).to eq(4)
     end
   end
 end

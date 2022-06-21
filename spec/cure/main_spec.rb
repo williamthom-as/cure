@@ -6,16 +6,40 @@ require "cure/config"
 RSpec.describe Cure::Main do
 
   describe "#init" do
-    it "should register config" do
-      config = Cure::Configuration::Config.new("abc", {}, "ghi")
+    it "should set up the main service" do
+      source_file_loc = "../../spec/cure/test_files/test_csv_file.csv"
+      template_file_loc = "../../spec/cure/test_files/test_template.json"
+      tmp_location = "/tmp/cure"
 
-      mc = MockClass.new
-      mc.register_config(config)
+      main = Cure::Main.init(template_file_loc, source_file_loc, tmp_location)
+      expect(main.is_initialised).to eq(true)
+      expect(main.transformer).to_not be(nil)
 
-      expect(mc.config.class).to eq(Cure::Configuration::Config)
-      expect(mc.config.source_file_location).to eq(config.source_file_location)
-      expect(mc.config.template).to eq(config.template)
-      expect(mc.config.output_dir).to eq(config.output_dir)
+      config = main.config
+      expect(config.source_file_location).to eq(source_file_loc)
+      expect(config.template.class).to eq(Hash)
+      expect(config.output_dir).to eq(tmp_location)
+    end
+  end
+
+  describe "#build_ctx" do
+    it "should build ctx" do
+      source_file_loc = "../../spec/cure/test_files/test_csv_file.csv"
+      template_file_loc = "../../spec/cure/test_files/test_template.json"
+      tmp_location = "/tmp/cure"
+
+      main = Cure::Main.init(template_file_loc, source_file_loc, tmp_location)
+      ctx = main.build_ctx
+
+      expect(ctx.column_headers).to eq({"test_column" => 0, "test_column2" => 1})
+      expect(ctx.row_count).to eq(4)
+
+      main.with_temp_dir("/tmp/cure") do
+        main.run
+        expect(File.exist?("/tmp/cure/csv_file.csv")).to be_truthy
+      end
+
+      expect(File.exist?("/tmp/cure/csv_file.csv")).to be_falsey
     end
   end
 end

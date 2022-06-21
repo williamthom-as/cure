@@ -16,6 +16,8 @@ RSpec.describe Cure::Strategy::Base do
     it "should load options" do
       opts = {"regex_cg" => "^arn:aws:.*:(.*):.*$"}
       strategy = Cure::Strategy::RegexStrategy.new(opts)
+      strategy.clear_history
+
       expect(strategy.history).to eq({})
       expect(strategy.options).to eq(opts)
     end

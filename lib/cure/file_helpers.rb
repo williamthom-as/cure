@@ -10,14 +10,14 @@ module Cure
 
       FileUtils.mkdir_p(dir) unless File.directory?(dir)
 
-      path << ".#{extension}"
+      path = "#{path}.#{extension}"
       File.open(path, "w", &block)
     end
 
     def clean_dir(path)
-      dir = File.dirname(path)
+      dir = File.file?(path) ? File.dirname(path) : path
 
-      FileUtils.rm_f(dir) if File.directory?(dir)
+      FileUtils.remove_dir(dir) if File.directory?(dir)
     end
 
     def read_file(file_location)
@@ -26,6 +26,14 @@ module Cure
       raise "No file found at [#{file_location}]" unless File.exist? result
 
       File.read(result)
+    end
+
+    def with_temp_dir(temp_dir, &_block)
+      return unless block_given?
+
+      clean_dir(temp_dir)
+      yield
+      clean_dir(temp_dir)
     end
 
   end

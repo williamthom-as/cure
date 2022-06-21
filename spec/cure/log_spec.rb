@@ -6,7 +6,6 @@ class MockClass
   include Cure::Log
 end
 
-
 RSpec.describe Cure::Log do
 
   describe "#log_debug" do

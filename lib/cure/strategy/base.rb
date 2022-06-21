@@ -23,12 +23,21 @@ module Cure
         history[source_value] = value
       end
 
+      def reset_history
+        HistoryCache.instance.reset
+      end
+      alias clear_history reset_history
+
       class HistoryCache
         include Singleton
 
         attr_reader :history_cache
 
         def initialize
+          @history_cache = {}
+        end
+
+        def reset
           @history_cache = {}
         end
       end

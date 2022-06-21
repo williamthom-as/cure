@@ -1,3 +1,42 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require "cure"
+require "optparse"
+
+include Cure::Log
+
+class CureConfig
+  include Cure::Configuration
+end
+
+conf = {}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: cure_cli [options]"
+
+  opts.on("-t", "--template_file=template_file", "Template definition file") do |t|
+    conf[:template_file_location] = t
+  end
+
+  opts.on("-s", "--source_file=source_file", "Source file") do |s|
+    conf[:source_file_location] = s
+  end
+
+  opts.on("-o", "--output_dir=output_dir", "Output directory") do |o|
+    conf[:output_dir] = o
+  end
+
+  opts.on("-h", "--help", "Prints this help") do
+    puts opts
+    exit
+  end
+end.parse!
+
+log_info "Config loaded successfully, initialising environment ..."
+main = Cure::Main.init(conf[:template_file_location], conf[:source_file_location], conf[:output_dir])
+
+log_info "... set up complete. Beginning process"
+main.process
+
+

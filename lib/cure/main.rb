@@ -22,6 +22,9 @@ module Cure
     # @return [Cure::Transformation::Transform]
     attr_accessor :transformer
 
+    # @return [Boolean]
+    attr_reader :is_initialised
+
     def initialize
       @is_initialised = false
     end
@@ -29,8 +32,13 @@ module Cure
     def run
       raise "Not init" unless @transformer
 
-      ctx = @transformer.extract_from_file(config.source_file_location)
+      ctx = build_ctx
       export(ctx)
+    end
+
+    # @return [Cure::Transform::TransformContext]
+    def build_ctx
+      @transformer.extract_from_file(config.source_file_location)
     end
 
     def setup(template_file, csv_file, output_dir)
@@ -40,6 +48,7 @@ module Cure
       candidates = config.template["candidates"].map { |c| Cure::Transformation::Candidate.new.from_json(c) }
 
       @transformer = Cure::Transformation::Transform.new(candidates)
+      @is_initialised = true
     end
 
     private
