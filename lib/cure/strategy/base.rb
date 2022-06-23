@@ -63,7 +63,7 @@ module Cure
         existing = retrieve_history(extracted_value)
         return _replace_value(source_value, existing) if existing
 
-        generated_value = generator.generate.to_s
+        generated_value = generator.generate(source_value).to_s
         value = _replace_value(source_value, generated_value)
 
         store_history(extracted_value, generated_value)

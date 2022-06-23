@@ -56,7 +56,8 @@ RSpec.describe Cure::Generator::RedactGenerator do
 
   describe "#generate" do
     it "should load options" do
-      expect(@generator.generate).to eq("XXX")
+      expect(@generator.generate("my_value")).to eq("XXXXXXXX")
+      expect(@generator.generate("my_value_2")).to eq("XXXXXXXXXX")
     end
   end
 
@@ -132,4 +133,32 @@ RSpec.describe Cure::Generator::PlaceholderGenerator do
     end
   end
 
+end
+
+RSpec.describe Cure::Generator::CharacterGenerator do
+
+  before :all do
+
+  end
+
+  describe "#generate" do
+    it "should be 5 if no length provided" do
+      generator = Cure::Generator::CharacterGenerator.new({
+                                                            "types" => %w[uppercase lowercase]
+                                                          })
+      expect(generator.generate.length).to eq(5)
+    end
+
+    it "should be source length if provided" do
+      generator = Cure::Generator::CharacterGenerator.new({
+                                                            "types" => %w[uppercase lowercase]
+                                                          })
+      expect(generator.generate("abcdefghij").length).to eq(10)
+    end
+
+    it "should be config length if provided" do
+      generator = Cure::Generator::CharacterGenerator.new({"length" => 3})
+      expect(generator.generate.length).to eq(3)
+    end
+  end
 end

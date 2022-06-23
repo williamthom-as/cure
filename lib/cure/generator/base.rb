@@ -11,13 +11,17 @@ module Cure
         @options = options
       end
 
-      def generate
-        _generate
+      # @param [Object/Nil] source_value
+      # @return [String]
+      def generate(source_value=nil)
+        _generate(source_value)
       end
 
       private
 
-      def _generate
+      # @param [Object/Nil] _source_value
+      # @return [String]
+      def _generate(_source_value)
         raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
     end
@@ -26,7 +30,8 @@ module Cure
 
       private
 
-      def _generate
+      # @param [Object] _source_value
+      def _generate(_source_value)
         1.upto(@options["length"] || rand(0..9)).map { rand(0..15).to_s(16) }.join("")
       end
 
@@ -36,7 +41,8 @@ module Cure
 
       private
 
-      def _generate
+      # @param [Object] _source_value
+      def _generate(_source_value)
         1.upto(@options["length"] || rand(0..9)).map { rand(1..9) }.join("").to_i
       end
 
@@ -46,8 +52,9 @@ module Cure
 
       private
 
-      def _generate
-        "XXX"
+      # @param [Object] source_value
+      def _generate(source_value)
+        1.upto(source_value&.length || 5).map { "X" }.join("")
       end
 
     end
@@ -57,7 +64,8 @@ module Cure
 
       private
 
-      def _generate
+      # @param [Object] _source_value
+      def _generate(_source_value)
         value = config.placeholders[@options["value"]]
         value || raise("Missing placeholder value. Available candidates: [#{config.placeholders.join(", ")}]")
       end
@@ -70,7 +78,8 @@ module Cure
 
       private
 
-      def _generate
+      # @param [Object] _source_value
+      def _generate(_source_value)
         SecureRandom.uuid.to_s
       end
 
@@ -83,22 +92,39 @@ module Cure
 
       private
 
-      def _generate
+      # @param [Object] _source_value
+      def _generate(_source_value)
         # faker code
       end
 
     end
 
-    # TODO
     class CharacterGenerator < Base
+
+      def initialize(options=nil)
+        super(options)
+      end
 
       private
 
-      def _generate
-        # 1.upto(@options["length"] || rand(0..9)).map { rand(1..9) }.join("").to_i
+      # @param [Object] source_value
+      def _generate(source_value)
+        arr = build_options.map(&:to_a).flatten
+        (0...@options["length"] || source_value&.length || 5).map { arr[rand(arr.length)] }.join
       end
 
-    end
+      def build_options
+        return [("a".."z"), ("A".."Z"), (0..9)] unless @options.key?("types")
 
+        type_array = @options["types"]
+
+        arr = []
+        arr << ("a".."z") if type_array.include? "lowercase"
+        arr << ("A".."Z") if type_array.include? "uppercase"
+        arr << (0..9) if type_array.include? "number"
+        arr << ("!".."+") if type_array.include? "symbol"
+        arr
+      end
+    end
   end
 end

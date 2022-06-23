@@ -30,6 +30,9 @@
   ],
   "placeholders" : {
     "$account_number" : "1234567891234"
+  },
+  "column_export" : {
+    "type" : "blacklist",
+    "columns" : []
   }
-
 }
