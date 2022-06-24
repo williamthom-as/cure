@@ -110,7 +110,7 @@ end
 RSpec.describe Cure::Generator::PlaceholderGenerator do
 
   before :all do
-    @generator = Cure::Generator::PlaceholderGenerator.new({"value" => "$account_number"})
+    @generator = Cure::Generator::PlaceholderGenerator.new({"name" => "$account_number"})
 
     mc = MockClass.new
     config = mc.create_config("abc", {
@@ -123,7 +123,7 @@ RSpec.describe Cure::Generator::PlaceholderGenerator do
 
   describe "#new" do
     it "should load options" do
-      expect(@generator.options).to eq({"value" => "$account_number"})
+      expect(@generator.options).to eq({"name" => "$account_number"})
     end
   end
 

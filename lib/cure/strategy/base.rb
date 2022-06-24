@@ -147,5 +147,40 @@ module Cure
       end
     end
 
+    class StartWithStrategy < Base
+
+      # gsub catchment group
+      # @param [String] source_value
+      def _retrieve_value(source_value)
+        @options["match"] || nil if source_value.start_with? @options["match"]
+      end
+
+      # @param [String] source_value
+      # @param [String] generated_value
+      # @return [String]
+      def _replace_value(source_value, generated_value)
+        return unless source_value.include? @options["match"]
+
+        source_value.gsub(@options["match"], generated_value)
+      end
+    end
+
+    class EndWithStrategy < Base
+
+      # gsub catchment group
+      # @param [String] source_value
+      def _retrieve_value(source_value)
+        @options["match"] || nil if source_value.end_with? @options["match"]
+      end
+
+      # @param [String] source_value
+      # @param [String] generated_value
+      # @return [String]
+      def _replace_value(source_value, generated_value)
+        return unless source_value.include? @options["match"]
+
+        source_value.gsub(@options["match"], generated_value)
+      end
+    end
   end
 end

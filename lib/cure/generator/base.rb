@@ -66,7 +66,7 @@ module Cure
 
       # @param [Object] _source_value
       def _generate(_source_value)
-        value = config.placeholders[@options["value"]]
+        value = config.placeholders[@options["name"]]
         value || raise("Missing placeholder value. Available candidates: [#{config.placeholders.join(", ")}]")
       end
 

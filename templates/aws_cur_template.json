@@ -26,9 +26,9 @@
           "options" : {}
         },
         "generator" : {
-          "name" : "number",
+          "name" : "placeholder",
           "options" : {
-            "length" : 6
+            "name" : "$account_number"
           }
         }
       }]
@@ -103,6 +103,8 @@
         }
       }
     }
-  ]
+  ],
+  "placeholders" : {
+    "$account_number" : "1234567891234"
+  }
 }
-
