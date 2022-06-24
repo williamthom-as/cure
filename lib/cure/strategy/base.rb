@@ -85,6 +85,10 @@ module Cure
         raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
 
+      def replace_partial_record
+        (@options["replace_partial"] || "true").to_s == "true"
+      end
+
     end
 
     class FullStrategy < Base
@@ -125,6 +129,8 @@ module Cure
         m = /#{@options["regex_cg"]}/.match(source_value)
         return unless m.instance_of?(MatchData)
 
+        generated_value unless replace_partial_record
+
         source_value.gsub(m[1], generated_value)
       end
     end
@@ -161,7 +167,9 @@ module Cure
       def _replace_value(source_value, generated_value)
         return unless source_value.include? @options["match"]
 
-        source_value.gsub(@options["match"], generated_value)
+        return generated_value unless replace_partial_record
+
+        source_value.reverse.chomp(@options["match"].reverse).reverse
       end
     end
 
@@ -179,7 +187,9 @@ module Cure
       def _replace_value(source_value, generated_value)
         return unless source_value.include? @options["match"]
 
-        source_value.gsub(@options["match"], generated_value)
+        return generated_value unless replace_partial_record
+
+        source_value.chomp(@options["match"]) + generated_value
       end
     end
   end
