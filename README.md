@@ -97,6 +97,7 @@ Install it yourself as:
     $ gem install cure
 
 ### Getting started *quickly*
+
 To quickly spin up a development environment, please use the Dockerfile provided. Run:
 
     $ docker build -t cure .
@@ -107,6 +108,7 @@ Please do not forget to mount any volumes which may have templates that you wish
 Once set up and connected to your container, run:
 
     $ cure -t /file/path/to/template.json -s /file/path/to/source_file.csv -o /my/output/folder
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

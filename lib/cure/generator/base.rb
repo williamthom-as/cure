@@ -14,7 +14,10 @@ module Cure
       # @param [Object/Nil] source_value
       # @return [String]
       def generate(source_value=nil)
-        _generate(source_value)
+        translated = _generate(source_value)
+        translated = "#{prefix}#{translated}" if prefix
+        translated = "#{translated}#{suffix}" if suffix
+        translated
       end
 
       private
@@ -24,6 +27,26 @@ module Cure
       def _generate(_source_value)
         raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
+
+      def prefix(default=nil)
+        extract_property("prefix", default)
+      end
+
+      def suffix(default=nil)
+        extract_property("suffix", default)
+      end
+
+      def length(default=nil)
+        extract_property("length", default)
+      end
+
+      def property_name(default=nil)
+        extract_property("name", default)
+      end
+
+      def extract_property(property, default_val)
+        @options.fetch(property, default_val)
+      end
     end
 
     class HexGenerator < Base
@@ -32,7 +55,7 @@ module Cure
 
       # @param [Object] _source_value
       def _generate(_source_value)
-        1.upto(@options["length"] || rand(0..9)).map { rand(0..15).to_s(16) }.join("")
+        1.upto(length(rand(0..9))).map { rand(0..15).to_s(16) }.join("")
       end
 
     end
@@ -43,7 +66,7 @@ module Cure
 
       # @param [Object] _source_value
       def _generate(_source_value)
-        1.upto(@options["length"] || rand(0..9)).map { rand(1..9) }.join("").to_i
+        1.upto(length(rand(0..9))).map { rand(1..9) }.join("").to_i
       end
 
     end
@@ -54,7 +77,7 @@ module Cure
 
       # @param [Object] source_value
       def _generate(source_value)
-        1.upto(source_value&.length || 5).map { "X" }.join("")
+        1.upto(length(source_value&.length || 5)).map { "X" }.join("")
       end
 
     end
@@ -66,7 +89,7 @@ module Cure
 
       # @param [Object] _source_value
       def _generate(_source_value)
-        value = config.placeholders[@options["name"]]
+        value = config.placeholders[property_name]
         value || raise("Missing placeholder value. Available candidates: [#{config.placeholders.join(", ")}]")
       end
 
@@ -110,7 +133,7 @@ module Cure
       # @param [Object] source_value
       def _generate(source_value)
         arr = build_options.map(&:to_a).flatten
-        (0...@options["length"] || source_value&.length || 5).map { arr[rand(arr.length)] }.join
+        (0...length(source_value&.length || 5)).map { arr[rand(arr.length)] }.join
       end
 
       def build_options
