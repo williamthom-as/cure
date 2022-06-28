@@ -162,3 +162,20 @@ RSpec.describe Cure::Generator::CharacterGenerator do
     end
   end
 end
+
+RSpec.describe Cure::Generator::FakerGenerator do
+
+  before :all do
+
+  end
+
+  describe "#generate" do
+    it "should be 5 if no length provided" do
+      generator = Cure::Generator::FakerGenerator.new({
+                                                        "module" => "Internet",
+                                                        "method" => "email"
+                                                      })
+      expect(generator.generate.include?("@")).to be_truthy
+    end
+  end
+end

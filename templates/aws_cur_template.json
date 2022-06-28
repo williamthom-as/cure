@@ -67,13 +67,14 @@
         "strategy" : {
           "name": "regex",
           "options" : {
-            "regex_cg" : "^.*:.*\/(.*)$"
+            "regex_cg" : "^.*:.*:(.*)$"
           }
         },
         "generator" : {
-          "name" : "guid",
+          "name" : "faker",
           "options" : {
-            "length" : 48
+            "module" : "App",
+            "method" : "name"
           }
         }
       },{
@@ -84,9 +85,22 @@
           }
         },
         "generator" : {
-          "name" : "number",
+          "name" : "hex",
           "options" : {
-            "length" : 6
+            "length" : 10
+          }
+        }
+      },{
+        "strategy" : {
+          "name": "regex",
+          "options" : {
+            "regex_cg" : "^vol-(.*)"
+          }
+        },
+        "generator" : {
+          "name" : "hex",
+          "options" : {
+            "length" : 10
           }
         }
       }],
@@ -96,12 +110,28 @@
           "options" : {}
         },
         "generator" : {
-          "name" : "guid",
+          "name" : "hex",
           "options" : {
-            "length" : 24
+            "length" : 10
           }
         }
       }
+    },
+    {
+      "column" : "resourceTags/aws:createdBy",
+      "translations" : [{
+        "strategy" : {
+          "name": "full",
+          "options" : {}
+        },
+        "generator" : {
+          "name" : "faker",
+          "options" : {
+            "module" : "Faker::Movies::StarWars",
+            "method" : "character"
+          }
+        }
+      }]
     }
   ],
   "placeholders" : {

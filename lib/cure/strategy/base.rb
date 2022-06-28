@@ -57,6 +57,8 @@ module Cure
       # @param [String] source_value
       # @param [Generator::Base] generator
       # @return [String]
+      #
+      # This will retrieve the (partial) value, then generate a new replacement.
       def extract(source_value, generator)
         extracted_value = _retrieve_value(source_value)
 
@@ -86,7 +88,10 @@ module Cure
       end
 
       def replace_partial_record
-        (@options["replace_partial"] || "true").to_s == "true"
+        replace_partial = @options["replace_partial"]
+        return replace_partial || false unless replace_partial.instance_of?(String)
+
+        (replace_partial || "true").to_s == "true"
       end
 
     end
@@ -116,10 +121,9 @@ module Cure
       # @param [String] source_value
       def _retrieve_value(source_value)
         m = /#{@options["regex_cg"]}/.match(source_value)
-        return unless m.instance_of?(MatchData)
+        return unless m.instance_of?(MatchData) && (!m[1].nil? && m[1] != "")
 
         m[1]
-        # source_value.gsub(m[1], generator.generate.to_s)
       end
 
       # @param [String] source_value
@@ -127,7 +131,7 @@ module Cure
       # @return [String]
       def _replace_value(source_value, generated_value)
         m = /#{@options["regex_cg"]}/.match(source_value)
-        return unless m.instance_of?(MatchData)
+        return unless m.instance_of?(MatchData) && (!m[1].nil? && m[1] != "")
 
         generated_value unless replace_partial_record
 
@@ -165,11 +169,12 @@ module Cure
       # @param [String] generated_value
       # @return [String]
       def _replace_value(source_value, generated_value)
-        return unless source_value.include? @options["match"]
+        return unless source_value.start_with? @options["match"]
 
         return generated_value unless replace_partial_record
 
-        source_value.reverse.chomp(@options["match"].reverse).reverse
+        @options["match"] + generated_value
+        # source_value.chomp(@options["match"]) + generated_value
       end
     end
 
@@ -185,11 +190,35 @@ module Cure
       # @param [String] generated_value
       # @return [String]
       def _replace_value(source_value, generated_value)
-        return unless source_value.include? @options["match"]
+        return unless source_value.end_with? @options["match"]
 
         return generated_value unless replace_partial_record
 
-        source_value.chomp(@options["match"]) + generated_value
+        generated_value + @options["match"]
+        # generated_value + source_value.reverse.chomp(@options["match"].reverse).reverse
+      end
+    end
+
+    class SplitStrategy
+
+      # @param [String] source_value
+      def _retrieve_value(source_value)
+        split_token = @options["split_token"]
+
+        result_arr = source_value.split(split_token)
+        result_arr[@options["array_index"]]
+      end
+
+      # @param [String] source_value
+      # @param [String] generated_value
+      # @return [String]
+      def _replace_value(source_value, generated_value)
+        split_token = @options["split_token"]
+
+        result_arr = source_value.split(split_token)
+        result_arr[@options["array_index"]] = generated_value
+
+        result_arr.join(split_token)
       end
     end
   end
