@@ -98,10 +98,12 @@ RSpec.describe Cure::Strategy::Base do
     end
 
     it "should run" do
-      strat = Cure::Strategy::RegexStrategy.new({"regex_cg" => "^arn:aws:.*:(.*):.*$"})
-      result = strat.extract("arn:aws:apigateway:us-east-1::/restapis/bdwt2mrwr7/stages/dev", Cure::Generator::NumberGenerator.new({"length" => 10}))
-      puts result
-    end
+      strat = Cure::Strategy::SplitStrategy.new({"token" => ":", "index" => 4})
+      result = strat.extract("arn:aws:apigateway:us-east-1::/restapis/abcdef/stages/dev", Cure::Generator::NumberGenerator.new({"length" => 10}))
+      expect(result).to eq("arn:aws:apigateway:us-east-1::/restapis/abcdef/stages/dev")
 
+      result_two = strat.extract("arn:aws:apigateway:us-east-1:abcdef:/restapis/abcdef/stages/dev", Cure::Generator::RedactGenerator.new({"length" => 3}))
+      expect(result_two).to eq("arn:aws:apigateway:us-east-1:XXX:/restapis/abcdef/stages/dev")
+    end
   end
 end

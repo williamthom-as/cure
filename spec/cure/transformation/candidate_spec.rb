@@ -53,7 +53,7 @@ RSpec.describe Cure::Transformation::Candidate do
 
     it "strategy length should match the options" do
       candidate = Cure::Transformation::Candidate.new.from_json(config)
-      val = candidate.perform("abc")
+      val = candidate.perform("xxk")
       expect(val.to_s.length).to eq(candidate.translations.first.generator.options["length"].to_i)
     end
   end

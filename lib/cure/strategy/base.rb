@@ -14,13 +14,13 @@ module Cure
 
       # @return [String]
       def retrieve_history(source_value)
-        history[source_value]
+        history[source_value] unless source_value.nil? || source_value == ""
       end
 
       # @param [String] source_value
       # @param [String] value
       def store_history(source_value, value)
-        history[source_value] = value
+        history[source_value] = value unless source_value.nil? || source_value == ""
       end
 
       def reset_history
@@ -92,6 +92,10 @@ module Cure
         return replace_partial || false unless replace_partial.instance_of?(String)
 
         (replace_partial || "true").to_s == "true"
+      end
+
+      def value?(value)
+        !value.nil? && value != ""
       end
 
     end
@@ -199,25 +203,28 @@ module Cure
       end
     end
 
-    class SplitStrategy
+    class SplitStrategy < Base
 
       # @param [String] source_value
       def _retrieve_value(source_value)
-        split_token = @options["split_token"]
+        split_token = @options["token"]
+
+        return unless source_value.include?(split_token)
 
         result_arr = source_value.split(split_token)
-        result_arr[@options["array_index"]]
+        result_arr[@options["index"]]
       end
 
       # @param [String] source_value
       # @param [String] generated_value
       # @return [String]
       def _replace_value(source_value, generated_value)
-        split_token = @options["split_token"]
+        split_token = @options["token"]
+
+        return unless source_value.include?(split_token)
 
         result_arr = source_value.split(split_token)
-        result_arr[@options["array_index"]] = generated_value
-
+        result_arr[@options["index"]] = generated_value if value?(result_arr[@options["index"]])
         result_arr.join(split_token)
       end
     end

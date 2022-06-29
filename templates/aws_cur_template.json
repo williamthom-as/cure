@@ -54,33 +54,6 @@
         "strategy" : {
           "name": "regex",
           "options" : {
-            "regex_cg" : "^arn:aws:.*:(.*):.*$"
-          }
-        },
-        "generator" : {
-          "name" : "number",
-          "options" : {
-            "length" : 6
-          }
-        }
-      },{
-        "strategy" : {
-          "name": "regex",
-          "options" : {
-            "regex_cg" : "^.*:.*:(.*)$"
-          }
-        },
-        "generator" : {
-          "name" : "faker",
-          "options" : {
-            "module" : "App",
-            "method" : "name"
-          }
-        }
-      },{
-        "strategy" : {
-          "name": "regex",
-          "options" : {
             "regex_cg" : "^i-(.*)"
           }
         },
@@ -103,6 +76,35 @@
             "length" : 10
           }
         }
+      },{
+        "strategy" : {
+          "name": "split",
+          "options" : {
+            "token": ":",
+            "index": 4
+          }
+        },
+        "generator" : {
+          "name" : "placeholder",
+          "options" : {
+            "name" : "$account_number"
+          }
+        }
+      },{
+        "strategy" : {
+          "name": "split",
+          "options" : {
+            "token": ":",
+            "index": -1
+          }
+        },
+        "generator" : {
+          "name" : "faker",
+          "options" : {
+            "module" : "App",
+            "method" : "name"
+          }
+        }
       }],
       "no_match_translation" : {
         "strategy" : {
@@ -112,7 +114,8 @@
         "generator" : {
           "name" : "hex",
           "options" : {
-            "length" : 10
+            "length" : 10,
+            "prefix" : "s3_bucket_"
           }
         }
       }
