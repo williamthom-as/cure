@@ -2,8 +2,5 @@
 
 module Cure
   module CSVHelpers
-
-  #  Read/Write CSVs
-
   end
 end

@@ -4,7 +4,6 @@ require "fileutils"
 
 module Cure
   module FileHelpers
-
     def with_file(path, extension, &block)
       dir = File.dirname(path)
 
@@ -35,6 +34,5 @@ module Cure
       yield
       clean_dir(temp_dir)
     end
-
   end
 end

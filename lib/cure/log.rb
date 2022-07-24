@@ -4,7 +4,6 @@ require "cure"
 
 module Cure
   module Log
-
     # @param [String] message
     def log_debug(message)
       Cure.logger.debug(message)

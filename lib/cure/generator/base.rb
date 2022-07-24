@@ -3,7 +3,6 @@
 module Cure
   module Generator
     class Base
-
       # @return [Hash]
       attr_accessor :options
 
@@ -50,36 +49,30 @@ module Cure
     end
 
     class HexGenerator < Base
-
       private
 
       # @param [Object] _source_value
       def _generate(_source_value)
         1.upto(length(rand(0..9))).map { rand(0..15).to_s(16) }.join("")
       end
-
     end
 
     class NumberGenerator < Base
-
       private
 
       # @param [Object] _source_value
       def _generate(_source_value)
         1.upto(length(rand(0..9))).map { rand(1..9) }.join("").to_i
       end
-
     end
 
     class RedactGenerator < Base
-
       private
 
       # @param [Object] source_value
       def _generate(source_value)
         1.upto(length(source_value&.length || 5)).map { "X" }.join("")
       end
-
     end
 
     class PlaceholderGenerator < Base
@@ -92,26 +85,22 @@ module Cure
         value = config.placeholders[property_name]
         value || raise("Missing placeholder value. Available candidates: [#{config.placeholders.join(", ")}]")
       end
-
     end
 
     require "securerandom"
 
     class GuidGenerator < Base
-
       private
 
       # @param [Object] _source_value
       def _generate(_source_value)
         SecureRandom.uuid.to_s
       end
-
     end
 
     require "faker"
 
     class FakerGenerator < Base
-
       private
 
       # @param [Object] _source_value
@@ -126,7 +115,6 @@ module Cure
 
         mod.send(meth_code)
       end
-
     end
 
     class CharacterGenerator < Base

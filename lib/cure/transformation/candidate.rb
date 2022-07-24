@@ -7,7 +7,6 @@ require "cure/log"
 
 module Cure
   module Transformation
-
     # Per row, we will have a candidate for each transformation that needs to be made
     class Candidate
       include ObjectHelpers
@@ -51,7 +50,6 @@ module Cure
       def no_match_translation=(opts)
         @no_match_translation = Translation.new.from_hash(opts)
       end
-
     end
 
     class Translation

@@ -5,7 +5,6 @@ require "json"
 
 module Cure
   module ObjectHelpers
-
     def attributes=(hash)
       hash.each do |key, value|
         send("#{key}=", value)

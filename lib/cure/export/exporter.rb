@@ -44,7 +44,6 @@ module Cure
           file.write(contents)
         end
       end
-
     end
   end
 end

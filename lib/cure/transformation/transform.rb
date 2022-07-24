@@ -100,7 +100,6 @@ module Cure
       def add_transformed_row(row)
         @transformed_rows << row
       end
-
     end
   end
 end

@@ -6,7 +6,6 @@ module Cure
   module Strategy
     # Singleton Strategy for storing data across all processes
     module History
-
       # @return [Hash]
       def history
         HistoryCache.instance.history_cache
@@ -97,11 +96,9 @@ module Cure
       def value?(value)
         !value.nil? && value != ""
       end
-
     end
 
     class FullStrategy < Base
-
       private
 
       # @param [String] source_value
@@ -116,11 +113,9 @@ module Cure
       def _replace_value(_source_value, generated_value)
         generated_value
       end
-
     end
 
     class RegexStrategy < Base
-
       # gsub catchment group
       # @param [String] source_value
       def _retrieve_value(source_value)
@@ -144,7 +139,6 @@ module Cure
     end
 
     class MatchStrategy < Base
-
       # gsub catchment group
       # @param [String] source_value
       def _retrieve_value(source_value)
@@ -162,7 +156,6 @@ module Cure
     end
 
     class StartWithStrategy < Base
-
       # gsub catchment group
       # @param [String] source_value
       def _retrieve_value(source_value)
@@ -183,7 +176,6 @@ module Cure
     end
 
     class EndWithStrategy < Base
-
       # gsub catchment group
       # @param [String] source_value
       def _retrieve_value(source_value)
@@ -204,7 +196,6 @@ module Cure
     end
 
     class SplitStrategy < Base
-
       # @param [String] source_value
       def _retrieve_value(source_value)
         split_token = @options["token"]

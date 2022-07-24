@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "cure"
 require "json"
 require "cure/transformation/candidate"
@@ -57,6 +59,5 @@ module Cure
     def export(ctx)
       Cure::Export::Exporter.export_ctx(ctx, config.output_dir, "csv_file")
     end
-
   end
 end

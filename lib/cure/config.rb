@@ -25,7 +25,6 @@ module Cure
     end
 
     class Config
-
       attr_accessor :source_file_location, :template, :output_dir
 
       # @param [String] source_file_location
@@ -40,7 +39,6 @@ module Cure
       def placeholders
         @template["placeholders"] || []
       end
-
     end
 
     class ConfigurationSource
@@ -54,6 +52,5 @@ module Cure
         @config = config
       end
     end
-
   end
 end
