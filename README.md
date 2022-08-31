@@ -1,6 +1,7 @@
 # Cure
 
 ![run tests](https://github.com/williamthom-as/cure/actions/workflows/rspec.yml/badge.svg)
+[![Gem Version](https://badge.fury.io/rb/cure.svg)](https://badge.fury.io/rb/cure)
 
 Cure is a simple tool to **remove/redact/anonymize** and **replace** private information in a spreadsheet.
 It has been written to anonymize private cloud billing data for use in public demo environments.

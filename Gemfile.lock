@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cure (0.1.0)
+    cure (0.1.1)
       faker
       rcsv
 

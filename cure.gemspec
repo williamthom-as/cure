@@ -28,5 +28,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov"
   spec.add_dependency "faker"
   spec.add_dependency "rcsv"
-
 end
