@@ -35,7 +35,7 @@ RSpec.describe Cure::Main do
       expect(ctx.row_count).to eq(4)
 
       main.with_temp_dir("/tmp/cure") do
-        main.run
+        main.run_export
         expect(File.exist?("/tmp/cure/csv_file.csv")).to be_truthy
       end
 

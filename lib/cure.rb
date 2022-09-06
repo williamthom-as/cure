@@ -21,6 +21,11 @@ module Cure
       end
     end
 
-
+    # @param [String] csv_file_location
+    # @param [Hash] template
+    # @return [File] output_file
+    def process_file(csv_file_location, template)
+      # to do: allow lib use
+    end
   end
 end

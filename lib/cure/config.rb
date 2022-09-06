@@ -19,6 +19,9 @@ module Cure
       ConfigurationSource.instance.load_config(request_config)
     end
 
+    # @param [String] source_file_location
+    # @param [Hash] template
+    # @param [String] output_dir
     # @return [Config]
     def create_config(source_file_location, template, output_dir)
       Config.new(source_file_location, template, output_dir)
