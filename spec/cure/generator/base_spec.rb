@@ -5,12 +5,12 @@ require "cure/generator/base"
 RSpec.describe Cure::Generator::NumberGenerator do
 
   before :all do
-    @number_generator = Cure::Generator::NumberGenerator.new({"length" => 10})
+    @number_generator = Cure::Generator::NumberGenerator.new({ "length" => 10 })
   end
 
   describe "#new" do
     it "should load options" do
-      expect(@number_generator.options).to eq({"length" => 10})
+      expect(@number_generator.options).to eq({ "length" => 10 })
     end
   end
 
@@ -25,12 +25,12 @@ end
 RSpec.describe Cure::Generator::HexGenerator do
 
   before :all do
-    @generator = Cure::Generator::HexGenerator.new({"length" => 10})
+    @generator = Cure::Generator::HexGenerator.new({ "length" => 10 })
   end
 
   describe "#new" do
     it "should load options" do
-      expect(@generator.options).to eq({"length" => 10})
+      expect(@generator.options).to eq({ "length" => 10 })
     end
   end
 
@@ -110,20 +110,20 @@ end
 RSpec.describe Cure::Generator::PlaceholderGenerator do
 
   before :all do
-    @generator = Cure::Generator::PlaceholderGenerator.new({"name" => "$account_number"})
+    @generator = Cure::Generator::PlaceholderGenerator.new({ "name" => "$account_number" })
 
     mc = MockClass.new
     config = mc.create_config("abc", {
-                                "placeholders" => {
-                                  "$account_number" => "123456"
-                                }
-                              }, "ghi")
+      "placeholders" => {
+        "$account_number" => "123456"
+      }
+    }, "ghi")
     mc.register_config(config)
   end
 
   describe "#new" do
     it "should load options" do
-      expect(@generator.options).to eq({"name" => "$account_number"})
+      expect(@generator.options).to eq({ "name" => "$account_number" })
     end
   end
 
@@ -157,17 +157,13 @@ RSpec.describe Cure::Generator::CharacterGenerator do
     end
 
     it "should be config length if provided" do
-      generator = Cure::Generator::CharacterGenerator.new({"length" => 3})
+      generator = Cure::Generator::CharacterGenerator.new({ "length" => 3 })
       expect(generator.generate.length).to eq(3)
     end
   end
 end
 
 RSpec.describe Cure::Generator::FakerGenerator do
-
-  before :all do
-
-  end
 
   describe "#generate" do
     it "should be 5 if no length provided" do
@@ -177,5 +173,74 @@ RSpec.describe Cure::Generator::FakerGenerator do
                                                       })
       expect(generator.generate.include?("@")).to be_truthy
     end
+  end
+end
+
+RSpec.describe Cure::Generator::CaseGenerator do
+
+  describe "#generate" do
+    it "match on case" do
+      opts = {
+        "statement" => {
+          "switch" => [
+            {
+              "case" => "dog",
+              "return_value" => "doggus"
+            }, {
+              "case" => "cat",
+              "return_value" => "cattus"
+            }
+          ],
+          "else" => [
+            "return_value" => "unknown"
+          ]
+        }
+      }
+
+      generator = Cure::Generator::CaseGenerator.new(opts)
+      expect(generator.generate("dog")).to eq("doggus")
+    end
+
+    it "should return else property if no match" do
+      opts = {
+        "statement" => {
+          "switch" => [
+            {
+              "case" => "dog",
+              "return_value" => "doggus"
+            }, {
+              "case" => "cat",
+              "return_value" => "cattus"
+            }
+          ],
+          "else" => {
+            "return_value" => "unknown"
+          }
+        }
+      }
+
+      generator = Cure::Generator::CaseGenerator.new(opts)
+      expect(generator.generate("unknown")).to eq("unknown")
+    end
+
+    it "should return nil if no else" do
+      opts = {
+        "statement" => {
+          "switch" => [
+            {
+              "case" => "dog",
+              "return_value" => "doggus"
+            }, {
+              "case" => "cat",
+              "return_value" => "cattus"
+            }
+          ]
+        }
+      }
+
+      generator = Cure::Generator::CaseGenerator.new(opts)
+      expect(generator.generate("unknown")).to eq(nil)
+    end
+
   end
 end

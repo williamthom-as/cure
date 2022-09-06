@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors = ["william"]
   spec.email = ["me@williamthom.as"]
 
-  spec.summary = "Anonymize private data inside CSV files"
-  spec.description = "Anonymize private data inside CSV files"
+  spec.summary = "Cure provides the ability to transform CSVs using descriptive templates."
+  spec.description = "Transform, select, anonymize or manipulate data inside CSV files with templates."
   spec.homepage = "https://www.github.com/williamthom-as/cure"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
