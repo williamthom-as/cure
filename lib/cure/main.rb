@@ -16,13 +16,26 @@ module Cure
     # @param [String] csv_file_loc
     # @param [String] output_dir
     # @return [Cure::Main]
-    def self.init(template_file_loc, csv_file_loc, output_dir)
+    def self.init_from_file(template_file_loc, csv_file_loc, output_dir)
       # Run all init stuff here.
       # Run validator?
 
       main = Main.new
       template_hash = JSON.parse(main.read_file(template_file_loc))
 
+      main.setup(template_hash, csv_file_loc, output_dir)
+      main
+    end
+
+    # @param [Hash] template_hash
+    # @param [String] csv_file_loc
+    # @param [String] output_dir
+    # @return [Cure::Main]
+    def self.init_from_hash(template_hash, csv_file_loc, output_dir)
+      # Run all init stuff here.
+      # Run validator?
+
+      main = Main.new
       main.setup(template_hash, csv_file_loc, output_dir)
       main
     end

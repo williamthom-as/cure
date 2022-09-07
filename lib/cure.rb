@@ -24,8 +24,8 @@ module Cure
     # @param [String] csv_file_location
     # @param [Hash] template
     # @return [File] output_file
-    def process_file(csv_file_location, template)
-      # to do: allow lib use
+    def process(csv_file_location, template)
+      Main.init_from_file()
     end
   end
 end

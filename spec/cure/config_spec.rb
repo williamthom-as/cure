@@ -10,7 +10,7 @@ RSpec.describe Cure::Main do
       template_file_loc = "../../spec/cure/test_files/test_template.json"
       tmp_location = "/tmp/cure"
 
-      main = Cure::Main.init(template_file_loc, source_file_loc, tmp_location)
+      main = Cure::Main.init_from_file(template_file_loc, source_file_loc, tmp_location)
       expect(main.is_initialised).to eq(true)
       expect(main.transformer).to_not be(nil)
 
@@ -27,7 +27,7 @@ RSpec.describe Cure::Main do
       template_file_loc = "../../spec/cure/test_files/test_template.json"
       tmp_location = "/tmp/cure"
 
-      main = Cure::Main.init(template_file_loc, source_file_loc, tmp_location)
+      main = Cure::Main.init_from_file(template_file_loc, source_file_loc, tmp_location)
       ctx = main.build_ctx
 
       expect(ctx.column_headers).to eq({"test_column" => 0, "test_column2" => 1})
