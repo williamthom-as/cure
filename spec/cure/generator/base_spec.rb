@@ -113,11 +113,7 @@ RSpec.describe Cure::Generator::PlaceholderGenerator do
     @generator = Cure::Generator::PlaceholderGenerator.new({ "name" => "$account_number" })
 
     mc = MockClass.new
-    config = mc.create_config("abc", {
-      "placeholders" => {
-        "$account_number" => "123456"
-      }
-    }, "ghi")
+    config = mc.create_config("abc", Cure::Template.new.with_placeholder("$account_number", "123456"), "ghi")
     mc.register_config(config)
   end
 

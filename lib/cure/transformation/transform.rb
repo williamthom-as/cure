@@ -6,6 +6,7 @@ require "rcsv"
 
 module Cure
   module Transformation
+    # Operational file for conducting transforms
     class Transform
       include Log
       include FileHelpers
@@ -14,15 +15,8 @@ module Cure
       attr_accessor :candidates
 
       # @param [Array<Candidate>] candidates
-      def initialize(candidates=[])
+      def initialize(candidates)
         @candidates = candidates
-      end
-
-      # @param [Candidate] candidate
-      # @return [Cure::Transformation::Transform]
-      def with_candidate(candidate)
-        @candidates.push(candidate)
-        self
       end
 
       # @param [String] csv_file_location

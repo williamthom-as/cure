@@ -73,9 +73,7 @@ module Cure
       register_config(config)
 
       # This is unnecessary, leave for now but fix later until we move Template to builder.
-      candidates = config.template.candidates.map { |c| Cure::Transformation::Candidate.new.from_json(c) }
-
-      @transformer = Cure::Transformation::Transform.new(candidates)
+      @transformer = Cure::Transformation::Transform.new(config.template.candidates)
       @is_initialised = true
 
       self
