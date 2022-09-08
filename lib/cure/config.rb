@@ -20,7 +20,7 @@ module Cure
     end
 
     # @param [String] source_file_location
-    # @param [Hash] template
+    # @param [Cure::Template] template
     # @param [String] output_dir
     # @return [Config]
     def create_config(source_file_location, template, output_dir)
@@ -31,7 +31,7 @@ module Cure
       attr_accessor :source_file_location, :template, :output_dir
 
       # @param [String] source_file_location
-      # @param [Hash] template
+      # @param [Cure::Template] template
       # @param [String] output_dir
       def initialize(source_file_location, template, output_dir)
         @source_file_location = source_file_location

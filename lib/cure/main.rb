@@ -2,6 +2,7 @@
 
 require "cure"
 require "json"
+require "cure/template"
 require "cure/transformation/candidate"
 require "cure/transformation/transform"
 require "cure/export/exporter"
@@ -22,8 +23,8 @@ module Cure
 
       main = Main.new
       template_hash = JSON.parse(main.read_file(template_file_loc))
-
-      main.setup(template_hash, csv_file_loc, output_dir)
+      template = Template.from_hash(template_hash)
+      main.setup(csv_file_loc, template, output_dir)
       main
     end
 
@@ -36,7 +37,8 @@ module Cure
       # Run validator?
 
       main = Main.new
-      main.setup(template_hash, csv_file_loc, output_dir)
+      template = Template.from_hash(template_hash)
+      main.setup(csv_file_loc, template, output_dir)
       main
     end
 
@@ -62,15 +64,16 @@ module Cure
       @transformer.extract_from_file(config.source_file_location)
     end
 
-    # @param [Hash] template
     # @param [String] csv_file_location
+    # @param [Cure::Template] template
     # @param [String] output_dir
     # @return [Cure::Main]
-    def setup(template, csv_file_location, output_dir)
+    def setup(csv_file_location, template, output_dir)
       config = create_config(csv_file_location, template, output_dir)
       register_config(config)
 
-      candidates = config.template["candidates"].map { |c| Cure::Transformation::Candidate.new.from_json(c) }
+      # This is unnecessary, leave for now but fix later until we move Template to builder.
+      candidates = config.template.candidates.map { |c| Cure::Transformation::Candidate.new.from_json(c) }
 
       @transformer = Cure::Transformation::Transform.new(candidates)
       @is_initialised = true

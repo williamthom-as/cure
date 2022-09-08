@@ -16,7 +16,7 @@ RSpec.describe Cure::Main do
 
       config = main.config
       expect(config.source_file_location).to eq(source_file_loc)
-      expect(config.template.class).to eq(Hash)
+      expect(config.template.class).to eq(Cure::Template)
       expect(config.output_dir).to eq(tmp_location)
     end
   end
@@ -39,7 +39,7 @@ RSpec.describe Cure::Main do
 
       config = main.config
       expect(config.source_file_location).to eq(source_file_loc)
-      expect(config.template.class).to eq(Hash)
+      expect(config.template.class).to eq(Cure::Template)
       expect(config.output_dir).to eq(tmp_location)
     end
   end
