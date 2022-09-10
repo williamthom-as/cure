@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "singleton"
+require "cure/validators"
 
 module Cure
   module Strategy
@@ -43,6 +44,9 @@ module Cure
     end
 
     class Base
+      extend Validators
+
+      include Validators::Helpers
       include History
 
       # Additional details needed to make substitution.
@@ -196,14 +200,26 @@ module Cure
     end
 
     class SplitStrategy < Base
+
+      attr_reader :token, :index
+
+      validates :@token
+      validates :@index1
+
+      def initialize(options)
+        @token = options["token"]
+        @index = options["index"]
+
+        super(options)
+      end
+
       # @param [String] source_value
       def _retrieve_value(source_value)
-        split_token = @options["token"]
+        valid?
+        return unless source_value.include?(@token)
 
-        return unless source_value.include?(split_token)
-
-        result_arr = source_value.split(split_token)
-        result_arr[@options["index"]]
+        result_arr = source_value.split(@token)
+        result_arr[@index]
       end
 
       # @param [String] source_value
@@ -215,7 +231,7 @@ module Cure
         return unless source_value.include?(split_token)
 
         result_arr = source_value.split(split_token)
-        result_arr[@options["index"]] = generated_value if value?(result_arr[@options["index"]])
+        result_arr[@index] = generated_value if value?(result_arr[@index])
         result_arr.join(split_token)
       end
     end
