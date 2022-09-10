@@ -72,7 +72,10 @@ module Cure
       # @param [Hash] opts
       def strategy=(opts)
         clazz_name = "Cure::Strategy::#{opts["name"].to_s.capitalize}Strategy"
-        @strategy = Kernel.const_get(clazz_name).new(opts["options"] || {})
+        strategy = Kernel.const_get(clazz_name).new(opts["options"] || {})
+        raise "Object fails validation" unless strategy.obj_is_valid?
+
+        @strategy = strategy
       end
 
       # @param [Hash] opts

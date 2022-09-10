@@ -11,28 +11,30 @@ module Cure
 
       # @param [String] prop
       # @param [Object] validator
-      def register_validator(prop, validator)
-        @validators[prop.to_sym] = validator
+      def register_validator(caller, prop, validator)
+        @validators[caller] = [] unless @validators.has_key? caller
+        @validators[caller] << {prop: "@#{prop}".to_sym, validator: validator}
       end
 
-      # @param [Object] thiz
       # @return [TrueClass, FalseClass]
-      def obj_is_valid?(thiz)
-        variables = instance_variables_hash(thiz)
-        @validators.all? { |k, _v| variables[k] }
+      def validate(zelf)
+        return true unless @validators.has_key? zelf.class
+
+        variables = instance_variables_hash(zelf)
+        @validators[zelf.class].all? { |k| variables[k[:prop]] } # actually run validation
       end
 
-      # @param [Object] thiz
+      # @param [Object] zelf
       # @return [Hash]
-      def instance_variables_hash(thiz)
-        thiz.instance_variables.each_with_object({}) do |attribute, hash|
-          hash[attribute] = thiz.instance_variable_get(attribute)
+      def instance_variables_hash(zelf)
+        zelf.instance_variables.each_with_object({}) do |attribute, hash|
+          hash[attribute] = zelf.instance_variable_get(attribute)
         end
       end
     end
 
     def validates(property, *args)
-      Validators.register_validator(property, {})
+      Validators.register_validator(self, property, {})
     end
 
     def each_validator(&block)
@@ -42,7 +44,7 @@ module Cure
     module Helpers
 
       def valid?
-        Validators.obj_is_valid?(self)
+        Validators.validate(self)
       end
     end
   end

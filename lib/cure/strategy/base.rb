@@ -76,7 +76,22 @@ module Cure
         value
       end
 
+      def obj_is_valid?
+        valid?
+      end
+
       private
+
+      def replace_partial_record
+        replace_partial = @options["replace_partial"]
+        return replace_partial || false unless replace_partial.instance_of?(String)
+
+        (replace_partial || "true").to_s == "true"
+      end
+
+      def value?(value)
+        !value.nil? && value != ""
+      end
 
       # @param [String] _source_value
       def _retrieve_value(_source_value)
@@ -88,17 +103,6 @@ module Cure
       # @return [String]
       def _replace_value(_source_value, _generated_value)
         raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
-      end
-
-      def replace_partial_record
-        replace_partial = @options["replace_partial"]
-        return replace_partial || false unless replace_partial.instance_of?(String)
-
-        (replace_partial || "true").to_s == "true"
-      end
-
-      def value?(value)
-        !value.nil? && value != ""
       end
     end
 
@@ -120,10 +124,18 @@ module Cure
     end
 
     class RegexStrategy < Base
+
+      validates :regex_cg
+
+      def initialize(options)
+        @regex_cg = options["regex_cg"]
+        super(options)
+      end
+
       # gsub catchment group
       # @param [String] source_value
       def _retrieve_value(source_value)
-        m = /#{@options["regex_cg"]}/.match(source_value)
+        m = /#{@regex_cg}/.match(source_value)
         return unless m.instance_of?(MatchData) && (!m[1].nil? && m[1] != "")
 
         m[1]
@@ -133,7 +145,7 @@ module Cure
       # @param [String] generated_value
       # @return [String]
       def _replace_value(source_value, generated_value)
-        m = /#{@options["regex_cg"]}/.match(source_value)
+        m = /#{@regex_cg}/.match(source_value)
         return unless m.instance_of?(MatchData) && (!m[1].nil? && m[1] != "")
 
         generated_value unless replace_partial_record
@@ -143,58 +155,81 @@ module Cure
     end
 
     class MatchStrategy < Base
+
+      validates :match
+
+      def initialize(options)
+        @match = options["match"]
+        super(options)
+      end
+
       # gsub catchment group
       # @param [String] source_value
       def _retrieve_value(source_value)
-        @options["match"] || nil if source_value.include? @options["match"]
+        @match || nil if source_value.include? @match
       end
 
       # @param [String] source_value
       # @param [String] generated_value
       # @return [String]
       def _replace_value(source_value, generated_value)
-        return unless source_value.include? @options["match"]
+        return unless source_value.include? @match
 
-        source_value.gsub(@options["match"], generated_value)
+        source_value.gsub(@match, generated_value)
       end
     end
 
     class StartWithStrategy < Base
+
+      validates :match
+
+      def initialize(options)
+        @match = options["match"]
+        super(options)
+      end
+
       # gsub catchment group
       # @param [String] source_value
       def _retrieve_value(source_value)
-        @options["match"] || nil if source_value.start_with? @options["match"]
+        @match || nil if source_value.start_with? @match
       end
 
       # @param [String] source_value
       # @param [String] generated_value
       # @return [String]
       def _replace_value(source_value, generated_value)
-        return unless source_value.start_with? @options["match"]
+        return unless source_value.start_with? @match
 
         return generated_value unless replace_partial_record
 
-        @options["match"] + generated_value
-        # source_value.chomp(@options["match"]) + generated_value
+        @match + generated_value
       end
     end
 
     class EndWithStrategy < Base
+
+      validates :match
+
+      def initialize(options)
+        @match = options["match"]
+        super(options)
+      end
+
       # gsub catchment group
       # @param [String] source_value
       def _retrieve_value(source_value)
-        @options["match"] || nil if source_value.end_with? @options["match"]
+        @match || nil if source_value.end_with? @match
       end
 
       # @param [String] source_value
       # @param [String] generated_value
       # @return [String]
       def _replace_value(source_value, generated_value)
-        return unless source_value.end_with? @options["match"]
+        return unless source_value.end_with? @match
 
         return generated_value unless replace_partial_record
 
-        generated_value + @options["match"]
+        generated_value + @match
         # generated_value + source_value.reverse.chomp(@options["match"].reverse).reverse
       end
     end
@@ -203,8 +238,8 @@ module Cure
 
       attr_reader :token, :index
 
-      validates :@token
-      validates :@index1
+      validates :token
+      validates :index
 
       def initialize(options)
         @token = options["token"]
@@ -215,7 +250,6 @@ module Cure
 
       # @param [String] source_value
       def _retrieve_value(source_value)
-        valid?
         return unless source_value.include?(@token)
 
         result_arr = source_value.split(@token)

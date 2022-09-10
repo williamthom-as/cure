@@ -69,6 +69,8 @@ RSpec.describe Cure::Strategy::Base do
   describe "replace_partial" do
     it "should replace the start if partial is set" do
       start_strategy = Cure::Strategy::StartWithStrategy.new({"match" => "my_val_", "replace_partial" => true})
+      expect(start_strategy.valid?).to eq(true)
+
       result = start_strategy.extract("my_val_replace_me", Cure::Generator::NumberGenerator.new({"length" => 10}))
 
       expect(result.length).to eq(10 + "my_val_".length)
@@ -101,7 +103,6 @@ RSpec.describe Cure::Strategy::Base do
       strat = Cure::Strategy::SplitStrategy.new({"token" => ":", "index" => 4})
       result = strat.extract("arn:aws:apigateway:us-east-1::/restapis/abcdef/stages/dev", Cure::Generator::NumberGenerator.new({"length" => 10}))
       expect(result).to eq("arn:aws:apigateway:us-east-1::/restapis/abcdef/stages/dev")
-
       result_two = strat.extract("arn:aws:apigateway:us-east-1:abcdef:/restapis/abcdef/stages/dev", Cure::Generator::RedactGenerator.new({"length" => 3}))
       expect(result_two).to eq("arn:aws:apigateway:us-east-1:XXX:/restapis/abcdef/stages/dev")
     end
