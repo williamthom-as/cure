@@ -40,12 +40,13 @@ module Cure
 
       attr_reader :token, :index
 
-      validates :token
-      validates :index
+      validates :token, validator: :presence
+      validates :index, validator: :presence
 
       def initialize(options=nil)
         @token = options["token"]
         @index = options["index"]
+        valid?
 
         super(options)
       end
