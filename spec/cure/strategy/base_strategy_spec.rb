@@ -3,6 +3,7 @@
 require "cure/strategy/imports"
 require "cure/generator/imports"
 
+# rubocop:disable Metrics/BlockLength
 RSpec.describe Cure::Strategy::BaseStrategy do
   before :all do
     @base_strategy = Cure::Strategy::BaseStrategy.new({})
@@ -108,3 +109,4 @@ RSpec.describe Cure::Strategy::BaseStrategy do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

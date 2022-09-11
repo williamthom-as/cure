@@ -20,10 +20,10 @@ module Cure
     end
 
     # @param [String] message
-    # @param [Exception/Nil] ex
-    def log_error(message, ex=nil)
+    # @param [Exception/Nil] exception
+    def log_error(message, exception=nil)
       Cure.logger.error(message)
-      Cure.logger.error(ex.backtrace.join("\n")) unless ex.nil?
+      Cure.logger.error(exception.backtrace.join("\n")) unless exception.nil?
     end
   end
 end

@@ -3,6 +3,7 @@
 require "json"
 require "cure/config"
 
+# rubocop:disable Metrics/BlockLength
 RSpec.describe Cure::Main do
   describe "#init_from_file" do
     it "should set up the main service" do
@@ -76,3 +77,4 @@ RSpec.describe Cure::Main do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

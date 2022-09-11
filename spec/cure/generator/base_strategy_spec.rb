@@ -157,6 +157,7 @@ RSpec.describe Cure::Generator::FakerGenerator do
   end
 end
 
+# rubocop:disable Metrics/BlockLength
 RSpec.describe Cure::Generator::CaseGenerator do
   describe "#generate" do
     it "match on case" do
@@ -223,3 +224,4 @@ RSpec.describe Cure::Generator::CaseGenerator do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength
