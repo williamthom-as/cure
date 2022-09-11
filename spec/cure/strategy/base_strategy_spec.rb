@@ -21,7 +21,7 @@ RSpec.describe Cure::Strategy::BaseStrategy do
       strategy.clear_history
 
       expect(strategy.history).to eq({})
-      expect(strategy.options).to eq(opts)
+      expect(strategy.params.regex_cg).to eq(opts["regex_cg"])
     end
   end
 
@@ -68,7 +68,7 @@ RSpec.describe Cure::Strategy::BaseStrategy do
   describe "replace_partial" do
     it "should replace the start if partial is set" do
       start_strategy = Cure::Strategy::StartWithStrategy.new({ "match" => "my_val_", "replace_partial" => true})
-      expect(start_strategy.valid?).to eq(true)
+      expect(start_strategy.params.valid?).to eq(true)
 
       result = start_strategy.extract("my_val_replace_me", Cure::Generator::NumberGenerator.new({ "length" => 10}))
 

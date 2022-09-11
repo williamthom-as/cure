@@ -111,7 +111,7 @@ module Cure
       attr_accessor :replace_partial
 
       def initialize(options={})
-        @replace_partial = options["replace_partial"] || "true"
+        @replace_partial = options["replace_partial"] || "false"
         @options = options
       end
 
