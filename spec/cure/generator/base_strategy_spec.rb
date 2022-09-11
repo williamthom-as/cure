@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "cure/generator/base"
+require "cure/generator/imports"
 
 RSpec.describe Cure::Generator::NumberGenerator do
 
@@ -83,10 +83,10 @@ RSpec.describe Cure::Generator::GuidGenerator do
 
 end
 
-RSpec.describe Cure::Generator::Base do
+RSpec.describe Cure::Generator::BaseGenerator do
 
   before :all do
-    @generator = Cure::Generator::Base.new({})
+    @generator = Cure::Generator::BaseGenerator.new({})
   end
 
   describe "#new" do

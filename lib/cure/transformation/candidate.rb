@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require "cure/object_helpers"
-require "cure/strategy/base"
-require "cure/generator/base"
+require "cure/strategy/imports"
+require "cure/generator/imports"
 require "cure/log"
 
 module Cure
@@ -56,11 +56,11 @@ module Cure
       include ObjectHelpers
 
       # What sort of replacement is done, full/random/lookup/partial.
-      # @return [Strategy::Base]
+      # @return [Strategy::BaseStrategy]
       attr_reader :strategy
 
       # What sort of data needs to be generated.
-      # @return [Generator::Base]
+      # @return [Generator::BaseGenerator]
       attr_reader :generator
 
       # @param [String] source_value
@@ -73,7 +73,6 @@ module Cure
       def strategy=(opts)
         clazz_name = "Cure::Strategy::#{opts["name"].to_s.capitalize}Strategy"
         strategy = Kernel.const_get(clazz_name).new(opts["options"] || {})
-        raise "Object fails validation" unless strategy.obj_is_valid?
 
         @strategy = strategy
       end

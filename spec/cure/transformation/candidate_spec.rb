@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require "cure/transformation/candidate"
-require "cure/generator/base"
-require "cure/strategy/base"
+require "cure/generator/base_generator"
+require "cure/strategy/base_strategy"
 
 RSpec.describe Cure::Transformation::Candidate do
 
