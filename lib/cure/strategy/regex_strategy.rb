@@ -5,7 +5,6 @@ require "cure/strategy/base_strategy"
 module Cure
   module Strategy
     class RegexStrategy < BaseStrategy
-
       # Additional details needed to make substitution.
       # @return [RegexStrategyParams]
       attr_accessor :params
@@ -37,7 +36,6 @@ module Cure
     end
 
     class RegexStrategyParams < BaseStrategyParams
-
       attr_reader :regex_cg
 
       validates :regex_cg

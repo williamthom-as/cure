@@ -5,7 +5,6 @@ require "cure/strategy/base_strategy"
 module Cure
   module Strategy
     class MatchStrategy < BaseStrategy
-
       # Additional details needed to make substitution.
       # @return [MatchStrategyParams]
       attr_accessor :params
@@ -31,7 +30,6 @@ module Cure
     end
 
     class MatchStrategyParams < BaseStrategyParams
-
       attr_reader :match
 
       validates :match

@@ -38,5 +38,3 @@ main = Cure::Main.init_from_file(conf[:template_file_location], conf[:source_fil
 
 log_info "... set up complete. Beginning process"
 main.run_export
-
-

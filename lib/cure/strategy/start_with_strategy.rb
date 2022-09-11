@@ -34,7 +34,6 @@ module Cure
     end
 
     class StartWithStrategyParams < BaseStrategyParams
-
       attr_reader :match
 
       validates :match

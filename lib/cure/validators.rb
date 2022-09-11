@@ -2,7 +2,6 @@
 
 module Cure
   module Validators
-
     # Should be an array, we can have multiple validators for the same obj
     @validators = {}
 
@@ -60,7 +59,6 @@ module Cure
     end
 
     module Helpers
-
       def valid?(suppress_error: false)
         status = Validators.validate(self)
         return true if status

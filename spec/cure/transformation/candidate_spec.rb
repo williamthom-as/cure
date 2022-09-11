@@ -4,8 +4,7 @@ require "cure/transformation/candidate"
 require "cure/generator/base_generator"
 require "cure/strategy/base_strategy"
 
-RSpec.describe Cure::Transformation::Candidate do
-
+RSpec.describe Cure::Transformation::Candidate do # rubocop:disable Metrics/BlockLength
   config = %(
     {
       "column" : "bill/PayerAccountId",
@@ -124,12 +123,9 @@ RSpec.describe Cure::Transformation::Candidate do
       val_three = candidate.perform("i-11111111")
       val_four = candidate.perform("ABCNOMATCHFORME")
 
-
       expect(val).to eq(val_two)
       expect(val_three).to_not eq("i-11111111")
       expect(val_four.length).to eq(36)
     end
-
   end
-
 end

@@ -85,4 +85,3 @@ module Cure
     end
   end
 end
-

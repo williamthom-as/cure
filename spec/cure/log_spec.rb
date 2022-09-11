@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "json"
 require "cure/log"
 
@@ -7,7 +8,6 @@ class MockClass
 end
 
 RSpec.describe Cure::Log do
-
   describe "#log_debug" do
     it "should log" do
       mc = MockClass.new

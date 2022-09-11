@@ -4,7 +4,6 @@ require "json"
 require "cure/transformation/candidate"
 
 RSpec.describe Cure::Transformation::Transform do
-
   before :all do
     @source_file_loc = "../../spec/cure/test_files/test_csv_file.csv"
     template_file_loc = "./spec/cure/test_files/test_template.json"

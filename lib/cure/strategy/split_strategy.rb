@@ -5,7 +5,6 @@ require "cure/strategy/base_strategy"
 module Cure
   module Strategy
     class SplitStrategy < BaseStrategy
-
       # Additional details needed to make substitution.
       # @return [SplitStrategyParams]
       attr_accessor :params
@@ -37,7 +36,6 @@ module Cure
     end
 
     class SplitStrategyParams < BaseStrategyParams
-
       attr_reader :token, :index
 
       validates :token, validator: :presence

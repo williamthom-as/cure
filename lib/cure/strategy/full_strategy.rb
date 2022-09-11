@@ -5,7 +5,6 @@ require "cure/strategy/base_strategy"
 module Cure
   module Strategy
     class FullStrategy < BaseStrategy
-
       private
 
       # @param [String] source_value

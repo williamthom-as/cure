@@ -8,7 +8,6 @@ require "cure/transformation/transform"
 require "cure/export/exporter"
 
 module Cure
-
   class Main
     include Configuration
     include FileHelpers

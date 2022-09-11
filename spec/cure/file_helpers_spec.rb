@@ -8,7 +8,6 @@ class MockClass
 end
 
 RSpec.describe Cure::FileHelpers do
-
   describe "#with_temp_dir" do
     it "should clean dir by default" do
       mc = MockClass.new
@@ -23,5 +22,4 @@ RSpec.describe Cure::FileHelpers do
       expect(File.exist?("/tmp/cure/abc.txt")).to be_falsey
     end
   end
-
 end

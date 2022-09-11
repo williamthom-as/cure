@@ -1,7 +1,7 @@
 # frozen_string_literal: true
+
 require "json"
 require "cure/config"
-
 
 RSpec.describe Cure::Main do
   describe "#init_from_file" do
@@ -43,7 +43,6 @@ RSpec.describe Cure::Main do
       expect(config.output_dir).to eq(tmp_location)
     end
   end
-
 
   describe "#build_ctx" do
     it "should build ctx and run from file" do

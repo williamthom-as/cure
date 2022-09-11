@@ -2,7 +2,6 @@
 
 module Cure
   class Template
-
     # @param [Array<Candidate>] candidates
     attr_accessor :candidates
 
