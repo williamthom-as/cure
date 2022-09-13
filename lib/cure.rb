@@ -3,6 +3,7 @@
 require "cure/log"
 require "cure/config"
 require "cure/version"
+require "cure/template"
 
 require "cure/file_helpers"
 require "cure/transformation/transform"
@@ -24,8 +25,8 @@ module Cure
     # @param [String] csv_file_location
     # @param [Hash] template
     # @return [File] output_file
-    def process(_csv_file_location, _template)
-      Main.init_from_file
+    def process(template, csv_file_location, output_dir)
+      # Main.init_from_hash(template, csv_file_location, output_dir)
     end
   end
 end

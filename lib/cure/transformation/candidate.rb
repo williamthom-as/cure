@@ -20,7 +20,12 @@ module Cure
       # @return [List<Translation>]
       attr_reader :translations
 
+      # @return [Translation]
       attr_reader :no_match_translation
+
+      def initialize
+        @translations = []
+      end
 
       # @param [String] source_value
       # @return [String]
@@ -43,10 +48,12 @@ module Cure
         value
       end
 
+      # @param [Hash] opts
       def translations=(opts)
         @translations = opts.map { |o| Translation.new.from_hash(o) }
       end
 
+      # @param [Hash] opts
       def no_match_translation=(opts)
         @no_match_translation = Translation.new.from_hash(opts)
       end
@@ -82,6 +89,7 @@ module Cure
         clazz_name = "Cure::Generator::#{opts["name"].to_s.capitalize}Generator"
         @generator = Kernel.const_get(clazz_name).new(opts["options"] || {})
       end
+
     end
   end
 end

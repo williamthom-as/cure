@@ -5,6 +5,7 @@ require "cure/generator/base_generator"
 module Cure
   module Generator
     class CharacterGenerator < BaseGenerator
+
       def initialize(options=nil)
         super(options)
       end
