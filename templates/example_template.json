@@ -1,38 +1,47 @@
 {
-  "replacements" : [
-    {
-      "column" : "bill/PayerAccountId",
-      "strategy" : {
-        "name": "full",
-        "options" : {}
-      },
-      "generator" : {
-        "name" : "placeholder",
-        "options" : {
-          "name" : "$account_number"
-        }
-      }
-    },{
-      "column" : "lineItem/ResourceId",
-      "strategy" : {
-        "name": "regex",
-        "options" : {
-          "regex" : ""
-        }
-      },
-      "generator" : {
-        "name": "number",
-        "options" : {
-          "length" : 12
-        }
-      }
-    }
-  ],
-  "placeholders" : {
-    "$account_number" : "1234567891234"
+  "extraction": {
+    "named_ranges": [{
+      "name": "main",
+      "section": "B2:F2",
+      "has_headers": true
+    }]
   },
-  "column_export" : {
-    "type" : "blacklist",
-    "columns" : []
+  "replacements": {
+    "candidates": [
+      {
+        "column": "bill/PayerAccountId",
+        "strategy": {
+          "name": "full",
+          "options": {}
+        },
+        "generator": {
+          "name": "placeholder",
+          "options": {
+            "name": "$account_number"
+          }
+        }
+      },{
+        "column": "lineItem/ResourceId",
+        "strategy": {
+          "name": "regex",
+          "options": {
+            "regex": ""
+          }
+        },
+        "generator": {
+          "name": "number",
+          "options": {
+            "length": 12
+          }
+        }
+      }
+    ],
+    "placeholders": {
+      "$account_number": "1234567891234"
+    }
+  },
+  "export": {
+    "type": "blacklist",
+    "columns": []
   }
 }

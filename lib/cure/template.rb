@@ -2,7 +2,7 @@
 
 module Cure
   class Template
-    # @param [Array<Candidate>] candidates
+    # @param [Array<Transformation::Candidate>] candidates
     attr_accessor :candidates
 
     # @param [Array<Hash>] placeholders
@@ -23,7 +23,7 @@ module Cure
       this
     end
 
-    # @param [Candidate] candidate
+    # @param [Transformation::Candidate] candidate
     # @return [Cure::Template]
     def with_candidate(candidate)
       @candidates.push(candidate)
