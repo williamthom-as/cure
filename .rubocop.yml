@@ -26,6 +26,9 @@ Metrics/ClassLength:
 Layout/SpaceAroundEqualsInParameterDefault:
   EnforcedStyle: no_space
 
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+
 # We do not need to support Ruby 1.9, so this is good to use.
 Style/SymbolArray:
   Enabled: true

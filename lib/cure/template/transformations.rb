@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Cure
-  class Template
+  class Transformations
     # @param [Array<Transformation::Candidate>] candidates
     attr_accessor :candidates
 
@@ -15,16 +15,16 @@ module Cure
     end
 
     # @param [Hash] hash
-    # @return [Cure::Template]
+    # @return [Cure::Transformations]
     def self.from_hash(hash)
-      this = Cure::Template.new
+      this = Cure::Transformations.new
       this.candidates = hash["candidates"].map { |c| Cure::Transformation::Candidate.new.from_json(c) }
       this.placeholders = hash["placeholders"]
       this
     end
 
     # @param [Transformation::Candidate] candidate
-    # @return [Cure::Template]
+    # @return [Cure::Transformations]
     def with_candidate(candidate)
       @candidates.push(candidate)
       self
@@ -32,7 +32,7 @@ module Cure
 
     # @param [String] key
     # @param [Object] value
-    # @return [Cure::Template]
+    # @return [Cure::Transformations]
     def with_placeholder(key, value)
       @placeholders[key.to_s] = value
       self

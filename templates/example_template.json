@@ -2,11 +2,10 @@
   "extraction": {
     "named_ranges": [{
       "name": "main",
-      "section": "B2:F2",
-      "has_headers": true
+      "section": "B2:F2"
     }]
   },
-  "replacements": {
+  "transformations": {
     "candidates": [
       {
         "column": "bill/PayerAccountId",

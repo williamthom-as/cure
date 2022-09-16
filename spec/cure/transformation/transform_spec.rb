@@ -9,7 +9,7 @@ RSpec.describe Cure::Transformation::Transform do
     template_file_loc = "./spec/cure/test_files/test_template.json"
 
     json = JSON.parse(File.read(template_file_loc))
-    candidates = json["candidates"].map { |x| Cure::Transformation::Candidate.new.from_json(x) }
+    candidates = json["transformations"]["candidates"].map { |x| Cure::Transformation::Candidate.new.from_json(x) }
 
     @transform = Cure::Transformation::Transform.new(candidates)
   end

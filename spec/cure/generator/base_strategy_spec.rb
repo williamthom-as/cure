@@ -101,8 +101,19 @@ RSpec.describe Cure::Generator::PlaceholderGenerator do
   before :all do
     @generator = Cure::Generator::PlaceholderGenerator.new({"name" => "$account_number"})
 
+    conf = {
+      "transformations" => {
+        "candidates" => [],
+        "placeholders" => {
+          "$account_number" => "123456"
+        }
+      }
+    }
+
+    template = Cure::Template.from_hash(conf)
+
     mc = MockClass.new
-    config = mc.create_config("abc", Cure::Template.new.with_placeholder("$account_number", "123456"), "ghi")
+    config = mc.create_config("abc", template, "ghi")
     mc.register_config(config)
   end
 

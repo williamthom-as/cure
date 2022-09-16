@@ -27,11 +27,13 @@ RSpec.describe Cure::Main do
       source_file_loc = "../../spec/cure/test_files/test_csv_file.csv"
       tmp_location = "/tmp/cure"
       template = {
-        "candidates" => [{
-          "column" => "my_col",
-          "translations" => [{}]
-        }],
-        "placeholders" => []
+        "transformations" => {
+          "candidates" => [{
+            "column" => "my_col",
+            "translations" => [{}]
+          }],
+          "placeholders" => []
+        }
       }
 
       main = Cure::Main.init_from_hash(template, source_file_loc, tmp_location)

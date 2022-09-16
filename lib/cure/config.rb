@@ -40,7 +40,7 @@ module Cure
       end
 
       def placeholders
-        @template.placeholders || {}
+        @template.transformations.placeholders || {}
       end
     end
 

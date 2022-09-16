@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-require "cure"
-require "json"
-require "cure/template"
+require "cure/template/template"
 require "cure/transformation/candidate"
 require "cure/transformation/transform"
 require "cure/export/exporter"
+
+require "cure"
+require "json"
 
 module Cure
   class Main
@@ -72,7 +73,7 @@ module Cure
       register_config(config)
 
       # This is unnecessary, leave for now but fix later until we move Template to builder.
-      @transformer = Cure::Transformation::Transform.new(config.template.candidates)
+      @transformer = Cure::Transformation::Transform.new(config.template.transformations.candidates)
       @is_initialised = true
 
       self

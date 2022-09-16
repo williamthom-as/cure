@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 require "cure/generator/base_generator"
+require "cure/config"
 
 module Cure
   module Generator
     class PlaceholderGenerator < BaseGenerator
-      include Configuration
+      include Cure::Configuration
 
       private
 
