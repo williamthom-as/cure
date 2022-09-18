@@ -55,12 +55,12 @@ module Cure
     def run_export
       raise "Not init" unless @transformer
 
-      ctx = build_ctx
-      export(ctx)
+      result = run_transform
+      export(result)
     end
 
-    # @return [Cure::Transform::TransformContext]
-    def build_ctx
+    # @return [Cure::Transform::TransformResult]
+    def run_transform
       # this is a terrible name [build_ctx]
       @transformer.extract_from_file(config.source_file_location)
     end
@@ -82,9 +82,9 @@ module Cure
 
     private
 
-    # @param [Cure::Transform::TransformContext] ctx
-    def export(ctx)
-      Cure::Export::Exporter.export_ctx(ctx[0], config.output_dir, "csv_file")
+    # @param [Array<Cure::Transform::TransformResult>] result
+    def export(result)
+      Cure::Export::Exporter.export_result(result[0], config.output_dir, "csv_file")
     end
   end
 end

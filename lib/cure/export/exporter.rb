@@ -9,7 +9,7 @@ module Cure
       include Cure::FileHelpers
       include Log
 
-      def self.export_ctx(ctx, output_dir, file_name)
+      def self.export_result(ctx, output_dir, file_name)
         column_headers = ctx.column_headers.keys
 
         exporter = Exporter.new

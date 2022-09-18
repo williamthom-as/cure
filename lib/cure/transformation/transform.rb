@@ -24,21 +24,21 @@ module Cure
       end
 
       # @param [String] csv_file_location
-      # @return [Array<TransformContext>]
+      # @return [Array<TransformResult>]
       def extract_from_file(csv_file_location)
         file_contents = read_file(csv_file_location)
         extract_from_contents(file_contents)
       end
 
       # @param [String] file_contents
-      # @return [Array<TransformContext>] # make this transformation results?
+      # @return [Array<TransformResult>] # make this transformation results?
       def extract_from_contents(file_contents)
         parsed_content = parse_csv(file_contents, header: :none)
 
         log_info("Parsed CSV into #{parsed_content.length} sections.")
 
         parsed_content.map do |section|
-          ctx = TransformContext.new
+          ctx = TransformResult.new
           section["rows"].each do |row|
             ctx.row_count += 1
 
@@ -100,7 +100,7 @@ module Cure
       end
     end
 
-    class TransformContext
+    class TransformResult
       include FileHelpers
 
       attr_accessor :row_count,
