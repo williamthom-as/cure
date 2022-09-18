@@ -1,0 +1,40 @@
+{
+  "transformations": {
+    "candidates": [
+      {
+        "column": "column_1",
+        "translations": [
+          {
+            "strategy": {
+              "name": "full",
+              "options": {}
+            },
+            "generator": {
+              "name": "number",
+              "options": {
+                "length": 12
+              }
+            }
+          }
+        ]
+      },{
+        "column": "column_2",
+        "translations": [
+          {
+            "strategy": {
+              "name": "full",
+              "options": {}
+            },
+            "generator" : {
+              "name" : "faker",
+              "options" : {
+                "module" : "Faker::Movies::StarWars",
+                "method" : "character"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

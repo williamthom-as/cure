@@ -12,6 +12,10 @@ module Cure
       include ObjectHelpers
       include Log
 
+      # Named range that column exists in
+      # @return [String]
+      attr_accessor :named_range
+
       # Lookup column name for CSV.
       # @return [String]
       attr_accessor :column
@@ -25,6 +29,7 @@ module Cure
 
       def initialize
         @translations = []
+        @named_range = "default"
       end
 
       # @param [String] source_value

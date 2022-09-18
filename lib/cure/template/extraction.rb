@@ -6,7 +6,10 @@ module Cure
     attr_accessor :named_ranges
 
     def initialize
-      @named_ranges = [default_value]
+      @named_ranges = [{
+        "name" => "default",
+        "section" => -1
+      }]
     end
 
     # @param [Hash] hash
@@ -17,11 +20,13 @@ module Cure
       this
     end
 
-    def default_value
-      {
-        "name" => "default",
-        "section" => -1
-      }
+    # We only need to get the named ranges where the candidates have specified
+    # interest in them.
+    #
+    # @param [Array] candidate_nrs
+    # @return [Array]
+    def required_named_ranges(candidate_nrs)
+      @named_ranges.select { |nr| candidate_nrs.include?(nr["name"]) }
     end
   end
 end

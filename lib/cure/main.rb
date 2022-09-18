@@ -61,6 +61,7 @@ module Cure
 
     # @return [Cure::Transform::TransformContext]
     def build_ctx
+      # this is a terrible name [build_ctx]
       @transformer.extract_from_file(config.source_file_location)
     end
 
@@ -83,7 +84,7 @@ module Cure
 
     # @param [Cure::Transform::TransformContext] ctx
     def export(ctx)
-      Cure::Export::Exporter.export_ctx(ctx, config.output_dir, "csv_file")
+      Cure::Export::Exporter.export_ctx(ctx[0], config.output_dir, "csv_file")
     end
   end
 end

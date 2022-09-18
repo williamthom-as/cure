@@ -6,17 +6,15 @@ require "cure/transformation/candidate"
 RSpec.describe Cure::Transformation::Transform do
   before :all do
     @source_file_loc = "../../spec/cure/test_files/test_csv_file.csv"
-    template_file_loc = "./spec/cure/test_files/test_template.json"
+    template_file_loc = "../../spec/cure/test_files/test_template.json"
 
-    json = JSON.parse(File.read(template_file_loc))
-    candidates = json["transformations"]["candidates"].map { |x| Cure::Transformation::Candidate.new.from_json(x) }
-
-    @transform = Cure::Transformation::Transform.new(candidates)
+    main = Cure::Main.init_from_file(template_file_loc, @source_file_loc, "/tmp")
+    @transform = Cure::Transformation::Transform.new(main.config.template.transformations.candidates)
   end
 
   describe "#transform" do
     it "should load appropriately" do
-      result = @transform.extract_from_file(@source_file_loc)
+      result = @transform.extract_from_file(@source_file_loc)[0]
       expect(result.row_count).to eq(4)
       expect(result.transformed_rows.map { |a| a[0] }.uniq.length).to eq(1)
     end

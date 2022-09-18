@@ -54,7 +54,7 @@ RSpec.describe Cure::Main do
       tmp_location = "/tmp/cure"
 
       main = Cure::Main.init_from_file(template_file_loc, source_file_loc, tmp_location)
-      ctx = main.build_ctx
+      ctx = main.build_ctx[0]
 
       expect(ctx.column_headers).to eq({"test_column" => 0, "test_column2" => 1})
       expect(ctx.row_count).to eq(4)
@@ -68,7 +68,7 @@ RSpec.describe Cure::Main do
       tmp_location = "/tmp/cure"
 
       main = Cure::Main.init_from_file(template_file_loc, source_file_loc, tmp_location)
-      main.build_ctx
+      main.build_ctx[0]
 
       main.with_temp_dir("/tmp/cure") do
         main.run_export

@@ -1,0 +1,45 @@
+{
+  "extraction": {
+    "named_ranges": [
+      {
+        "name": "section_1",
+        "section": "B2:G6"
+      },{
+        "name": "section_2",
+        "section": "B9:H14"
+      }
+    ]
+  },
+  "transformations": {
+    "candidates": [{
+      "named_range" : "section_1",
+      "column" : "column_1",
+      "translations" : [{
+        "strategy" : {
+          "name": "full",
+          "options" : {}
+        },
+        "generator" : {
+          "name" : "number",
+          "options" : {
+            "length" : 12
+          }
+        }
+      }]
+    },{
+      "translations" : [{
+        "strategy" : {
+          "name": "full",
+          "options" : {}
+        },
+        "generator" : {
+          "name" : "number",
+          "options" : {
+            "length" : 12
+          }
+        }
+      }]
+    }],
+    "placeholders" : []
+  }
+}

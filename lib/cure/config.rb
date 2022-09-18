@@ -28,7 +28,10 @@ module Cure
     end
 
     class Config
-      attr_accessor :source_file_location, :template, :output_dir
+      attr_accessor :source_file_location, :output_dir
+
+      # @param [Cure::Template] template
+      attr_accessor :template
 
       # @param [String] source_file_location
       # @param [Cure::Template] template

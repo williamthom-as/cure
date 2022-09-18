@@ -2,6 +2,9 @@
 
 require "cure/log"
 require "cure/file_helpers"
+require "cure/config"
+require "cure/cleanup/extractor"
+
 require "rcsv"
 
 module Cure
@@ -10,6 +13,7 @@ module Cure
     class Transform
       include Log
       include FileHelpers
+      include Configuration
 
       # @return [Array<Candidate>]
       attr_accessor :candidates
@@ -20,52 +24,62 @@ module Cure
       end
 
       # @param [String] csv_file_location
-      # @return [TransformContext]
+      # @return [Array<TransformContext>]
       def extract_from_file(csv_file_location)
         file_contents = read_file(csv_file_location)
         extract_from_contents(file_contents)
       end
 
       # @param [String] file_contents
-      # @return [TransformContext]
+      # @return [Array<TransformContext>] # make this transformation results?
       def extract_from_contents(file_contents)
-        ctx = TransformContext.new
-        parse_content(ctx, file_contents, header: :none) do |row|
-          if ctx.row_count == 1
-            ctx.extract_column_headers(row)
-            next
+        parsed_content = parse_csv(file_contents, header: :none)
+
+        log_info("Parsed CSV into #{parsed_content.length} sections.")
+
+        parsed_content.map do |section|
+          ctx = TransformContext.new
+          section["rows"].each do |row|
+            ctx.row_count += 1
+
+            if ctx.row_count == 1
+              ctx.extract_column_headers(row)
+              next
+            end
+
+            row = transform(section["name"], ctx.column_headers, row)
+            ctx.add_transformed_row(row)
           end
 
-          row = transform(ctx.column_headers, row)
-          ctx.add_transformed_row(row)
+          ctx
         end
-
-        ctx
       end
 
       private
 
-      # @param [TransformContext] ctx
       # @param [String] file_contents
-      # @param [Proc] _block
       # @param [Hash] opts
-      # @yield [Array] row
-      # @yield [TransformContext] ctx
-      # @return [TransformContext]
-      def parse_content(ctx, file_contents, opts={}, &_block)
-        return nil unless block_given?
+      # @return [Array<Hash>]
+      def parse_csv(file_contents, opts={})
+        csv_rows = []
+        Rcsv.parse(file_contents, opts) { |row| csv_rows << row }
 
-        Rcsv.parse(file_contents, opts) do |row|
-          ctx.row_count += 1
-          yield row
+        extractor = Cure::Cleanup::Extractor.new({})
+
+        # Use only the NR's that are defined from the candidates list
+        config.template.extraction.required_named_ranges(@candidates.map(&:named_range).uniq).map do |nr|
+          {
+            "rows" => extractor.extract_from_rows(csv_rows, nr["section"]),
+            "name" => nr["name"]
+          }
         end
       end
 
       # @param [Hash] column_headers
       # @param [Array] row
       # @return [Array]
-      def transform(column_headers, row)
-        @candidates.each do |candidate|
+      def transform(named_range, column_headers, row)
+        candidates_for_named_range(named_range).each do |candidate|
           column_idx = column_headers[candidate.column]
           next unless column_idx
 
@@ -77,6 +91,12 @@ module Cure
         end
 
         row
+      end
+
+      # @param [String] named_range
+      # @return [Array<Cure::Transformation::Candidate>]
+      def candidates_for_named_range(named_range)
+        @candidates.select { |c| c.named_range == named_range }
       end
     end
 
