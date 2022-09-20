@@ -19,6 +19,8 @@ module Cure
       # @param [Array] rows
       # @param [Array] columns
       def export(output_dir, file_name, rows, columns)
+        file_name = "#{file_name}-#{Time.now.utc.strftime("%Y-%m-%dT%H:%M:%S%-z")}"
+
         log_info("Exporting file to [#{output_dir}/#{file_name}] with #{rows.length} rows")
 
         file_contents = []
@@ -37,7 +39,7 @@ module Cure
       # @param [String] contents
       # @param [String] file_extension
       def write_to_file(file_path, file_name, file_extension, contents)
-        file_location = "#{file_path}/#{file_name || Time.now.utc.strftime("%Y-%m-%dT%H:%M:%S%-z")}"
+        file_location = "#{file_path}/#{file_name}"
         clean_dir(file_path)
 
         with_file(file_location, file_extension) do |file|
