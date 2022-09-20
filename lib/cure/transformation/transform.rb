@@ -3,7 +3,7 @@
 require "cure/log"
 require "cure/file_helpers"
 require "cure/config"
-require "cure/cleanup/extractor"
+require "cure/preprocessor/extractor"
 
 require "rcsv"
 
@@ -32,12 +32,12 @@ module Cure
 
       # @param [String] file_contents
       # @return [Array<TransformResult>] # make this transformation results?
+      # rubocop:disable Metrics/AbcSize
       def extract_from_contents(file_contents)
         parsed_content = parse_csv(file_contents, header: :none)
+        log_info("Parsed CSV into #{parsed_content.content.length} sections.")
 
-        log_info("Parsed CSV into #{parsed_content.length} sections.")
-
-        parsed_content.map do |section|
+        parsed_content.content.map do |section|
           ctx = TransformResult.new
           section["rows"].each do |row|
             ctx.row_count += 1
@@ -54,25 +54,55 @@ module Cure
           ctx
         end
       end
+      # rubocop:enable Metrics/AbcSize
 
       private
 
       # @param [String] file_contents
       # @param [Hash] opts
-      # @return [Array<Hash>]
+      # @return [ParsedCSV]
       def parse_csv(file_contents, opts={})
         csv_rows = []
+
         Rcsv.parse(file_contents, opts) { |row| csv_rows << row }
 
-        extractor = Cure::Cleanup::Extractor.new({})
+        result = ParsedCSV.new
+        result.content = extract_named_ranges(csv_rows)
+        result.variables = extract_variables(csv_rows)
 
+        result
+      end
+
+      # @param [String] named_range
+      # @return [Array<Cure::Transformation::Candidate>]
+      def candidates_for_named_range(named_range)
+        @candidates.select { |c| c.named_range == named_range }
+      end
+
+      # @param [Array<Array>] csv_rows
+      # @return [Array<Hash>]
+      def extract_named_ranges(csv_rows)
+        extractor = Cure::Preprocessor::Extractor.new({})
         # Use only the NR's that are defined from the candidates list
-        config.template.extraction.required_named_ranges(@candidates.map(&:named_range).uniq).map do |nr|
+        candidate_nrs = config.template.extraction.required_named_ranges(@candidates.map(&:named_range).uniq)
+        candidate_nrs.map do |nr|
           {
             "rows" => extractor.extract_from_rows(csv_rows, nr["section"]),
             "name" => nr["name"]
           }
         end
+      end
+
+      # @param [Array<Array>] csv_rows
+      # @return [Hash]
+      def extract_variables(csv_rows)
+        extractor = Cure::Preprocessor::Extractor.new({})
+
+        result = config.template.extraction.variables.each_with_object({}) do |variable, hash|
+          hash[variable["name"]] = extractor.lookup_location(csv_rows, variable["location"])
+        end
+
+        config.placeholders
       end
 
       # @param [Hash] column_headers
@@ -91,12 +121,6 @@ module Cure
         end
 
         row
-      end
-
-      # @param [String] named_range
-      # @return [Array<Cure::Transformation::Candidate>]
-      def candidates_for_named_range(named_range)
-        @candidates.select { |c| c.named_range == named_range }
       end
     end
 
@@ -120,6 +144,19 @@ module Cure
 
       def add_transformed_row(row)
         @transformed_rows << row
+      end
+    end
+
+    class ParsedCSV
+      # @return [Array<Hash>]
+      attr_accessor :content
+
+      # @return [Hash]
+      attr_accessor :variables
+
+      def initialize
+        @content = []
+        @variables = {}
       end
     end
   end

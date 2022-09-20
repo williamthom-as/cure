@@ -3,6 +3,11 @@
     "named_ranges": [{
       "name": "main",
       "section": "B2:F2"
+    }],
+    "variables" : [{
+      "name" : "date",
+      "type" : "single_field",
+      "location" : "B2"
     }]
   },
   "transformations": {
@@ -40,7 +45,6 @@
     }
   },
   "export": {
-    "type": "blacklist",
-    "columns": []
+
   }
 }

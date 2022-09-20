@@ -5,11 +5,16 @@ module Cure
     # @param [Array<Hash>] named_ranges
     attr_accessor :named_ranges
 
+    # @param [Array<Hash>] named_ranges
+    attr_accessor :variables
+
     def initialize
       @named_ranges = [{
         "name" => "default",
         "section" => -1
       }]
+
+      @variables = []
     end
 
     # @param [Hash] hash
@@ -17,6 +22,7 @@ module Cure
     def self.from_hash(hash)
       this = Cure::Extraction.new
       this.named_ranges.push(*hash["named_ranges"])
+      this.variables.push(*hash["variables"])
       this
     end
 

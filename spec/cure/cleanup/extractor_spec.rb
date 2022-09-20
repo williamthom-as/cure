@@ -1,18 +1,9 @@
 # frozen_string_literal: true
 
-require "cure/cleanup/extractor"
+require "cure/preprocessor/extractor"
 
-RSpec.describe Cure::Cleanup::Extractor do
+RSpec.describe Cure::Preprocessor::Extractor do
   describe "#array_position" do
-    it "should create an array position list from input" do
-      arr = Cure::Cleanup::Extractor.new({}).array_position_lookup("B2:C3")
-      expect(arr).to eq([1, 2, 1, 2])
-    end
-
-    it "should handle -1 as entire sheet" do
-      arr = Cure::Cleanup::Extractor.new({}).array_position_lookup(-1)
-      expect(arr).to eq([0, -1, 0, -1])
-    end
 
     it "should create subset array from a named range" do
       test_arr = [
@@ -22,7 +13,7 @@ RSpec.describe Cure::Cleanup::Extractor do
         %w[a4 b4 c4 d4]
       ]
 
-      arr = Cure::Cleanup::Extractor.new({}).extract_from_rows(test_arr, "B2:C3")
+      arr = described_class.new({}).extract_from_rows(test_arr, "B2:C3")
       expect(arr).to eq([%w[b2 c2], %w[b3 c3]])
     end
 
@@ -34,7 +25,7 @@ RSpec.describe Cure::Cleanup::Extractor do
         %w[a4 b4 c4 d4]
       ]
 
-      arr = Cure::Cleanup::Extractor.new({}).extract_from_rows(test_arr, -1)
+      arr = described_class.new({}).extract_from_rows(test_arr, -1)
       expect(arr).to eq(test_arr)
     end
   end

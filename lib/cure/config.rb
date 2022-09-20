@@ -45,6 +45,7 @@ module Cure
       def placeholders
         @template.transformations.placeholders || {}
       end
+
     end
 
     class ConfigurationSource
