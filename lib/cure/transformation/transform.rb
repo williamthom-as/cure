@@ -70,6 +70,8 @@ module Cure
         result.content = extract_named_ranges(csv_rows)
         result.variables = extract_variables(csv_rows)
 
+        config.variables = result.variables
+
         result
       end
 
@@ -98,11 +100,9 @@ module Cure
       def extract_variables(csv_rows)
         extractor = Cure::Preprocessor::Extractor.new({})
 
-        result = config.template.extraction.variables.each_with_object({}) do |variable, hash|
+        config.template.extraction.variables.each_with_object({}) do |variable, hash|
           hash[variable["name"]] = extractor.lookup_location(csv_rows, variable["location"])
         end
-
-        config.placeholders
       end
 
       # @param [Hash] column_headers

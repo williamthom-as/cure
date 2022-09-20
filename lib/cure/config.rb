@@ -30,8 +30,11 @@ module Cure
     class Config
       attr_accessor :source_file_location, :output_dir
 
-      # @param [Cure::Template] template
+      # @return [Cure::Template] template
       attr_accessor :template
+
+      # @return [Hash] variables
+      attr_accessor :variables
 
       # @param [String] source_file_location
       # @param [Cure::Template] template
@@ -45,7 +48,6 @@ module Cure
       def placeholders
         @template.transformations.placeholders || {}
       end
-
     end
 
     class ConfigurationSource
