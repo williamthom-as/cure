@@ -72,10 +72,10 @@ RSpec.describe Cure::Main do
 
       main.with_temp_dir("/tmp/cure") do
         main.run_export
-        expect(File.exist?("/tmp/cure/csv_file.csv")).to be_truthy
+        expect(Dir["/tmp/cure/*.csv"].length.positive?).to be_truthy
       end
 
-      expect(File.exist?("/tmp/cure/csv_file.csv")).to be_falsey
+      expect(Dir["/tmp/cure/*.csv"].length.positive?).to be_falsey
     end
   end
 end

@@ -70,6 +70,7 @@ module Cure
         result.content = extract_named_ranges(csv_rows)
         result.variables = extract_variables(csv_rows)
 
+        log_debug "Setting extracted variables to global conf for access downstream"
         config.variables = result.variables
 
         result

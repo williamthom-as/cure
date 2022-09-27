@@ -40,7 +40,7 @@ module Cure
       def lookup_location(rows, variable_location)
         psx = [CsvLookup.position_for_letter(variable_location),
                CsvLookup.position_for_digit(variable_location)]
-        rows[psx[0]][psx[1]]
+        rows[psx[1]][psx[0]]
       end
     end
   end

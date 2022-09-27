@@ -9,42 +9,67 @@
         "section": "B9:H14"
       }
     ],
-    "variables" : [{
-      "name" : "date",
-      "type" : "single_field",
-      "location" : "B2"
-    }]
+    "variables" : [
+      {
+        "name" : "new_field",
+        "type" : "single_field",
+        "location" : "A16"
+      },{
+        "name" : "new_field_2",
+        "type" : "single_field",
+        "location" : "B16"
+      }
+    ]
   },
   "transformations": {
-    "candidates": [{
-      "named_range" : "section_1",
-      "column" : "column_1",
-      "translations" : [{
-        "strategy" : {
-          "name": "full",
-          "options" : {}
-        },
-        "generator" : {
-          "name" : "number",
-          "options" : {
-            "length" : 12
+    "candidates": [
+      {
+        "named_range" : "section_1",
+        "column" : "column_1",
+        "translations" : [{
+          "strategy" : {
+            "name": "full",
+            "options" : {}
+          },
+          "generator" : {
+            "name" : "number",
+            "options" : {
+              "length" : 12
+            }
           }
-        }
-      }]
-    },{
-      "translations" : [{
-        "strategy" : {
-          "name": "full",
-          "options" : {}
-        },
-        "generator" : {
-          "name" : "number",
-          "options" : {
-            "length" : 12
+        }]
+      },
+      {
+        "named_range" : "section_1",
+        "column" : "column_2",
+        "translations" : [
+          {
+            "strategy" : {
+              "name": "full",
+              "options" : {}
+            },
+            "generator" : {
+              "name" : "variable",
+              "options" : {
+                "name" : "new_field"
+              }
+            }
+          },
+          {
+            "strategy" : {
+              "name": "append",
+              "options" : {}
+            },
+            "generator" : {
+              "name" : "variable",
+              "options" : {
+                "name" : "new_field_2"
+              }
+            }
           }
-        }
-      }]
-    }],
+        ]
+      }
+    ],
     "placeholders" : []
   }
 }

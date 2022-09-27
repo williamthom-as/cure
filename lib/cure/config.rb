@@ -27,6 +27,11 @@ module Cure
       Config.new(source_file_location, template, output_dir)
     end
 
+    # If we are overloading here as a "data store" and "config store", we
+    # could break out variables and placeholders into their own singleton.
+    #
+    # This should be a kind of instance cache, which loads once per run,
+    # and junk can be jammed in there?
     class Config
       attr_accessor :source_file_location, :output_dir
 
