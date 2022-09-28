@@ -14,7 +14,7 @@ RSpec.describe Cure::Transformation::Transform do
 
   describe "#transform" do
     it "should load appropriately" do
-      result = @transform.extract_from_file(@source_file_loc)[0]
+      result = @transform.extract_from_file(@source_file_loc)["default"]
       expect(result.row_count).to eq(4)
       expect(result.transformed_rows.map { |a| a[0] }.uniq.length).to eq(1)
     end

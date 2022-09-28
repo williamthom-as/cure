@@ -38,7 +38,7 @@ RSpec.describe Cure::Preprocessor::Extractor do
       main = Cure::Main.init_from_file(template_file_loc, source_file_loc, "/tmp")
       @transform = Cure::Transformation::Transform.new(main.config.template.transformations.candidates)
 
-      result = @transform.extract_from_file(source_file_loc)[0]
+      result = @transform.extract_from_file(source_file_loc)["section_1"]
       expect(result.row_count).to eq(5)
       expect(result.transformed_rows.map { |r| r[0] }.join("").length).to eq(48)
       expect(result.transformed_rows.map { |r| r[1] }.join("")).to eq(
@@ -55,7 +55,7 @@ RSpec.describe Cure::Preprocessor::Extractor do
       main = Cure::Main.init_from_file(template_file_loc, source_file_loc, "/tmp")
       @transform = Cure::Transformation::Transform.new(main.config.template.transformations.candidates)
 
-      result = @transform.extract_from_file(source_file_loc)[0]
+      result = @transform.extract_from_file(source_file_loc)["default"]
       expect(result.row_count).to eq(5)
       expect(result.transformed_rows.map { |r| r[0] }.join("").length).to eq(48)
     end

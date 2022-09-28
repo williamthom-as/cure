@@ -54,7 +54,7 @@ RSpec.describe Cure::Main do
       tmp_location = "/tmp/cure"
 
       main = Cure::Main.init_from_file(template_file_loc, source_file_loc, tmp_location)
-      ctx = main.run_transform[0]
+      ctx = main.run_transform["default"]
 
       expect(ctx.column_headers).to eq({"test_column" => 0, "test_column2" => 1})
       expect(ctx.row_count).to eq(4)
