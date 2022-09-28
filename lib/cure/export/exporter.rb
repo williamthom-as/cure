@@ -1,19 +1,42 @@
 # frozen_string_literal: true
 
 require "cure/log"
+require "cure/config"
 require "cure/file_helpers"
 
 module Cure
   module Export
     class Exporter
       include Cure::FileHelpers
+      include Configuration
       include Log
 
-      def self.export_result(ctx, output_dir, file_name)
-        column_headers = ctx.column_headers.keys
+      # @param [Array<Cure::Transform::TransformResult>] result
+      def self.export_result(results, output_dir)
+        exporter = Exporter.new(output_dir)
+        exporter.export_results(results)
+      end
 
-        exporter = Exporter.new
-        exporter.export(output_dir, file_name, ctx.transformed_rows, column_headers)
+      attr_reader :output_dir
+
+      def initialize(output_dir)
+        @output_dir = output_dir
+      end
+
+      # @param [Array<Cure::Transform::TransformResult>] result
+      def export_results(result)
+        export_ranges = config.template.dispatch.named_ranges
+
+        export_ranges.each do |range|
+          named_range = range["named_range"]
+          unless result.has_key?(named_range)
+            raise "Missing named range - #{range} from candidates [#{result.keys.join(", ")}]"
+          end
+
+          data = result[named_range]
+          column_headers = data.column_headers.keys
+          export(@output_dir, result["file_name"], data.transformed_rows, column_headers)
+        end
       end
 
       # @param [Array] rows

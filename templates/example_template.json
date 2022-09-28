@@ -45,6 +45,10 @@
     }
   },
   "export": {
-
+    "sections" : {
+      "named_range" : "main",
+      "file_name" : "main-file",
+      "type" : "csv"
+    }
   }
 }

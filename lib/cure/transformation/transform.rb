@@ -24,20 +24,20 @@ module Cure
       end
 
       # @param [String] csv_file_location
-      # @return [Array<TransformResult>]
+      # @return [Hash<String,TransformResult>]
       def extract_from_file(csv_file_location)
         file_contents = read_file(csv_file_location)
         extract_from_contents(file_contents)
       end
 
       # @param [String] file_contents
-      # @return [Array<TransformResult>] # make this transformation results?
+      # @return [Hash<String,TransformResult>] # make this transformation results?
       # rubocop:disable Metrics/AbcSize
       def extract_from_contents(file_contents)
         parsed_content = parse_csv(file_contents, header: :none)
         log_info("Parsed CSV into #{parsed_content.content.length} sections.")
 
-        parsed_content.content.map do |section|
+        parsed_content.content.each_with_object({}) do |section, hash|
           ctx = TransformResult.new
           section["rows"].each do |row|
             ctx.row_count += 1
@@ -51,7 +51,7 @@ module Cure
             ctx.add_transformed_row(row)
           end
 
-          ctx
+          hash[section["name"]] = ctx
         end
       end
       # rubocop:enable Metrics/AbcSize
