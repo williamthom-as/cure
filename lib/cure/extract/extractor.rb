@@ -1,10 +1,17 @@
 # frozen_string_literal: true
 
+require "cure/log"
+require "cure/config"
 require "cure/extract/csv_lookup"
+require "cure/helpers/file_helpers"
 
 module Cure
   module Extract
     class Extractor
+      include Log
+      include Configuration
+      include Helpers::FileHelpers
+
       # @param [Hash] opts
       attr_reader :opts
 
@@ -28,7 +35,7 @@ module Cure
         parsed_content
       end
 
-      private
+      # private
 
       # @param [String] file_contents
       # @param [Hash] opts
