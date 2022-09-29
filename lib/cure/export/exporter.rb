@@ -35,7 +35,7 @@ module Cure
 
           data = result[named_range]
           column_headers = data.column_headers.keys
-          export(@output_dir, result["file_name"], data.transformed_rows, column_headers)
+          export(@output_dir, range["file_name"], data.transformed_rows, column_headers)
         end
       end
 

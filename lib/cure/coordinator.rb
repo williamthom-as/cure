@@ -28,12 +28,14 @@ module Cure
     # @param [String] csv_file_location
     # @return [ParsedCSV]
     def extract(csv_file_location)
+      log_info "Beginning the extraction process..."
       extractor = Extract::Extractor.new({})
       result = extractor.extract_from_file(csv_file_location)
 
       log_debug "Setting extracted variables to global conf for access downstream"
       config.variables = result.variables
 
+      log_info "...extraction complete"
       result
     end
 
@@ -44,12 +46,18 @@ module Cure
     # @return [Hash<String,Cure::Transformation::TransformResult>]
     # @param [ParsedCSV] parsed_csv
     def transform(parsed_csv)
+      log_info "Beginning the transformation process..."
       transformer = Cure::Transformation::Transform.new(config.template.transformations.candidates)
-      transformer.transform_content(parsed_csv)
+      content = transformer.transform_content(parsed_csv)
+
+      log_info "...transform complete"
+      content
     end
 
     def export(transformed_result)
+      log_info "Beginning export process..."
       Cure::Export::Exporter.export_result(transformed_result, config.output_dir)
+      log_info "... export complete."
     end
   end
 end
