@@ -2,12 +2,12 @@
 
 require "cure/log"
 require "cure/config"
-require "cure/file_helpers"
+require "cure/helpers/file_helpers"
 
 module Cure
   module Export
     class Exporter
-      include Cure::FileHelpers
+      include Helpers::FileHelpers
       include Configuration
       include Log
 

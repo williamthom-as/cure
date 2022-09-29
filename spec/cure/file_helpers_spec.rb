@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 require "json"
-require "cure/file_helpers"
+require "cure/helpers/file_helpers"
 
 class MockClass
-  include Cure::FileHelpers
+  include Cure::Helpers::FileHelpers
 end
 
-RSpec.describe Cure::FileHelpers do
+RSpec.describe Cure::Helpers::FileHelpers do
   describe "#with_temp_dir" do
     it "should clean dir by default" do
       mc = MockClass.new

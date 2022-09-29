@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "cure/object_helpers"
+require "cure/helpers/object_helpers"
 require "cure/strategy/imports"
 require "cure/generator/imports"
 require "cure/log"
@@ -9,7 +9,7 @@ module Cure
   module Transformation
     # Per row, we will have a candidate for each transformation that needs to be made
     class Candidate
-      include ObjectHelpers
+      include Helpers::ObjectHelpers
       include Log
 
       # Named range that column exists in
@@ -65,7 +65,7 @@ module Cure
     end
 
     class Translation
-      include ObjectHelpers
+      include Helpers::ObjectHelpers
 
       # What sort of replacement is done, full/random/lookup/partial.
       # @return [Strategy::BaseStrategy]

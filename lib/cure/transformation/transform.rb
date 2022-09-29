@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "cure/log"
-require "cure/file_helpers"
+require "cure/helpers/file_helpers"
 require "cure/config"
-require "cure/preprocessor/extractor"
+require "cure/extract/extractor"
 
 require "rcsv"
 
@@ -12,7 +12,7 @@ module Cure
     # Operational file for conducting transforms
     class Transform
       include Log
-      include FileHelpers
+      include Helpers::FileHelpers
       include Configuration
 
       # @return [Array<Candidate>]
@@ -23,20 +23,9 @@ module Cure
         @candidates = candidates
       end
 
-      # @param [String] csv_file_location
-      # @return [Hash<String,TransformResult>]
-      def extract_from_file(csv_file_location)
-        file_contents = read_file(csv_file_location)
-        extract_from_contents(file_contents)
-      end
-
-      # @param [String] file_contents
+      # @param [ParsedCSV] parsed_content
       # @return [Hash<String,TransformResult>] # make this transformation results?
-      # rubocop:disable Metrics/AbcSize
-      def extract_from_contents(file_contents)
-        parsed_content = parse_csv(file_contents, header: :none)
-        log_info("Parsed CSV into #{parsed_content.content.length} sections.")
-
+      def transform_content(parsed_content)
         parsed_content.content.each_with_object({}) do |section, hash|
           ctx = TransformResult.new
           section["rows"].each do |row|
@@ -54,57 +43,8 @@ module Cure
           hash[section["name"]] = ctx
         end
       end
-      # rubocop:enable Metrics/AbcSize
 
       private
-
-      # @param [String] file_contents
-      # @param [Hash] opts
-      # @return [ParsedCSV]
-      def parse_csv(file_contents, opts={})
-        csv_rows = []
-
-        Rcsv.parse(file_contents, opts) { |row| csv_rows << row }
-
-        result = ParsedCSV.new
-        result.content = extract_named_ranges(csv_rows)
-        result.variables = extract_variables(csv_rows)
-
-        log_debug "Setting extracted variables to global conf for access downstream"
-        config.variables = result.variables
-
-        result
-      end
-
-      # @param [String] named_range
-      # @return [Array<Cure::Transformation::Candidate>]
-      def candidates_for_named_range(named_range)
-        @candidates.select { |c| c.named_range == named_range }
-      end
-
-      # @param [Array<Array>] csv_rows
-      # @return [Array<Hash>]
-      def extract_named_ranges(csv_rows)
-        extractor = Cure::Preprocessor::Extractor.new({})
-        # Use only the NR's that are defined from the candidates list
-        candidate_nrs = config.template.extraction.required_named_ranges(@candidates.map(&:named_range).uniq)
-        candidate_nrs.map do |nr|
-          {
-            "rows" => extractor.extract_from_rows(csv_rows, nr["section"]),
-            "name" => nr["name"]
-          }
-        end
-      end
-
-      # @param [Array<Array>] csv_rows
-      # @return [Hash]
-      def extract_variables(csv_rows)
-        extractor = Cure::Preprocessor::Extractor.new({})
-
-        config.template.extraction.variables.each_with_object({}) do |variable, hash|
-          hash[variable["name"]] = extractor.lookup_location(csv_rows, variable["location"])
-        end
-      end
 
       # @param [Hash] column_headers
       # @param [Array] row
@@ -123,10 +63,16 @@ module Cure
 
         row
       end
+
+      # @param [String] named_range
+      # @return [Array<Cure::Transformation::Candidate>]
+      def candidates_for_named_range(named_range)
+        @candidates.select { |c| c.named_range == named_range }
+      end
     end
 
     class TransformResult
-      include FileHelpers
+      include Helpers::FileHelpers
 
       attr_accessor :row_count,
                     :transformed_rows,
@@ -145,19 +91,6 @@ module Cure
 
       def add_transformed_row(row)
         @transformed_rows << row
-      end
-    end
-
-    class ParsedCSV
-      # @return [Array<Hash>]
-      attr_accessor :content
-
-      # @return [Hash]
-      attr_accessor :variables
-
-      def initialize
-        @content = []
-        @variables = {}
       end
     end
   end

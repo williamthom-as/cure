@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "cure/preprocessor/extractor"
+require "cure/extract/extractor"
 
 # rubocop:disable Metrics/BlockLength
-RSpec.describe Cure::Preprocessor::Extractor do
+RSpec.describe Cure::Extract::Extractor do
   describe "#array_position" do
     it "should create subset array from a named range" do
       test_arr = [
@@ -32,8 +32,8 @@ RSpec.describe Cure::Preprocessor::Extractor do
 
   describe "#transform" do
     it "should load appropriately" do
-      source_file_loc = "../../spec/cure/test_files/sectioned_csv.csv"
-      template_file_loc = "../../spec/cure/test_files/sectioned_template.json"
+      source_file_loc = "../../../spec/cure/test_files/sectioned_csv.csv"
+      template_file_loc = "../../../spec/cure/test_files/sectioned_template.json"
 
       main = Cure::Main.init_from_file(template_file_loc, source_file_loc, "/tmp")
       @transform = Cure::Transformation::Transform.new(main.config.template.transformations.candidates)
@@ -49,8 +49,8 @@ RSpec.describe Cure::Preprocessor::Extractor do
 
   describe "#transform" do
     it "should load appropriately" do
-      source_file_loc = "../../spec/cure/test_files/unsectioned_csv.csv"
-      template_file_loc = "../../spec/cure/test_files/unsectioned_template.json"
+      source_file_loc = "../../../spec/cure/test_files/unsectioned_csv.csv"
+      template_file_loc = "../../../spec/cure/test_files/unsectioned_template.json"
 
       main = Cure::Main.init_from_file(template_file_loc, source_file_loc, "/tmp")
       @transform = Cure::Transformation::Transform.new(main.config.template.transformations.candidates)

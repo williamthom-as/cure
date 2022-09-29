@@ -4,7 +4,7 @@ require "cure/log"
 require "cure/main"
 require "cure/config"
 require "cure/version"
-require "cure/file_helpers"
+require "cure/helpers/file_helpers"
 
 require "cure/template/template"
 require "cure/transformation/transform"

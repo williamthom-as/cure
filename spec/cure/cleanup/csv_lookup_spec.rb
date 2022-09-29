@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "cure/preprocessor/csv_lookup"
+require "cure/extract/csv_lookup"
 
-RSpec.describe Cure::Preprocessor::CsvLookup do
+RSpec.describe Cure::Extract::CsvLookup do
   describe "#array_position" do
     it "should create an array position list from input" do
       arr = described_class.array_position_lookup("B2:C3")

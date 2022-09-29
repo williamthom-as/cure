@@ -4,6 +4,7 @@ require "cure/template/template"
 require "cure/transformation/candidate"
 require "cure/transformation/transform"
 require "cure/export/exporter"
+require "cure/coordinator"
 
 require "cure"
 require "json"
@@ -11,7 +12,7 @@ require "json"
 module Cure
   class Main
     include Configuration
-    include FileHelpers
+    include Helpers::FileHelpers
 
     # @param [String] template_file_loc
     # @param [String] csv_file_loc
@@ -42,26 +43,19 @@ module Cure
       main
     end
 
-    # @return [Cure::Transformation::Transform]
-    attr_accessor :transformer
+    # @return [Cure::Coordinator]
+    attr_accessor :coordinator
 
     # @return [Boolean]
     attr_reader :is_initialised
 
     def initialize
       @is_initialised = false
+      @coordinator = Coordinator.new
     end
 
     def run_export
-      raise "Not init" unless @transformer
-
-      result = run_transform
-      dispatch(result)
-    end
-
-    # @return [Hash]
-    def run_transform
-      @transformer.extract_from_file(config.source_file_location)
+      @coordinator.process
     end
 
     # @param [String] csv_file_location
@@ -72,18 +66,7 @@ module Cure
       config = create_config(csv_file_location, template, output_dir)
       register_config(config)
 
-      # This is unnecessary, leave for now but fix later until we move Template to builder.
-      @transformer = Cure::Transformation::Transform.new(config.template.transformations.candidates)
-      @is_initialised = true
-
       self
-    end
-
-    private
-
-    # @param [Hash] result
-    def dispatch(result)
-      Cure::Export::Exporter.export_result(result, config.output_dir )
     end
   end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Cure
+  # This name sucks, it is just an exporter
   class Dispatch
 
     # @param [Array<Hash>] named_ranges
@@ -21,7 +22,7 @@ module Cure
     def default
       {
         "named_range" => "default",
-        "file_name" => "main-file",
+        "file_name" => "cure-export",
         "type" => "csv"
       }
     end

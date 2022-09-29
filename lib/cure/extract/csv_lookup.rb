@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Cure
-  module Preprocessor
+  module Extract
     class CsvLookup
 
       # @param [String] position - [Ex A1:B1, A1:B1,A2:B2]
