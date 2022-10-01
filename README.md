@@ -3,18 +3,27 @@
 ![run tests](https://github.com/williamthom-as/cure/actions/workflows/rspec.yml/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/cure.svg)](https://badge.fury.io/rb/cure)
 
-Cure is a simple tool to **remove/redact/anonymize** and **replace** private information in a spreadsheet.
-It has been written to anonymize private cloud billing data for use in public demo environments.
+Cure is a simple tool to **extract/clean/transform/remove/redact/anonymize** and **replace** information in a spreadsheet.
+It has been written to anonymize private cloud billing data for use in public demo environments.  Since then, it has grown to 
+additional processing capabilities that can take a CSV from junk to workable data.
 
 It has several key features:
-- Define either full or regex match groups replacements.
-- Choose from many strategies to replace anonymous data - random number sequences, GUIDs, placeholders, multipliers amongst many others.
-- **Existing generated values are stored and recalled** so once a replacement is defined, it is kept around for other columns to use.
-  - For example, once a replacement **Account Number** is generated, any further use of that number sequence is other columns will be used, keeping data real(ish) and functional in a relational sense.
+- Operate on your data to build what you need. 
+  - Files are taken through an `Extract -> Build -> Transform -> Export` pipeline.
+- Extract parts of your file into named ranges to remove junk. 
+- Build (Add/Remove/Explode) columns - handy for files that may have JSON as a column value.
+- Transform values:
+  - Define either full or regex match groups replacements.
+  - Choose from many strategies to replace anonymous data - random number sequences, GUIDs, placeholders, multipliers amongst many others.
+  - **Existing generated values are stored and recalled** so once a replacement is defined, it is kept around for other columns to use.
+    - For example, once a replacement **Account Number** is generated, any further use of that number sequence is other columns will be used, keeping data real(ish) and functional in a relational sense.
+- Export into one (or many) files, in a selection of chosen formats (CSV at the moment, coming soon with JSON, Parquet).
 
 ## Use Cases
 
 - Strip out personal data from a CSV that may be used for public demo.
+- Extract specific parts of a CSV file and junk the rest.
+- Explode JSON values into individual columns per key.
 
 ## Usage
 
