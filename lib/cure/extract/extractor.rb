@@ -21,14 +21,14 @@ module Cure
       end
 
       # @param [String] csv_file_location
-      # @return [ParsedCSV]
+      # @return [WrappedCSV]
       def extract_from_file(csv_file_location)
         file_contents = read_file(csv_file_location)
         extract_from_contents(file_contents)
       end
 
       # @param [String] file_contents
-      # @return [ParsedCSV]
+      # @return [WrappedCSV]
       def extract_from_contents(file_contents)
         parsed_content = parse_csv(file_contents, header: :none)
         log_info("Parsed CSV into #{parsed_content.content.length} sections.")
@@ -39,13 +39,13 @@ module Cure
 
       # @param [String] file_contents
       # @param [Hash] opts
-      # @return [ParsedCSV]
+      # @return [WrappedCSV]
       def parse_csv(file_contents, opts={})
         csv_rows = []
 
         Rcsv.parse(file_contents, opts) { |row| csv_rows << row }
 
-        result = ParsedCSV.new
+        result = WrappedCSV.new
         result.content = extract_named_ranges(csv_rows)
         result.variables = extract_variables(csv_rows)
 
@@ -107,7 +107,7 @@ module Cure
       end
     end
 
-    class ParsedCSV
+    class WrappedCSV
       # @return [Array<Hash>]
       attr_accessor :content
 

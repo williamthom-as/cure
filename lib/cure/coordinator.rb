@@ -18,17 +18,19 @@ module Cure
     include Log
 
     def process
-      parsed_csv = extract(config.source_file_location)
-      transformed_csv = transform(parsed_csv)
+      extracted_csv = extract(config.source_file_location)
+      built_csv = build(extracted_csv)
+      transformed_csv = transform(built_csv)
       export(transformed_csv)
     end
 
     private
 
     # @param [String] csv_file_location
-    # @return [ParsedCSV]
+    # @return [Cure::Extract::WrappedCSV]
     def extract(csv_file_location)
       log_info "Beginning the extraction process..."
+
       extractor = Extract::Extractor.new({})
       result = extractor.extract_from_file(csv_file_location)
 
@@ -39,12 +41,15 @@ module Cure
       result
     end
 
-    def build
-      "Do something later?"
+    # @param [Cure::Extract::WrappedCSV] wrapped_csv
+    def build(wrapped_csv)
+      log_info "Beginning the building process..."
+      log_info "... building complete"
+      wrapped_csv
     end
 
     # @return [Hash<String,Cure::Transformation::TransformResult>]
-    # @param [ParsedCSV] parsed_csv
+    # @param [Cure::Extract::WrappedCSV] parsed_csv
     def transform(parsed_csv)
       log_info "Beginning the transformation process..."
       transformer = Cure::Transformation::Transform.new(config.template.transformations.candidates)
@@ -54,6 +59,7 @@ module Cure
       content
     end
 
+    # @return [Hash<String,Cure::Transformation::TransformResult>]
     def export(transformed_result)
       log_info "Beginning export process..."
       Cure::Export::Exporter.export_result(transformed_result, config.output_dir)

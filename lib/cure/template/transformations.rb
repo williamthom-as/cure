@@ -22,20 +22,5 @@ module Cure
       this.placeholders = hash["placeholders"]
       this
     end
-
-    # @param [Transformation::Candidate] candidate
-    # @return [Cure::Transformations]
-    def with_candidate(candidate)
-      @candidates.push(candidate)
-      self
-    end
-
-    # @param [String] key
-    # @param [Object] value
-    # @return [Cure::Transformations]
-    def with_placeholder(key, value)
-      @placeholders[key.to_s] = value
-      self
-    end
   end
 end
