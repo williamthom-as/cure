@@ -236,3 +236,31 @@ RSpec.describe Cure::Generator::CaseGenerator do
   end
 end
 # rubocop:enable Metrics/BlockLength
+
+RSpec.describe Cure::Generator::VariableGenerator do
+  before :all do
+    @generator = described_class.new({"name" => "variable"})
+
+    conf = {
+      "transformations" => {
+        "candidates" => [],
+        "placeholders" => {
+          "$account_number" => "123456"
+        }
+      }
+    }
+
+    template = Cure::Template.from_hash(conf)
+
+    mc = MockClass.new
+    config = mc.create_config("abc", template, "ghi")
+    mc.register_config(config)
+    mc.config.variables = {"variable" => "test"}
+  end
+
+  describe "#generate" do
+    it "should raise if called on base class" do
+      expect(@generator.generate).to eq("test")
+    end
+  end
+end

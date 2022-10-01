@@ -18,7 +18,9 @@ module Cure
     include Log
 
     def process
-      extracted_csv = extract(config.source_file_location)
+      # need to check config is init'd
+
+      extracted_csv = extract
       built_csv = build(extracted_csv)
       transformed_csv = transform(built_csv)
       export(transformed_csv)
@@ -26,13 +28,12 @@ module Cure
 
     private
 
-    # @param [String] csv_file_location
     # @return [Cure::Extract::WrappedCSV]
-    def extract(csv_file_location)
+    def extract
       log_info "Beginning the extraction process..."
 
       extractor = Extract::Extractor.new({})
-      result = extractor.extract_from_file(csv_file_location)
+      result = extractor.extract_from_file(config.source_file_location)
 
       log_debug "Setting extracted variables to global conf for access downstream"
       config.variables = result.variables
