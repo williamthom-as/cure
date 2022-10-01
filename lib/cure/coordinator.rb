@@ -65,6 +65,8 @@ module Cure
       log_info "Beginning export process..."
       Cure::Export::Exporter.export_result(transformed_result, config.output_dir)
       log_info "... export complete."
+
+      transformed_result
     end
   end
 end
