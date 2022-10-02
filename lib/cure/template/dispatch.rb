@@ -11,7 +11,7 @@ module Cure
       @named_ranges = [default]
     end
 
-    # @param [Array<String>] hash
+    # @param [Hash] hash
     # @return [Cure::Dispatch]
     def self.from_hash(hash)
       this = Cure::Dispatch.new

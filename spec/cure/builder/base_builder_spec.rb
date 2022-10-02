@@ -2,7 +2,7 @@
 
 require "cure/builder/base_builder"
 
-RSpec.describe Cure::Builder::ExploderBuilder do
+RSpec.describe Cure::Builder::ExplodeBuilder do
   before :all do
     @source_file_loc = "../../../spec/cure/test_files/explode_csv.csv"
     template_file_loc = "../../../spec/cure/test_files/explode_template.json"
@@ -31,7 +31,12 @@ RSpec.describe Cure::Builder::ExploderBuilder do
         }
       }
 
-      exploder = Cure::Builder::ExploderBuilder.new(opts["build"]["candidates"].first)
+      exploder = Cure::Builder::ExplodeBuilder.new(
+        "default",
+        opts["build"]["candidates"][0]["column"],
+        opts["build"]["candidates"][0]["action"]["options"]
+      )
+
       result = exploder.process(wrapped_csv)
 
       expect(result.content.first["content"].column_headers.keys).to eq(%w[index json abc def ghi])

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require "csv"
 require "cure/log"
 require "cure/config"
 require "cure/helpers/file_helpers"
@@ -47,11 +47,8 @@ module Cure
         log_info("Exporting file to [#{output_dir}/#{file_name}] with #{rows.length} rows")
 
         file_contents = []
-        file_contents << columns.join(",")
-
-        rows.each do |row|
-          file_contents << row.join(",")
-        end
+        file_contents << columns.join(",").to_s
+        file_contents << rows.map(&:to_csv).join
 
         write_to_file(
           output_dir, file_name, "csv", file_contents.join("\n")
@@ -72,3 +69,4 @@ module Cure
     end
   end
 end
+

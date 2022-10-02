@@ -5,8 +5,8 @@ require "cure/config"
 require "cure/helpers/file_helpers"
 
 require "cure/extract/extractor"
-require "cure/transformation/transform"
 require "cure/export/exporter"
+require "cure/transformation/transform"
 
 require "rcsv"
 
@@ -45,6 +45,11 @@ module Cure
     # @param [Cure::Extract::WrappedCSV] wrapped_csv
     def build(wrapped_csv)
       log_info "Beginning the building process..."
+      candidates = config.template.build.candidates
+      candidates.each do |candidate|
+        candidate.perform(wrapped_csv)
+      end
+
       log_info "... building complete"
       wrapped_csv
     end

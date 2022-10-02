@@ -11,10 +11,10 @@ module Cure
   module Builder
 
     class BaseBuilder
-      def initialize(opts)
-        @named_range = opts.fetch("named_range", "default")
-        @column = opts["column"]
-        @opts = opts["action"]["options"]
+      def initialize(named_range, column, opts)
+        @named_range = named_range
+        @column = column
+        @opts = opts
       end
 
       def process(_wrapped_csv)
@@ -22,9 +22,10 @@ module Cure
       end
     end
 
-    class ExploderBuilder < BaseBuilder
+    class ExplodeBuilder < BaseBuilder
 
       # @param [Cure::Extract::WrappedCSV] wrapped_csv
+      # @return [Cure::Extract::WrappedCSV]
       def process(wrapped_csv)
         content = wrapped_csv.find_named_range(@named_range)
         json_store, new_keys = extract_json_data(content)
