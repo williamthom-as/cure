@@ -1,0 +1,16 @@
+{
+  "transformations": {},
+  "build" : {
+    "candidates" : [
+      {
+        "column" : "json",
+        "action" : {
+          "type" : "explode",
+          "options" : {
+            "keep_existing" : false
+          }
+        }
+      }
+    ]
+  }
+}

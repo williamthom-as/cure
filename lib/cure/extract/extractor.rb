@@ -4,6 +4,7 @@ require "cure/log"
 require "cure/config"
 require "cure/extract/csv_lookup"
 require "cure/helpers/file_helpers"
+require "cure/extract/wrapped_csv"
 
 module Cure
   module Extract
@@ -54,17 +55,24 @@ module Cure
 
       # @param [Array<Array>] csv_rows
       # @return [Array<Hash>]
+      # rubocop:disable Metrics/AbcSize
       def extract_named_ranges(csv_rows)
         # Use only the NR's that are defined from the candidates list
         candidates = config.template.transformations.candidates
         candidate_nrs = config.template.extraction.required_named_ranges(candidates.map(&:named_range).uniq)
+
         candidate_nrs.map do |nr|
+          rows = extract_from_rows(csv_rows, nr["section"])
+          ctx = Extract::CSVContent.new
+          ctx.extract_column_headers(rows[0])
+          ctx.add_rows(rows[1..])
           {
-            "rows" => extract_from_rows(csv_rows, nr["section"]),
+            "content" => ctx,
             "name" => nr["name"]
           }
         end
       end
+      # rubocop:enable Metrics/AbcSize
 
       # @param [Array<Array>] csv_rows
       # @return [Hash]
@@ -104,19 +112,6 @@ module Cure
         return nil unless psx[3] == -1 || (row_idx >= psx[2] && row_idx <= psx[3])
 
         row[psx[0]..psx[1]]
-      end
-    end
-
-    class WrappedCSV
-      # @return [Array<Hash>]
-      attr_accessor :content
-
-      # @return [Hash]
-      attr_accessor :variables
-
-      def initialize
-        @content = []
-        @variables = {}
       end
     end
   end

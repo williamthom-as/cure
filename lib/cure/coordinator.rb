@@ -49,8 +49,8 @@ module Cure
       wrapped_csv
     end
 
-    # @return [Hash<String,Cure::Transformation::TransformResult>]
     # @param [Cure::Extract::WrappedCSV] parsed_csv
+    # @return [Hash<String,Cure::Transformation::TransformResult>]
     def transform(parsed_csv)
       log_info "Beginning the transformation process..."
       transformer = Cure::Transformation::Transform.new(config.template.transformations.candidates)

@@ -21,28 +21,11 @@ RSpec.describe Cure::Coordinator do
       csv = result.content.first
 
       expect(csv["name"]).to be("default")
-      expect(csv["rows"].length).to be(4)
-      expect(csv["rows"][0]).to eq(%w[test_column test_column2])
-      expect(csv["rows"][1]).to eq(%w[abc def])
-      expect(csv["rows"][2]).to eq(%w[abc def])
-      expect(csv["rows"][3]).to eq(%w[abc def])
-    end
-  end
-
-  describe "#extract" do
-    it "will extract required sections" do
-      result = @coordinator.send(:extract)
-      expect(result.variables.keys).to be_empty
-      expect(result.content.length).to be(1)
-
-      csv = result.content.first
-
-      expect(csv["name"]).to be("default")
-      expect(csv["rows"].length).to be(4)
-      expect(csv["rows"][0]).to eq(%w[test_column test_column2])
-      expect(csv["rows"][1]).to eq(%w[abc def])
-      expect(csv["rows"][2]).to eq(%w[abc def])
-      expect(csv["rows"][3]).to eq(%w[abc def])
+      expect(csv["content"].rows.length).to be(3)
+      expect(csv["content"].column_headers.keys).to eq(%w[test_column test_column2])
+      expect(csv["content"].rows[0]).to eq(%w[abc def])
+      expect(csv["content"].rows[1]).to eq(%w[abc def])
+      expect(csv["content"].rows[2]).to eq(%w[abc def])
     end
   end
 end

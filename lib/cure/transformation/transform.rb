@@ -23,19 +23,13 @@ module Cure
         @candidates = candidates
       end
 
-      # @param [ParsedCSV] parsed_content
+      # @param [Cure::Extract::WrappedCSV] wrapped_csv
       # @return [Hash<String,TransformResult>] # make this transformation results?
-      def transform_content(parsed_content)
-        parsed_content.content.each_with_object({}) do |section, hash|
+      def transform_content(wrapped_csv)
+        wrapped_csv.content.each_with_object({}) do |section, hash|
           ctx = TransformResult.new
-          section["rows"].each do |row|
-            ctx.row_count += 1
-
-            if ctx.row_count == 1
-              ctx.extract_column_headers(row)
-              next
-            end
-
+          ctx.column_headers = section["content"].column_headers
+          section["content"].rows.each do |row|
             row = transform(section["name"], ctx.column_headers, row)
             ctx.add_transformed_row(row)
           end
@@ -72,7 +66,6 @@ module Cure
     end
 
     class TransformResult
-      include Helpers::FileHelpers
 
       attr_accessor :row_count,
                     :transformed_rows,

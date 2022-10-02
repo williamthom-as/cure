@@ -18,7 +18,9 @@ module Cure
     # @return [Cure::Transformations]
     def self.from_hash(hash)
       this = Cure::Transformations.new
-      this.candidates = hash["candidates"].map { |c| Cure::Transformation::Candidate.new.from_json(c) }
+      if hash.key? "candidates"
+        this.candidates = hash["candidates"].map { |c| Cure::Transformation::Candidate.new.from_json(c) }
+      end
       this.placeholders = hash["placeholders"]
       this
     end
