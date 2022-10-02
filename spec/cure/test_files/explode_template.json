@@ -3,7 +3,7 @@
   "build" : {
     "candidates" : [
       {
-        "column" : "json",
+        "column" : "Tags",
         "action" : {
           "type" : "explode",
           "options" : {

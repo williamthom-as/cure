@@ -34,7 +34,9 @@ RSpec.describe Cure::Builder::ExploderBuilder do
       exploder = Cure::Builder::ExploderBuilder.new(opts["build"]["candidates"].first)
       result = exploder.process(wrapped_csv)
 
-      p result
+      expect(result.content.first["content"].column_headers.keys).to eq(%w[index json abc def ghi])
+      expect(result.content.first["content"].rows[0]).to eq(["1", "{\"abc\": \"def\",\"def\": 123}", "def", 123, ""])
+      expect(result.content.first["content"].rows[1]).to eq(["2", "{\"abc\": \"def\",\"ghi\": 123}", "def", "", 123])
     end
   end
 

@@ -38,6 +38,10 @@ module Cure
         @rows.concat(rows)
       end
 
+      def add_column_key(key)
+        @column_headers[key] = @column_headers.length
+      end
+
       def row_count
         @rows.length
       end
