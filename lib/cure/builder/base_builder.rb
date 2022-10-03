@@ -65,5 +65,19 @@ module Cure
         [temp_json_store, temp_new_keys]
       end
     end
+
+    class RemoveBuilder < BaseBuilder
+
+      # @param [Cure::Extract::WrappedCSV] wrapped_csv
+      # @return [Cure::Extract::WrappedCSV]
+      def process(wrapped_csv)
+        content = wrapped_csv.find_named_range(@named_range)
+        column_idx = content.column_headers.delete(@column)
+
+        content.rows.each { |row| row.delete_at(column_idx) }
+
+        wrapped_csv
+      end
+    end
   end
 end
