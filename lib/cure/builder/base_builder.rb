@@ -66,6 +66,20 @@ module Cure
       end
     end
 
+    class AddBuilder < BaseBuilder
+
+      # @param [Cure::Extract::WrappedCSV] wrapped_csv
+      # @return [Cure::Extract::WrappedCSV]
+      def process(wrapped_csv)
+        content = wrapped_csv.find_named_range(@named_range)
+        content.add_column_key(@column)
+
+        content.rows.each { |row| row.append("") }
+
+        wrapped_csv
+      end
+    end
+
     class RemoveBuilder < BaseBuilder
 
       # @param [Cure::Extract::WrappedCSV] wrapped_csv
