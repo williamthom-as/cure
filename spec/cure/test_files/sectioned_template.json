@@ -21,27 +21,23 @@
       }
     ]
   },
+  "build": {
+    "candidates" : [
+      {
+        "column" : "new_column",
+        "named_range" : "section_1",
+        "action" : {
+          "type" : "add",
+          "options" : {}
+        }
+      }
+    ]
+  },
   "transformations": {
     "candidates": [
       {
         "named_range" : "section_1",
-        "column" : "column_1",
-        "translations" : [{
-          "strategy" : {
-            "name": "full",
-            "options" : {}
-          },
-          "generator" : {
-            "name" : "number",
-            "options" : {
-              "length" : 12
-            }
-          }
-        }]
-      },
-      {
-        "named_range" : "section_1",
-        "column" : "column_2",
+        "column" : "new_column",
         "translations" : [
           {
             "strategy" : {
@@ -52,18 +48,6 @@
               "name" : "variable",
               "options" : {
                 "name" : "new_field"
-              }
-            }
-          },
-          {
-            "strategy" : {
-              "name": "append",
-              "options" : {}
-            },
-            "generator" : {
-              "name" : "variable",
-              "options" : {
-                "name" : "new_field_2"
               }
             }
           }

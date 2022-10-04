@@ -16,7 +16,12 @@ module Cure
 
       # @return [CSVContent]
       def find_named_range(named_range)
-        @content.find { |x| x["name"] == named_range }.fetch("content")
+        range = @content.find { |x| x["name"] == named_range }
+        unless range
+          raise "Missing range for [#{named_range}]. Candidates are [#{@content.map { |x| x["name"] }.join(", ")}]"
+        end
+
+        range.fetch("content")
       end
     end
 
