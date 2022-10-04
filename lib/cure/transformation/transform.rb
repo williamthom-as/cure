@@ -77,11 +77,6 @@ module Cure
         @column_headers = {}
       end
 
-      # @param [Array<String>] row
-      def extract_column_headers(row)
-        row.each_with_index { |column, idx| @column_headers[column] = idx }
-      end
-
       def add_transformed_row(row)
         @transformed_rows << row
       end

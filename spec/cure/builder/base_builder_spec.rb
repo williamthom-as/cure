@@ -11,7 +11,7 @@ RSpec.describe Cure::Builder::ExplodeBuilder do
     @coordinator = Cure::Coordinator.new
   end
 
-  describe "#proces" do
+  describe "#process" do
     it "will extract required sections" do
       wrapped_csv = @coordinator.send(:extract)
 
@@ -36,8 +36,9 @@ RSpec.describe Cure::Builder::ExplodeBuilder do
         opts["build"]["candidates"][0]["column"],
         opts["build"]["candidates"][0]["action"]["options"]
       )
-
       result = exploder.process(wrapped_csv)
+
+      expect(exploder.safe_parse_json("dfsdfd")).to eq({})
 
       expect(result.content.first["content"].column_headers.keys).to eq(%w[index json abc def ghi])
       expect(result.content.first["content"].rows[0]).to eq(["1", "{\"abc\": \"def\",\"def\": 123}", "def", 123, ""])
@@ -129,6 +130,14 @@ RSpec.describe Cure::Builder::AddBuilder do
       expect(result.content.first["content"].column_headers.keys).to eq(%w[index json new])
       expect(result.content.first["content"].rows[0]).to eq(["1", "{\"abc\": \"def\",\"def\": 123}", ""])
       expect(result.content.first["content"].rows[1]).to eq(["2", "{\"abc\": \"def\",\"ghi\": 123}", ""])
+    end
+  end
+end
+
+RSpec.describe Cure::Builder::BaseBuilder do
+  describe "#process" do
+    it "will raise if called on base" do
+      expect { Cure::Builder::BaseBuilder.new("default","x", {}).process(nil) }.to raise_error
     end
   end
 end

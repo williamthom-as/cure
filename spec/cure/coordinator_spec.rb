@@ -50,6 +50,7 @@ RSpec.describe Cure::Coordinator do
     end
   end
 
+  # rubocop:disable Metrics/BlockLength
   describe "#build" do
     it "will extract required sections" do
       source_file_loc = "../../../spec/cure/test_files/sectioned_csv.csv"
@@ -62,9 +63,10 @@ RSpec.describe Cure::Coordinator do
 
       expect(result.variables.keys).to eq(%w[new_field new_field_2])
       expect(result.content.length).to be(1)
+      expect { result.find_named_range("default") }.to raise_error(StandardError)
 
       csv = result.content.first
-
+      expect(csv["content"].row_count).to eq(4)
       expect(csv["name"]).to eq("section_1")
       expect(csv["content"].rows.length).to be(4)
       expect(csv["content"].column_headers.keys).to eq(
@@ -81,5 +83,6 @@ RSpec.describe Cure::Coordinator do
       expect(trans_csv["content"].rows[1]).to eq(%w[b1 b2 b3 b4 b5 b6 new_value])
       expect(trans_csv["content"].rows[2]).to eq(%w[c1 c2 c3 c4 c5 c6 new_value])
     end
+    # rubocop:enable Metrics/BlockLength
   end
 end

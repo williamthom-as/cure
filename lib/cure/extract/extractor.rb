@@ -104,15 +104,16 @@ module Cure
         rows[psx[1]][psx[0]]
       end
 
+      # Commented out for now, not needed.rsp
       # @param [Integer] row_idx
       # @param [Array] row
       # @param [Array] psx
       # @return [Array, nil]
-      def handle_row(row_idx, row, psx)
-        return nil unless psx[3] == -1 || (row_idx >= psx[2] && row_idx <= psx[3])
-
-        row[psx[0]..psx[1]]
-      end
+      # def handle_row(row_idx, row, psx)
+      #   return nil unless psx[3] == -1 || (row_idx >= psx[2] && row_idx <= psx[3])
+      #
+      #   row[psx[0]..psx[1]]
+      # end
     end
   end
 end

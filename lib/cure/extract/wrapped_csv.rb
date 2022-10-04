@@ -3,7 +3,7 @@
 module Cure
   module Extract
     class WrappedCSV
-      # @return [CSVContent]
+      # @return [Array<Hash<String,CSVContent>]
       attr_accessor :content
 
       # @return [Hash]

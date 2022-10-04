@@ -28,8 +28,8 @@ module Cure
           proc = case validator_prop
                  when Symbol
                    common_validators.fetch(validator_prop, proc { |_x| false })
-                 when Proc
-                   validator_prop
+                 # when Proc
+                 #   validator_prop
                  else
                    proc { |_x| false }
                  end

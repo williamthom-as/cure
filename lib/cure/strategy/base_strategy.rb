@@ -113,6 +113,8 @@ module Cure
       def initialize(options={})
         @replace_partial = options["replace_partial"] || "false"
         @options = options
+
+        validate_params
       end
 
       def validate_params
