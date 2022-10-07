@@ -24,6 +24,7 @@ module Cure
 
     class ExplodeBuilder < BaseBuilder
 
+      # TODO: remove original column
       # @param [Cure::Extract::WrappedCSV] wrapped_csv
       # @return [Cure::Extract::WrappedCSV]
       def process(wrapped_csv)
@@ -62,8 +63,31 @@ module Cure
           end
         end
 
+        temp_new_keys = filter_keys(temp_new_keys)
+
         [temp_json_store, temp_new_keys]
       end
+
+      #  rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
+      def filter_keys(keys)
+        filter_opts = @opts.fetch("filter", nil)
+        return keys unless filter_opts
+
+        type = filter_opts["type"]
+
+        if type == "whitelist"
+          candidates = filter_opts["values"]
+          return keys.map { |k| candidates.include?(k) ? k : nil }&.compact
+        end
+
+        if type == "blacklist"
+          candidates = filter_opts["values"]
+          return keys.map { |k| candidates.include?(k) ? nil : k }&.compact
+        end
+
+        keys
+      end
+      #  rubocop:enable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
     end
 
     class AddBuilder < BaseBuilder
@@ -86,7 +110,7 @@ module Cure
       # @return [Cure::Extract::WrappedCSV]
       def process(wrapped_csv)
         content = wrapped_csv.find_named_range(@named_range)
-        column_idx = content.column_headers.delete(@column)
+        column_idx = content.remove_column_key(@column)
 
         content.rows.each { |row| row.delete_at(column_idx) }
 

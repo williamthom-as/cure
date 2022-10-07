@@ -47,6 +47,17 @@ module Cure
         @column_headers[key] = @column_headers.length
       end
 
+      def remove_column_key(key)
+        remove_idx = column_headers[key]
+
+        @column_headers.delete(key)
+        @column_headers.each do |k, val|
+          @column_headers[k] -= 1 if val > remove_idx
+        end
+
+        remove_idx
+      end
+
       def row_count
         @rows.length
       end
