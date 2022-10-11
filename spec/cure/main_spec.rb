@@ -9,13 +9,11 @@ RSpec.describe Cure::Main do
     it "should set up the main service" do
       source_file_loc = "../../../spec/cure/test_files/test_csv_file.csv"
       template_file_loc = "../../../spec/cure/test_files/test_template.json"
-      tmp_location = "/tmp/cure"
 
-      main = Cure::Main.init_from_file_locations(template_file_loc, source_file_loc, tmp_location)
+      main = Cure::Main.init_from_file_locations(template_file_loc, source_file_loc)
 
       config = main.config
       expect(config.template.class).to eq(Cure::Template)
-      expect(config.output_dir).to eq(tmp_location)
     end
   end
 
@@ -33,11 +31,10 @@ RSpec.describe Cure::Main do
         }
       }
 
-      main = Cure::Main.init(template, File.open(source_file_loc), tmp_location)
+      main = Cure::Main.init(template, File.open(source_file_loc))
 
       config = main.config
       expect(config.template.class).to eq(Cure::Template)
-      expect(config.output_dir).to eq(tmp_location)
     end
   end
 
@@ -45,9 +42,8 @@ RSpec.describe Cure::Main do
     it "should run export" do
       source_file_loc = "../../../spec/cure/test_files/test_csv_file.csv"
       template_file_loc = "../../../spec/cure/test_files/test_template.json"
-      tmp_location = "/tmp/cure"
 
-      main = Cure::Main.init_from_file_locations(template_file_loc, source_file_loc, tmp_location)
+      main = Cure::Main.init_from_file_locations(template_file_loc, source_file_loc)
       main.with_temp_dir("/tmp/cure") do
         main.run_export
         expect(Dir["/tmp/cure/*.csv"].length.positive?).to be_truthy

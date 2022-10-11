@@ -21,10 +21,9 @@ module Cure
 
     # @param [File] source_file
     # @param [Cure::Template] template
-    # @param [String] output_dir
     # @return [Config]
-    def create_config(source_file, template, output_dir)
-      Config.new(source_file, template, output_dir)
+    def create_config(source_file, template)
+      Config.new(source_file, template)
     end
 
     # If we are overloading here as a "data store" and "config store", we
@@ -33,7 +32,7 @@ module Cure
     # This should be a kind of instance cache, which loads once per run,
     # and junk can be jammed in there?
     class Config
-      attr_accessor :source_file, :output_dir
+      attr_accessor :source_file
 
       # @return [Cure::Template] template
       attr_accessor :template
@@ -43,11 +42,9 @@ module Cure
 
       # @param [File] source_file
       # @param [Cure::Template] template
-      # @param [String] output_dir
-      def initialize(source_file, template, output_dir)
+      def initialize(source_file, template)
         @source_file = source_file
         @template = template
-        @output_dir = output_dir
       end
 
       def placeholders

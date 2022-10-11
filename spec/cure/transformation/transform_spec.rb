@@ -8,7 +8,7 @@ RSpec.describe Cure::Transformation::Transform do
     @source_file_loc = "../../../spec/cure/test_files/test_csv_file.csv"
     template_file_loc = "../../../spec/cure/test_files/test_template.json"
 
-    main = Cure::Main.init_from_file_locations(template_file_loc, @source_file_loc, "/tmp")
+    main = Cure::Main.init_from_file_locations(template_file_loc, @source_file_loc)
     @transform = Cure::Transformation::Transform.new(main.config.template.transformations.candidates)
   end
 

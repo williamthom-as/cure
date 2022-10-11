@@ -17,6 +17,7 @@ module Cure
     include Configuration
     include Log
 
+    # @return [Hash<String,Cure::Transformation::TransformResult>]
     def process
       # need to check config is init'd
 
@@ -43,6 +44,7 @@ module Cure
     end
 
     # @param [Cure::Extract::WrappedCSV] wrapped_csv
+    # @return [Cure::Extract::WrappedCSV]
     def build(wrapped_csv)
       log_info "Beginning the building process..."
       candidates = config.template.build.candidates
@@ -68,7 +70,7 @@ module Cure
     # @return [Hash<String,Cure::Transformation::TransformResult>]
     def export(transformed_result)
       log_info "Beginning export process..."
-      Cure::Export::Exporter.export_result(transformed_result, config.output_dir)
+      Cure::Export::Exporter.export_result(transformed_result, "/tmp/cure")
       log_info "... export complete."
 
       transformed_result

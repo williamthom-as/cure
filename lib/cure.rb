@@ -24,8 +24,8 @@ module Cure
     # @param [String] csv_file_location
     # @param [Hash] template
     # @return [File] output_file
-    def process(template, csv_file_location, output_dir)
-      # Main.init_from_hash(template, csv_file_location, output_dir)
+    def process(template, csv_file_location)
+      # Main.init_from_hash(template, csv_file_location)
     end
   end
 end

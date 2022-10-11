@@ -3,10 +3,9 @@
 require "cure/builder/candidate"
 
 module Cure
-  # This name sucks, it is just an exporter
   class Build
 
-    # @param [Array<Hash>] candidates
+    # @param [Array<Cure::Builder::Candidate>] candidates
     attr_accessor :candidates
 
     def initialize

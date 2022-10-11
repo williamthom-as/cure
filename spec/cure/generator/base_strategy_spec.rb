@@ -113,7 +113,7 @@ RSpec.describe Cure::Generator::PlaceholderGenerator do
     template = Cure::Template.from_hash(conf)
 
     mc = MockClass.new
-    config = mc.create_config("abc", template, "ghi")
+    config = mc.create_config("abc", template)
     mc.register_config(config)
   end
 
@@ -253,7 +253,7 @@ RSpec.describe Cure::Generator::VariableGenerator do
     template = Cure::Template.from_hash(conf)
 
     mc = MockClass.new
-    config = mc.create_config("abc", template, "ghi")
+    config = mc.create_config("abc", template)
     mc.register_config(config)
     mc.config.variables = {"variable" => "test"}
   end

@@ -12,15 +12,15 @@ module Cure
       include Log
 
       # @param [Array<Cure::Transform::TransformResult>] result
-      def self.export_result(results, output_dir)
-        exporter = Exporter.new(output_dir)
+      def self.export_result(results, exporters)
+        exporter = Exporter.new(exporters)
         exporter.export_results(results)
       end
 
-      attr_reader :output_dir
+      attr_reader :exporters
 
-      def initialize(output_dir)
-        @output_dir = output_dir
+      def initialize(exporters)
+        @exporters = exporters
       end
 
       # @param [Array<Cure::Transform::TransformResult>] result
@@ -35,7 +35,7 @@ module Cure
 
           data = result[named_range]
           column_headers = data.column_headers.keys
-          export(@output_dir, range["file_name"], data.transformed_rows, column_headers)
+          export(@exporters, range["file_name"], data.transformed_rows, column_headers)
         end
       end
 

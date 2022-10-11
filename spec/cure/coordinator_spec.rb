@@ -9,7 +9,7 @@ RSpec.describe Cure::Coordinator do
       source_file_loc = "../../../spec/cure/test_files/test_csv_file.csv"
       template_file_loc = "../../../spec/cure/test_files/test_template.json"
 
-      Cure::Main.init_from_file_locations(template_file_loc, source_file_loc, "/tmp")
+      Cure::Main.init_from_file_locations(template_file_loc, source_file_loc)
       coordinator = Cure::Coordinator.new
       result = coordinator.send(:extract)
 
@@ -32,7 +32,7 @@ RSpec.describe Cure::Coordinator do
       source_file_loc = "../../../spec/cure/test_files/sectioned_csv.csv"
       template_file_loc = "../../../spec/cure/test_files/sectioned_template.json"
 
-      Cure::Main.init_from_file_locations(template_file_loc, source_file_loc, "/tmp")
+      Cure::Main.init_from_file_locations(template_file_loc, source_file_loc)
       coordinator = Cure::Coordinator.new
       result = coordinator.send(:extract)
 
@@ -56,7 +56,7 @@ RSpec.describe Cure::Coordinator do
       source_file_loc = "../../../spec/cure/test_files/sectioned_csv.csv"
       template_file_loc = "../../../spec/cure/test_files/sectioned_template.json"
 
-      Cure::Main.init_from_file_locations(template_file_loc, source_file_loc, "/tmp")
+      Cure::Main.init_from_file_locations(template_file_loc, source_file_loc)
       coordinator = Cure::Coordinator.new
       wrapped_csv = coordinator.send(:extract)
       result = coordinator.send(:build, wrapped_csv)

@@ -7,17 +7,20 @@ require "cure/template/build"
 
 module Cure
   class Template
-    # @param [Cure::Transformations] transformations
+    # @return [Cure::Transformations] transformations
     attr_accessor :transformations
 
-    # @param [Cure::Extraction] extraction
+    # @return [Cure::Extraction] extraction
     attr_accessor :extraction
 
-    # @param [Cure::Dispatch] dispatch
+    # @return [Cure::Dispatch] dispatch
     attr_accessor :dispatch
 
-    # @param [Cure::Build]
+    # @return [Cure::Build]
     attr_accessor :build
+
+    # @return [Cure::Exporter]
+    attr_accessor :exporter
 
     # @param [Hash] hash
     # @return [Cure::Template]
