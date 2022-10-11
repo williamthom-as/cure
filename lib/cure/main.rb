@@ -18,28 +18,29 @@ module Cure
     # @param [String] csv_file_loc
     # @param [String] output_dir
     # @return [Cure::Main]
-    def self.init_from_file(template_file_loc, csv_file_loc, output_dir)
+    def self.init_from_file_locations(template_file_loc, csv_file_loc, output_dir)
       # Run all init stuff here.
       # Run validator?
 
       main = Main.new
+      csv_file = main.open_file(csv_file_loc)
       template_hash = JSON.parse(main.read_file(template_file_loc))
       template = Template.from_hash(template_hash)
-      main.setup(csv_file_loc, template, output_dir)
+      main.setup(csv_file, template, output_dir)
       main
     end
 
     # @param [Hash] template_hash
-    # @param [String] csv_file_loc
+    # @param [File] csv_file
     # @param [String] output_dir
     # @return [Cure::Main]
-    def self.init_from_hash(template_hash, csv_file_loc, output_dir)
+    def self.init(template_hash, csv_file, output_dir)
       # Run all init stuff here.
       # Run validator?
 
       main = Main.new
       template = Template.from_hash(template_hash)
-      main.setup(csv_file_loc, template, output_dir)
+      main.setup(csv_file, template, output_dir)
       main
     end
 
@@ -58,12 +59,12 @@ module Cure
       @coordinator.process
     end
 
-    # @param [String] csv_file_location
+    # @param [File] csv_file
     # @param [Cure::Template] template
     # @param [String] output_dir
     # @return [Cure::Main]
-    def setup(csv_file_location, template, output_dir)
-      config = create_config(csv_file_location, template, output_dir)
+    def setup(csv_file, template, output_dir)
+      config = create_config(csv_file, template, output_dir)
       register_config(config)
 
       self

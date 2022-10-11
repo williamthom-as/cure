@@ -28,6 +28,14 @@ module Cure
         File.read(result)
       end
 
+      def open_file(file_location)
+        result = file_location.start_with?("/") ? file_location : File.join(File.dirname(__FILE__), file_location)
+
+        raise "No file found at [#{file_location}]" unless File.exist? result
+
+        File.open(result)
+      end
+
       def with_temp_dir(temp_dir, &_block)
         return unless block_given?
 

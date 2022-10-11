@@ -19,12 +19,12 @@ module Cure
       ConfigurationSource.instance.load_config(request_config)
     end
 
-    # @param [String] source_file_location
+    # @param [File] source_file
     # @param [Cure::Template] template
     # @param [String] output_dir
     # @return [Config]
-    def create_config(source_file_location, template, output_dir)
-      Config.new(source_file_location, template, output_dir)
+    def create_config(source_file, template, output_dir)
+      Config.new(source_file, template, output_dir)
     end
 
     # If we are overloading here as a "data store" and "config store", we
@@ -33,7 +33,7 @@ module Cure
     # This should be a kind of instance cache, which loads once per run,
     # and junk can be jammed in there?
     class Config
-      attr_accessor :source_file_location, :output_dir
+      attr_accessor :source_file, :output_dir
 
       # @return [Cure::Template] template
       attr_accessor :template
@@ -41,11 +41,11 @@ module Cure
       # @return [Hash] variables
       attr_accessor :variables
 
-      # @param [String] source_file_location
+      # @param [File] source_file
       # @param [Cure::Template] template
       # @param [String] output_dir
-      def initialize(source_file_location, template, output_dir)
-        @source_file_location = source_file_location
+      def initialize(source_file, template, output_dir)
+        @source_file = source_file
         @template = template
         @output_dir = output_dir
       end

@@ -33,7 +33,7 @@ module Cure
       log_info "Beginning the extraction process..."
 
       extractor = Extract::Extractor.new({})
-      result = extractor.extract_from_file(config.source_file_location)
+      result = extractor.extract_from_file(config.source_file)
 
       log_debug "Setting extracted variables to global conf for access downstream"
       config.variables = result.variables

@@ -7,7 +7,7 @@ RSpec.describe Cure::Builder::ExplodeBuilder do
     @source_file_loc = "../../../spec/cure/test_files/explode_csv.csv"
     template_file_loc = "../../../spec/cure/test_files/explode_template.json"
 
-    Cure::Main.init_from_file(template_file_loc, @source_file_loc, "/tmp")
+    Cure::Main.init_from_file_locations(template_file_loc, @source_file_loc, "/tmp")
     @coordinator = Cure::Coordinator.new
   end
 
@@ -53,7 +53,7 @@ RSpec.describe Cure::Builder::RemoveBuilder do
     @source_file_loc = "../../../spec/cure/test_files/explode_csv.csv"
     template_file_loc = "../../../spec/cure/test_files/explode_template.json"
 
-    Cure::Main.init_from_file(template_file_loc, @source_file_loc, "/tmp")
+    Cure::Main.init_from_file_locations(template_file_loc, @source_file_loc, "/tmp")
     @coordinator = Cure::Coordinator.new
   end
 
@@ -95,7 +95,7 @@ RSpec.describe Cure::Builder::AddBuilder do
     @source_file_loc = "../../../spec/cure/test_files/explode_csv.csv"
     template_file_loc = "../../../spec/cure/test_files/explode_template.json"
 
-    Cure::Main.init_from_file(template_file_loc, @source_file_loc, "/tmp")
+    Cure::Main.init_from_file_locations(template_file_loc, @source_file_loc, "/tmp")
     @coordinator = Cure::Coordinator.new
   end
 

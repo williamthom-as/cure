@@ -21,11 +21,10 @@ module Cure
         @opts = opts
       end
 
-      # @param [String] csv_file_location
+      # @param [File, Not Nil] csv_file
       # @return [WrappedCSV]
-      def extract_from_file(csv_file_location)
-        file_contents = read_file(csv_file_location)
-        extract_from_contents(file_contents)
+      def extract_from_file(csv_file)
+        extract_from_contents(csv_file.read)
       end
 
       # @param [String] file_contents
