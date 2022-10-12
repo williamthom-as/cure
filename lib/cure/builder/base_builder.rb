@@ -9,7 +9,6 @@ require "rcsv"
 
 module Cure
   module Builder
-
     class BaseBuilder
       def initialize(named_range, column, opts)
         @named_range = named_range

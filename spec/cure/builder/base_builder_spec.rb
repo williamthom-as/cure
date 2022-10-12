@@ -45,7 +45,6 @@ RSpec.describe Cure::Builder::ExplodeBuilder do
       expect(result.content.first["content"].rows[1]).to eq(["2", "{\"abc\": \"def\",\"ghi\": 123}", "def", "", 123])
     end
   end
-
 end
 
 RSpec.describe Cure::Builder::RemoveBuilder do
@@ -137,7 +136,7 @@ end
 RSpec.describe Cure::Builder::BaseBuilder do
   describe "#process" do
     it "will raise if called on base" do
-      expect { Cure::Builder::BaseBuilder.new("default","x", {}).process(nil) }.to raise_error
+      expect { Cure::Builder::BaseBuilder.new("default", "x", {}).process(nil) }.to raise_error
     end
   end
 end

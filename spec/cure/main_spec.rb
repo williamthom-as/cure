@@ -20,7 +20,6 @@ RSpec.describe Cure::Main do
   describe "#init" do
     it "should set up the main service" do
       source_file_loc = "spec/cure/test_files/test_csv_file.csv"
-      tmp_location = "/tmp/cure"
       template = {
         "transformations" => {
           "candidates" => [{

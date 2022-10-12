@@ -32,7 +32,6 @@ RSpec.describe Cure::Extract::Extractor do
 
   describe "#lookup_location" do
     it "will return the variable" do
-
       test_arr = [
         %w[a1 b1 c1 d1],
         %w[a2 b2 c2 d2],
@@ -44,6 +43,5 @@ RSpec.describe Cure::Extract::Extractor do
       expect(res).to eq("a1")
     end
   end
-
 end
 # rubocop:enable Metrics/BlockLength
