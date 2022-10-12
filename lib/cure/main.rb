@@ -3,7 +3,6 @@
 require "cure/template/template"
 require "cure/transformation/candidate"
 require "cure/transformation/transform"
-require "cure/export/exporter"
 require "cure/coordinator"
 
 require "cure"

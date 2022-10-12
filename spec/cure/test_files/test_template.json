@@ -16,5 +16,16 @@
       }]
     }],
     "placeholders" : []
+  },
+  "exporter": {
+    "sections" : [{
+      "processor" : {
+        "type": "csv",
+        "options" : {
+          "file_name" : "abc",
+          "directory" : "/tmp/cure"
+        }
+      }
+    }]
   }
 }

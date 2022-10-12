@@ -1,42 +1,38 @@
 # frozen_string_literal: true
+
 require "csv"
 require "cure/log"
-require "cure/config"
 require "cure/helpers/file_helpers"
 
 module Cure
   module Export
-    class Exporter
-      include Helpers::FileHelpers
-      include Configuration
+    class BaseProcessor
       include Log
 
-      # @param [Array<Cure::Transform::TransformResult>] result
-      def self.export_result(results, exporters)
-        exporter = Exporter.new(exporters)
-        exporter.export_results(results)
+      def initialize(named_range, opts)
+        @named_range = named_range
+        @opts = opts
       end
 
-      attr_reader :exporters
-
-      def initialize(exporters)
-        @exporters = exporters
+      # @param [Hash<String,Cure::Transformation::TransformResult>] _transformed_result
+      # @return [Hash<String,Cure::Transformation::TransformResult>]
+      def process(_transformed_result)
+        raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
+    end
 
-      # @param [Array<Cure::Transform::TransformResult>] result
-      def export_results(result)
-        export_ranges = config.template.dispatch.named_ranges
+    class CsvProcessor < BaseProcessor
+      include Helpers::FileHelpers
 
-        export_ranges.each do |range|
-          named_range = range["named_range"]
-          unless result.has_key?(named_range)
-            raise "Missing named range - #{range} from candidates [#{result.keys.join(", ")}]"
-          end
-
-          data = result[named_range]
-          column_headers = data.column_headers.keys
-          export(@exporters, range["file_name"], data.transformed_rows, column_headers)
+      # @param [Hash<String,Cure::Transformation::TransformResult>] transformed_result
+      # @return [Hash<String,Cure::Transformation::TransformResult>]
+      def process(transformed_result)
+        content = transformed_result.fetch(@named_range, nil)
+        unless content
+          raise "Missing named range - #{@named_range} from candidates [#{transformed_result.keys.join(", ")}]"
         end
+
+        export(@opts["directory"], @opts["file_name"], content.transformed_rows, content.column_headers.keys)
       end
 
       # @param [Array] rows
@@ -69,4 +65,3 @@ module Cure
     end
   end
 end
-

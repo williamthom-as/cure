@@ -67,12 +67,10 @@ module Cure
 
     class TransformResult
 
-      attr_accessor :row_count,
-                    :transformed_rows,
+      attr_accessor :transformed_rows,
                     :column_headers
 
       def initialize
-        @row_count = 0
         @transformed_rows = []
         @column_headers = {}
       end

@@ -5,7 +5,6 @@ require "cure/config"
 require "cure/helpers/file_helpers"
 
 require "cure/extract/extractor"
-require "cure/export/exporter"
 require "cure/transformation/transform"
 
 require "rcsv"
@@ -67,10 +66,16 @@ module Cure
       content
     end
 
+    # @param [Hash<String,Cure::Transformation::TransformResult>] transformed_result
     # @return [Hash<String,Cure::Transformation::TransformResult>]
     def export(transformed_result)
       log_info "Beginning export process..."
-      Cure::Export::Exporter.export_result(transformed_result, "/tmp/cure")
+      sections = config.template.exporter.sections
+
+      sections.each do |section|
+        section.perform(transformed_result)
+      end
+
       log_info "... export complete."
 
       transformed_result

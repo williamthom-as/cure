@@ -4,6 +4,7 @@ require "cure/template/transformations"
 require "cure/template/extraction"
 require "cure/template/dispatch"
 require "cure/template/build"
+require "cure/template/exporter"
 
 module Cure
   class Template
@@ -24,13 +25,16 @@ module Cure
 
     # @param [Hash] hash
     # @return [Cure::Template]
-    def self.from_hash(hash)
+    def self.from_hash(hash) # rubocop:disable Metrics/AbcSize
       this = Cure::Template.new
       this.transformations = Cure::Transformations.from_hash(hash.fetch("transformations", {}))
       this.extraction = Cure::Extraction.from_hash(hash.fetch("extraction", {}))
       this.dispatch = Cure::Dispatch.from_hash(hash.fetch("dispatch", {}))
       this.build = Cure::Build.from_hash(hash.fetch("build", {}))
+      this.exporter = Cure::Exporter.from_hash(hash.fetch("exporter", {}))
+
       this
     end
+
   end
 end

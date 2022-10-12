@@ -44,11 +44,16 @@
       "$account_number": "1234567891234"
     }
   },
-  "export": {
-    "sections" : {
+  "exporter": {
+    "sections" : [{
       "named_range" : "main",
-      "file_name" : "main-file",
-      "type" : "csv"
-    }
+      "processor" : {
+        "type": "csv",
+        "options" : {
+          "file_name" : "abc",
+          "directory" : "/tmp/cure"
+        }
+      }
+    }]
   }
 }
