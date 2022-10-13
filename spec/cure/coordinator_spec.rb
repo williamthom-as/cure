@@ -3,7 +3,7 @@
 require "json"
 require "cure/coordinator"
 
-RSpec.describe Cure::Coordinator do # rubocop:disable Metrics/BlockLength
+RSpec.describe Cure::Coordinator do
   describe "#extract" do
     it "will extract required sections" do
       source_file_loc = "../../../spec/cure/test_files/test_csv_file.csv"
