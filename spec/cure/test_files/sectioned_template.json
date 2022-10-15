@@ -7,6 +7,10 @@
       },{
         "name": "section_2",
         "section": "B9:H14"
+      },{
+        "name" : "section_3",
+        "section" : "B18:G20",
+        "headers" : "B2:G2"
       }
     ],
     "variables" : [
@@ -37,6 +41,24 @@
     "candidates": [
       {
         "named_range" : "section_1",
+        "column" : "new_column",
+        "translations" : [
+          {
+            "strategy" : {
+              "name": "full",
+              "options" : {}
+            },
+            "generator" : {
+              "name" : "variable",
+              "options" : {
+                "name" : "new_field"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "named_range" : "section_3",
         "column" : "new_column",
         "translations" : [
           {

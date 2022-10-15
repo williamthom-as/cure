@@ -11,7 +11,8 @@ module Cure
     def initialize
       @named_ranges = [{
         "name" => "default",
-        "section" => -1
+        "section" => -1,
+        "headers" => nil
       }]
 
       @variables = []

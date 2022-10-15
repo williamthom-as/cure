@@ -37,7 +37,7 @@ RSpec.describe Cure::Coordinator do
       result = coordinator.send(:extract)
 
       expect(result.variables.keys).to eq(%w[new_field new_field_2])
-      expect(result.content.length).to be(1)
+      expect(result.content.length).to be(2)
 
       csv = result.content.first
 
@@ -62,7 +62,7 @@ RSpec.describe Cure::Coordinator do
       result = coordinator.send(:build, wrapped_csv)
 
       expect(result.variables.keys).to eq(%w[new_field new_field_2])
-      expect(result.content.length).to be(1)
+      expect(result.content.length).to be(2)
       expect { result.find_named_range("default") }.to raise_error(StandardError)
 
       csv = result.content.first
