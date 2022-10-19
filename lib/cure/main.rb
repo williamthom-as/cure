@@ -5,8 +5,8 @@ require "cure/transformation/candidate"
 require "cure/transformation/transform"
 require "cure/coordinator"
 
-require "cure"
 require "json"
+require "yaml"
 
 module Cure
   class Main
@@ -22,7 +22,7 @@ module Cure
 
       main = Main.new
       csv_file = main.open_file(csv_file_loc)
-      template_hash = JSON.parse(main.read_file(template_file_loc))
+      template_hash = main.load_template(template_file_loc)
       template = Template.from_hash(template_hash)
       main.setup(csv_file, template)
       main
@@ -64,6 +64,14 @@ module Cure
       register_config(config)
 
       self
+    end
+
+    def load_template(template_file_loc)
+      ext = File.extname(template_file_loc).tr(".", "")
+      return JSON.parse(read_file(template_file_loc)) if ext.downcase == "json"
+      return YAML.load_file(template_file_loc) if %w[yaml yml].include?(ext.downcase)
+
+      raise "No template parsing capability for #{ext} files"
     end
   end
 end

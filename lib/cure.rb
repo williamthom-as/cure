@@ -20,12 +20,5 @@ module Cure
         log.progname = name
       end
     end
-
-    # @param [String] csv_file_location
-    # @param [Hash] template
-    # @return [File] output_file
-    def process(template, csv_file_location)
-      # Main.init_from_hash(template, csv_file_location)
-    end
   end
 end
