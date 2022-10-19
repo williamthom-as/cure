@@ -26,10 +26,6 @@ OptionParser.new do |opts|
     conf[:source_file_location] = s
   end
 
-  opts.on("-o", "--output_dir=output_dir", "Output directory") do |o|
-    conf[:output_dir] = o
-  end
-
   opts.on("-h", "--help", "Prints this help") do
     puts opts
     exit
