@@ -11,9 +11,10 @@ module Cure
       end
 
       # @param [Object/Nil] source_value
+      # @param [RowCtx/Nil] row_ctx
       # @return [String]
-      def generate(source_value=nil)
-        translated = _generate(source_value)
+      def generate(source_value, row_ctx)
+        translated = _generate(source_value, row_ctx)
         translated = "#{prefix}#{translated}" if prefix
         translated = "#{translated}#{suffix}" if suffix
         translated
@@ -21,9 +22,10 @@ module Cure
 
       private
 
+      # @param [RowCtx] _row_ctx
       # @param [Object/Nil] _source_value
       # @return [String]
-      def _generate(_source_value)
+      def _generate(_source_value, _row_ctx)
         raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
 

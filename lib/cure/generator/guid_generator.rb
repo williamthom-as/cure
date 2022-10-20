@@ -8,7 +8,8 @@ module Cure
       private
 
       # @param [Object] _source_value
-      def _generate(_source_value)
+      # @param [RowCtx] _row_ctx
+      def _generate(_source_value, _row_ctx)
         SecureRandom.uuid.to_s
       end
     end

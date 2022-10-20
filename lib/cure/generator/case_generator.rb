@@ -8,7 +8,8 @@ module Cure
       private
 
       # @param [Object] source_value
-      def _generate(source_value)
+      # @param [RowCtx] _row_ctx
+      def _generate(source_value, _row_ctx)
         result = case_options.fetch("switch").find { |opts| opts["case"] == source_value }&.fetch("return_value", nil)
 
         return result if result

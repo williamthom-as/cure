@@ -15,7 +15,7 @@ RSpec.describe Cure::Generator::NumberGenerator do
 
   describe "#generate" do
     it "should load options" do
-      expect(@number_generator.generate.to_s.length).to eq(@number_generator.options["length"])
+      expect(@number_generator.generate(nil, nil).to_s.length).to eq(@number_generator.options["length"])
     end
   end
 end
@@ -33,7 +33,7 @@ RSpec.describe Cure::Generator::HexGenerator do
 
   describe "#generate" do
     it "should load options" do
-      expect(@generator.generate.to_s.length).to eq(@generator.options["length"])
+      expect(@generator.generate(nil, nil).to_s.length).to eq(@generator.options["length"])
     end
   end
 end
@@ -51,8 +51,8 @@ RSpec.describe Cure::Generator::RedactGenerator do
 
   describe "#generate" do
     it "should load options" do
-      expect(@generator.generate("my_value")).to eq("XXXXXXXX")
-      expect(@generator.generate("my_value_2")).to eq("XXXXXXXXXX")
+      expect(@generator.generate("my_value", nil)).to eq("XXXXXXXX")
+      expect(@generator.generate("my_value_2", nil)).to eq("XXXXXXXXXX")
     end
   end
 end
@@ -70,7 +70,7 @@ RSpec.describe Cure::Generator::GuidGenerator do
 
   describe "#generate" do
     it "should load options" do
-      expect(@generator.generate.to_s.length).to eq(36)
+      expect(@generator.generate(nil, nil).to_s.length).to eq(36)
     end
   end
 end
@@ -88,7 +88,7 @@ RSpec.describe Cure::Generator::BaseGenerator do
 
   describe "#generate" do
     it "should raise if called on base class" do
-      expect { @generator.generate }.to raise_error(NotImplementedError)
+      expect { @generator.generate(nil, nil) }.to raise_error(NotImplementedError)
     end
   end
 end
@@ -125,7 +125,7 @@ RSpec.describe Cure::Generator::PlaceholderGenerator do
 
   describe "#generate" do
     it "should raise if called on base class" do
-      expect(@generator.generate).to eq("123456")
+      expect(@generator.generate(nil, nil)).to eq("123456")
     end
   end
 end
@@ -139,19 +139,19 @@ RSpec.describe Cure::Generator::CharacterGenerator do
       generator = Cure::Generator::CharacterGenerator.new({
                                                             "types" => %w[uppercase lowercase]
                                                           })
-      expect(generator.generate.length).to eq(5)
+      expect(generator.generate(nil, nil).length).to eq(5)
     end
 
     it "should be source length if provided" do
       generator = Cure::Generator::CharacterGenerator.new({
                                                             "types" => %w[uppercase lowercase]
                                                           })
-      expect(generator.generate("abcdefghij").length).to eq(10)
+      expect(generator.generate("abcdefghij", nil).length).to eq(10)
     end
 
     it "should be config length if provided" do
       generator = Cure::Generator::CharacterGenerator.new({"length" => 3})
-      expect(generator.generate.length).to eq(3)
+      expect(generator.generate(nil, nil).length).to eq(3)
     end
   end
 end
@@ -163,7 +163,7 @@ RSpec.describe Cure::Generator::FakerGenerator do
                                                         "module" => "Internet",
                                                         "method" => "email"
                                                       })
-      expect(generator.generate.include?("@")).to be_truthy
+      expect(generator.generate(nil, nil).include?("@")).to be_truthy
     end
   end
 end
@@ -190,7 +190,7 @@ RSpec.describe Cure::Generator::CaseGenerator do
       }
 
       generator = Cure::Generator::CaseGenerator.new(opts)
-      expect(generator.generate("dog")).to eq("doggus")
+      expect(generator.generate("dog", nil)).to eq("doggus")
     end
 
     it "should return else property if no match" do
@@ -212,7 +212,7 @@ RSpec.describe Cure::Generator::CaseGenerator do
       }
 
       generator = Cure::Generator::CaseGenerator.new(opts)
-      expect(generator.generate("unknown")).to eq("unknown")
+      expect(generator.generate("unknown", nil)).to eq("unknown")
     end
 
     it "should return nil if no else" do
@@ -231,7 +231,7 @@ RSpec.describe Cure::Generator::CaseGenerator do
       }
 
       generator = Cure::Generator::CaseGenerator.new(opts)
-      expect(generator.generate("unknown")).to eq(nil)
+      expect(generator.generate("unknown", nil)).to eq(nil)
     end
   end
 end
@@ -260,7 +260,7 @@ RSpec.describe Cure::Generator::VariableGenerator do
 
   describe "#generate" do
     it "should raise if called on base class" do
-      expect(@generator.generate).to eq("test")
+      expect(@generator.generate(nil, nil)).to eq("test")
     end
   end
 end

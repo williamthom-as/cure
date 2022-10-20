@@ -51,7 +51,7 @@ module Cure
           existing_value = row[column_idx]
           next unless existing_value
 
-          new_value = candidate.perform(existing_value, row) # transform value
+          new_value = candidate.perform(existing_value, RowCtx.new(row, column_headers)) # transform value
           row[column_idx] = new_value
         end
 
@@ -62,6 +62,15 @@ module Cure
       # @return [Array<Cure::Transformation::Candidate>]
       def candidates_for_named_range(named_range)
         @candidates.select { |c| c.named_range == named_range }
+      end
+    end
+
+    class RowCtx
+      attr_accessor :rows, :column_headers
+
+      def initialize(rows, headers)
+        @rows = rows
+        @headers = headers
       end
     end
 

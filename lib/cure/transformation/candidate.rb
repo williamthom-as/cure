@@ -33,19 +33,20 @@ module Cure
       end
 
       # @param [String] source_value
+      # @param [RowCtx] row_ctx
       # @return [String]
       # Transforms the existing value
-      def perform(source_value, _row)
+      def perform(source_value, row_ctx)
         value = source_value
 
         @translations.each do |translation|
-          temp = translation.extract(value)
+          temp = translation.extract(value, row_ctx)
           value = temp if temp
         end
 
         if value == source_value
           log_debug("No translation made for #{value} [#{source_value}]")
-          value = @no_match_translation&.extract(source_value)
+          value = @no_match_translation&.extract(source_value, row_ctx)
           log_debug("Translated to #{value} from [#{source_value}]")
         end
 
@@ -76,8 +77,8 @@ module Cure
 
       # @param [String] source_value
       # @return [String]
-      def extract(source_value)
-        @strategy.extract(source_value, @generator)
+      def extract(source_value, row_ctx)
+        @strategy.extract(source_value, row_ctx, @generator)
       end
 
       # @param [Hash] opts

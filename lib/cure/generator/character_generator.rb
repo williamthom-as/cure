@@ -13,7 +13,8 @@ module Cure
       private
 
       # @param [Object] source_value
-      def _generate(source_value)
+      # @param [RowCtx] _row_ctx
+      def _generate(source_value, _row_ctx)
         arr = build_options.map(&:to_a).flatten
         (0...length(source_value&.length || 5)).map { arr[rand(arr.length)] }.join
       end

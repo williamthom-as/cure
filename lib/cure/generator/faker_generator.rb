@@ -9,7 +9,8 @@ module Cure
       private
 
       # @param [Object] _source_value
-      def _generate(_source_value)
+      # @param [RowCtx] _row_ctx
+      def _generate(_source_value, _row_ctx)
         mod_code = extract_property("module", nil)
         mod = Faker.const_get(mod_code)
 

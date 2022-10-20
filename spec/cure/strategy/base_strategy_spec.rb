@@ -29,37 +29,37 @@ RSpec.describe Cure::Strategy::BaseStrategy do
   describe "#extract" do
     it "should extract valid value, and use history for similarity" do
       id = "arn:aws:kms:ap-southeast-2:111111111111:key/22222222-2222-2222-2222-222222222222"
-      result = @regex_strategy.extract(id, Cure::Generator::NumberGenerator.new({"length" => 10}))
+      result = @regex_strategy.extract(id, nil, Cure::Generator::NumberGenerator.new({"length" => 10}))
       expect(result).to_not eq(id)
       expect(@regex_strategy.history.keys).to eq(["111111111111"])
       expect(result.include?(@regex_strategy.history&.values&.first)).to be_truthy
 
-      result_two = @full_strategy.extract("111111111111", Cure::Generator::NumberGenerator.new({"length" => 10}))
+      result_two = @full_strategy.extract("111111111111", nil, Cure::Generator::NumberGenerator.new({"length" => 10}))
       expect(result_two.include?(@regex_strategy.history&.values&.first)).to be_truthy
 
-      result_three = @match_strategy.extract("my_val", Cure::Generator::NumberGenerator.new({"length" => 10}))
+      result_three = @match_strategy.extract("my_val", nil, Cure::Generator::NumberGenerator.new({"length" => 10}))
       expect(result_three).to_not eq("my_val")
 
-      result_four = @start_strategy.extract("my_val_test", Cure::Generator::NumberGenerator.new({"length" => 10}))
+      result_four = @start_strategy.extract("my_val_test", nil, Cure::Generator::NumberGenerator.new({"length" => 10}))
       expect(result_four).to_not eq("my_val")
 
-      result_five = @start_strategy.extract("test_my_val_test", Cure::Generator::NumberGenerator.new({"length" => 10}))
+      result_five = @start_strategy.extract("test_my_val_test", nil, Cure::Generator::NumberGenerator.new({"length" => 10}))
       expect(result_five).to eq(nil)
 
-      result_six = @end_strategy.extract("test_my_val", Cure::Generator::NumberGenerator.new({"length" => 10}))
+      result_six = @end_strategy.extract("test_my_val", nil, Cure::Generator::NumberGenerator.new({"length" => 10}))
       expect(result_six).to_not eq("my_val")
 
-      result_seven = @end_strategy.extract("test_my_val_test", Cure::Generator::NumberGenerator.new({"length" => 10}))
+      result_seven = @end_strategy.extract("test_my_val_test", nil, Cure::Generator::NumberGenerator.new({"length" => 10}))
       expect(result_seven).to eq(nil)
 
-      result_eight = @append_strategy.extract("test_my", Cure::Generator::NumberGenerator.new({"length" => 10}))
+      result_eight = @append_strategy.extract("test_my", nil, Cure::Generator::NumberGenerator.new({"length" => 10}))
       expect(result_eight.length).to eq(17)
     end
   end
 
   describe "#_retrieve_value" do
     it "should raise if called on base class" do
-      expect { @base_strategy.extract("abc", Cure::Generator::RedactGenerator.new) }.to raise_error(NotImplementedError)
+      expect { @base_strategy.extract("abc", nil, Cure::Generator::RedactGenerator.new) }.to raise_error(NotImplementedError)
     end
   end
 
@@ -74,7 +74,7 @@ RSpec.describe Cure::Strategy::BaseStrategy do
       start_strategy = Cure::Strategy::StartWithStrategy.new({"match" => "my_val_", "replace_partial" => true})
       expect(start_strategy.params.valid?).to eq(true)
 
-      result = start_strategy.extract("my_val_replace_me", Cure::Generator::NumberGenerator.new({"length" => 10}))
+      result = start_strategy.extract("my_val_replace_me", nil, Cure::Generator::NumberGenerator.new({"length" => 10}))
 
       expect(result.length).to eq(10 + "my_val_".length)
       expect(result.start_with?("my_val_")).to be_truthy
@@ -82,7 +82,7 @@ RSpec.describe Cure::Strategy::BaseStrategy do
 
     it "should replace the end if partial is set" do
       end_strategy = Cure::Strategy::EndWithStrategy.new({"match" => "_my_val", "replace_partial" => true})
-      result = end_strategy.extract("replace_me_my_val", Cure::Generator::NumberGenerator.new({"length" => 10}))
+      result = end_strategy.extract("replace_me_my_val", nil, Cure::Generator::NumberGenerator.new({"length" => 10}))
 
       expect(result.length).to eq(10 + "my_val_".length)
       expect(result.end_with?("_my_val")).to be_truthy
@@ -90,13 +90,13 @@ RSpec.describe Cure::Strategy::BaseStrategy do
 
     it "should replace the entire if no partial is set" do
       end_strategy = Cure::Strategy::EndWithStrategy.new({"match" => "_my_val", "replace_partial" => "false"})
-      result = end_strategy.extract("replace_me_my_val", Cure::Generator::NumberGenerator.new({"length" => 10}))
+      result = end_strategy.extract("replace_me_my_val", nil, Cure::Generator::NumberGenerator.new({"length" => 10}))
 
       expect(result.length).to eq(10)
       expect(result.end_with?("_my_val")).to be_falsey
 
       end_strategy_one = Cure::Strategy::EndWithStrategy.new({"match" => "_my_val"})
-      result1 = end_strategy_one.extract("replace_me_my_val", Cure::Generator::NumberGenerator.new({"length" => 10}))
+      result1 = end_strategy_one.extract("replace_me_my_val", nil, Cure::Generator::NumberGenerator.new({"length" => 10}))
 
       expect(result1.length).to eq(10)
       expect(result1.end_with?("_my_val")).to be_falsey
@@ -105,9 +105,11 @@ RSpec.describe Cure::Strategy::BaseStrategy do
     it "should run" do
       strat = Cure::Strategy::SplitStrategy.new({"token" => ":", "index" => 4})
       result = strat.extract("arn:aws:apigateway:us-east-1::/restapis/abcdef/stages/dev",
+                             nil,
                              Cure::Generator::NumberGenerator.new({"length" => 10}))
       expect(result).to eq("arn:aws:apigateway:us-east-1::/restapis/abcdef/stages/dev")
       result_two = strat.extract("arn:aws:apigateway:us-east-1:abcdef:/restapis/abcdef/stages/dev",
+                                 nil,
                                  Cure::Generator::RedactGenerator.new({"length" => 3}))
       expect(result_two).to eq("arn:aws:apigateway:us-east-1:XXX:/restapis/abcdef/stages/dev")
     end

@@ -57,17 +57,18 @@ module Cure
       end
 
       # @param [String] source_value
+      # @param [Transformation::RowCtx] row_ctx
       # @param [Generator::BaseGenerator] generator
       # @return [String]
       #
       # This will retrieve the (partial) value, then generate a new replacement.
-      def extract(source_value, generator)
+      def extract(source_value, row_ctx, generator)
         extracted_value = _retrieve_value(source_value)
 
         existing = retrieve_history(extracted_value)
         return _replace_value(source_value, existing) if existing
 
-        generated_value = generator.generate(source_value)&.to_s
+        generated_value = generator.generate(source_value, row_ctx)&.to_s
         value = _replace_value(source_value, generated_value)
 
         store_history(extracted_value, generated_value)

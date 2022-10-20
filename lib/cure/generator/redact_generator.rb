@@ -7,8 +7,9 @@ module Cure
     class RedactGenerator < BaseGenerator
       private
 
-      # @param [Object] source_value
-      def _generate(source_value)
+      # @param [object] source_value
+      # @param [RowCtx] _row_ctx
+      def _generate(source_value, _row_ctx)
         1.upto(length(source_value&.length || 5)).map { "X" }.join("")
       end
     end
