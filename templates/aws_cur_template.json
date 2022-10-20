@@ -141,5 +141,17 @@
     "placeholders" : {
       "$account_number" : "1234567891234"
     }
+  },
+  "exporter": {
+    "sections" : [{
+      "named_range": "default",
+      "processor" : {
+        "type": "csv",
+        "options" : {
+          "file_name" : "aws_file",
+          "directory" : "/tmp/cure"
+        }
+      }
+    }]
   }
 }
