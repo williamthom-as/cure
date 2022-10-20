@@ -11,7 +11,7 @@ It has several key features:
 - Operate on your data to build what you need. 
   - Files are taken through an `Extract -> Build -> Transform -> Export` pipeline.
 - [Extract](docs/extract/main.md) parts of your file into named ranges to remove junk. 
-- [Build](docs/build/main.md) columns.
+- [Build](docs/builder/main.md) columns.
 - [Transform](docs/transform/main.md) values:
   - Define either full or regex match groups replacements.
   - Choose from many strategies to replace anonymous data - random number sequences, GUIDs, placeholders, multipliers amongst many others.
