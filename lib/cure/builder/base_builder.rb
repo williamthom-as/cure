@@ -116,5 +116,20 @@ module Cure
         wrapped_csv
       end
     end
+
+    class CopyBuilder < BaseBuilder
+
+      def process(wrapped_csv)
+        content = wrapped_csv.find_named_range(@named_range)
+        column_idx = content.column_headers[@column]
+        raise "Missing column to copy from [#{@column}]" unless column_idx
+
+        new_column_header = @opts.fetch("copy_column", "#{@column}_copy")
+        content.add_column_key(new_column_header)
+        content.rows.each { |row| row.append(row[column_idx]) }
+
+        wrapped_csv
+      end
+    end
   end
 end

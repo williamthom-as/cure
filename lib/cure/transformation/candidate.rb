@@ -35,8 +35,7 @@ module Cure
       # @param [String] source_value
       # @return [String]
       # Transforms the existing value
-      def perform(source_value)
-        # log_debug("Performing substitution for [#{@column}] with [#{@translations.length}] translations")
+      def perform(source_value, _row)
         value = source_value
 
         @translations.each do |translation|

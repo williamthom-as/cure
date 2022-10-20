@@ -35,8 +35,6 @@ module Cure
         parsed_content
       end
 
-      # private
-
       # @param [String] file_contents
       # @param [Hash] opts
       # @return [WrappedCSV]

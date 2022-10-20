@@ -45,14 +45,14 @@ RSpec.describe Cure::Transformation::Candidate do # rubocop:disable Metrics/Bloc
 
     it "it should look up in history if it exists" do
       candidate = Cure::Transformation::Candidate.new.from_json(config)
-      val = candidate.perform("abc")
-      val_two = candidate.perform("abc")
+      val = candidate.perform("abc", nil)
+      val_two = candidate.perform("abc", nil)
       expect(val).to eq(val_two)
     end
 
     it "strategy length should match the options" do
       candidate = Cure::Transformation::Candidate.new.from_json(config)
-      val = candidate.perform("xxk")
+      val = candidate.perform("xxk", nil)
       expect(val.to_s.length).to eq(candidate.translations.first.generator.options["length"].to_i)
     end
   end
@@ -118,10 +118,10 @@ RSpec.describe Cure::Transformation::Candidate do # rubocop:disable Metrics/Bloc
   describe "#extract" do
     it "it should look up in history if it exists" do
       candidate = Cure::Transformation::Candidate.new.from_json(regex_config)
-      val = candidate.perform("arn:aws:kms:ap-southeast-2:111111111111:key/e8192ac9-1111-1111-1111-42f9b7e18937")
-      val_two = candidate.perform("arn:aws:kms:ap-southeast-2:111111111111:key/e8192ac9-1111-1111-1111-42f9b7e18937")
-      val_three = candidate.perform("i-11111111")
-      val_four = candidate.perform("ABCNOMATCHFORME")
+      val = candidate.perform("arn:aws:kms:ap-southeast-2:111111111111:key/e8192ac9-1111-1111-1111-42f9b7e18937", nil)
+      val_two = candidate.perform("arn:aws:kms:ap-southeast-2:111111111111:key/e8192ac9-1111-1111-1111-42f9b7e18937", nil)
+      val_three = candidate.perform("i-11111111", nil)
+      val_four = candidate.perform("ABCNOMATCHFORME", nil)
 
       expect(val).to eq(val_two)
       expect(val_three).to_not eq("i-11111111")

@@ -21,7 +21,7 @@ module Cure
 
     # @param [Hash] hash
     # @return [Cure::Template]
-    def self.from_hash(hash) # rubocop:disable Metrics/AbcSize
+    def self.from_hash(hash)
       this = Cure::Template.new
       this.transformations = Cure::Transformations.from_hash(hash.fetch("transformations", {}))
       this.extraction = Cure::Extraction.from_hash(hash.fetch("extraction", {}))

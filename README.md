@@ -4,102 +4,33 @@
 [![Gem Version](https://badge.fury.io/rb/cure.svg)](https://badge.fury.io/rb/cure)
 
 Cure is a simple tool to **extract/clean/transform/remove/redact/anonymize** and **replace** information in a spreadsheet.
-It has been written to anonymize private cloud billing data for use in public demo environments.  Since then, it has grown to 
+It has been written to anonymize and prepare private cloud billing data for use in public demo environments.  Since then, it has grown to 
 additional processing capabilities that can take a CSV from junk to workable data.
 
 It has several key features:
 - Operate on your data to build what you need. 
   - Files are taken through an `Extract -> Build -> Transform -> Export` pipeline.
-- Extract parts of your file into named ranges to remove junk. 
-- Build (Add/Remove/Explode) columns - handy for files that may have JSON as a column value.
-- Transform values:
+- [Extract](docs/extract/main.md) parts of your file into named ranges to remove junk. 
+- [Build](docs/build/main.md) columns.
+- [Transform](docs/transform/main.md) values:
   - Define either full or regex match groups replacements.
   - Choose from many strategies to replace anonymous data - random number sequences, GUIDs, placeholders, multipliers amongst many others.
   - **Existing generated values are stored and recalled** so once a replacement is defined, it is kept around for other columns to use.
     - For example, once a replacement **Account Number** is generated, any further use of that number sequence is other columns will be used, keeping data real(ish) and functional in a relational sense.
-- Export into one (or many) files, in a selection of chosen formats (CSV at the moment, coming soon with JSON, Parquet).
+- [Export](docs/export/main.md) into one (or many) files, in a selection of chosen formats (CSV at the moment, coming soon with JSON, Parquet).
 
 ## Use Cases
 
-- Strip out personal data from a CSV that may be used for public demo.
+- Strip out and transform personal data from a CSV so that may be used for public demo.
 - Extract specific parts of a CSV file and junk the rest.
 - Explode JSON values into individual columns per key.
 
 ## Usage
 
-Cure requires two things, a **template** (or rules) file. This is a descriptive file that provides the translations required on each column.  
-A candidate column entry provides the translations to be run on each column.
+Cure requires a template and source CSV file to be provided.  The template file can be either JSON or YAML, and it must
+contain all the instructions you wish to perform.
 
-Please see example below.
-```json
-    {
-      "column" : "identity/LineItemId",
-      "translations" : [{
-        "strategy" : {
-          "name": "full",
-          "options" : {}
-        },
-        "generator" : {
-          "name" : "character",
-          "options" : {
-            "length" : 52,
-            "types" : [
-              "lowercase", "number", "uppercase"
-            ]
-          }
-        }
-      }]
-    }
-```
-
-A **translation** is made up of a strategy and generator.
-
-**Strategies** are the means of selecting the *value* to change. You may choose from:
-  - **Full replacement**: replaces the full entry. 
-  - **Regex replacement**: can replace either the match group (partial), or full record *if* there is a match.
-  - **Includes replacement**: can replace either the matched substring, or full record *if* there is a match.
-  - **StartWith replacement**: can replace either the starts with substring, or full record *if* there is a match.
-  - **EndWith replacement**: can replace either the end with substring, or full record *if* there is a match.
-
-**Generators** are the way a replacement value is generated. You may choose from: 
-  - Random number generator
-  - Random Hex numbers
-  - Random character strings
-  - Placeholder lookups
-  - Redaction strings
-  - Removal (empty string)
-
-## Example
-
-```json
-    {
-      "column" : "identity/ResourceId",
-      "translations" : [{
-        "strategy" : {
-          "name": "full",
-          "options" : {}
-        },
-        "generator" : {
-          "name" : "character",
-          "options" : {
-            "length" : 10,
-            "types" : [
-              "lowercase", "number"
-            ]
-          }
-        }
-      }]
-    }
-```
-
-The above example would translate a source value from column **identity/ResourceId** as follows:
-    
-    i-ae44e104ef1 => ddsf78ds56 
-
-    # A full replacement, with a random generated 10 character string 
-    # made up of lowercase letters and numbers
-
-You can see more of these examples in the Examples folder.
+Please see the [Getting Started](docs/examples/getting_started.md) article in the examples directory for more information.
 
 ## Installation
 

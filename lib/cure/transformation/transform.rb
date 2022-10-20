@@ -51,7 +51,7 @@ module Cure
           existing_value = row[column_idx]
           next unless existing_value
 
-          new_value = candidate.perform(existing_value) # transform value
+          new_value = candidate.perform(existing_value, row) # transform value
           row[column_idx] = new_value
         end
 
