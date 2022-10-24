@@ -17,6 +17,12 @@ as needed, and format them back together at the end.
 **Variables** are a single row value that is extracted into a hash, and available at the transform stage. A common use
 for this would be to extract a value from somewhere in the spreadsheet to allow it to be added to each row.
 
+---
+
+**When you should use this**: You have a spreadsheet that has more data than you need, or is in a format that is not 
+strictly in a tabular format.  You may want to extract a part (or multiple parts) of the spreadsheet, and discard the
+rest.
+
 See below an example configuration block:
 
 ### Example
@@ -64,3 +70,4 @@ changes to:
 variables 
   - my_string => "e5" 
 ```
+

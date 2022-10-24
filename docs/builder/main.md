@@ -9,6 +9,11 @@ The build step immediately follows the **extract** step, and operates at a colum
 an interface to manipulation that you may wish to occur across all columns.  Individual build steps are called
 candidates, and *multiple steps can be performed on a single column* if desired.  
 
+---
+
+**When you should use this**: You have a spreadsheet that requires changes to the column structure of the data. This 
+may be as trivial as adding or removing a column, or *exploding* a JSON object (Key => Val) into individual columns.
+
 See below an example configuration block:
 
 ```yaml
