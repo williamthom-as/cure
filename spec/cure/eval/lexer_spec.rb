@@ -4,17 +4,29 @@ require "cure/eval/lexer"
 
 RSpec.describe Cure::Eval::Lexer do
   describe ".lex" do
-    it "will ignore white space" do
-      tokens = described_class.lex(" 12 +   3")
+    # it "will ignore white space" do
+    #   tokens = described_class.lex(" 12 +   3")
+    #   puts tokens
+    #   # expect(tokens).to eq(%w[1 2 + 3])
+    # end
+
+
+    it "will find scientific notation" do
+      tokens = described_class.lex("identity 123e1")
       puts tokens
-      # expect(tokens).to eq(%w[1 2 + 3])
+      expect(tokens.map { |x| x.text }).to eq(["identity", 1230.0])
     end
 
-
-    it "will find identity" do
-      tokens = described_class.lex("identity + 123e1")
+    it "will find decimals" do
+      tokens = described_class.lex("1.23 .122")
       puts tokens
-      # expect(tokens).to eq(%w[identity + 123e1])
+      expect(tokens.map { |x| x.text }).to eq([1.23, 0.122])
+    end
+
+    it "will find characters" do
+      tokens = described_class.lex("(..)")
+      puts tokens
+      expect(tokens.map { |x| x.text }).to eq(%w[( . . )])
     end
   end
 end

@@ -5,7 +5,7 @@ require "strscan"
 module Cure
   module Eval
     class Lexer
-      def self.lex(text, opts={})
+      def self.lex(text, opts = {})
         scanner = Scanner.new(text, opts)
         tokens = []
 
@@ -19,13 +19,14 @@ module Cure
       end
     end
 
+    # rubocop:disable Metrics/AbcSize
     class Scanner
 
       attr_reader :input, :length, :peek, :opts
 
       # @param [String] input
       # @param [Hash] opts
-      def initialize(input, opts={})
+      def initialize(input, opts = {})
         @scanner = StringScanner.new(input)
         @length = input.length
         @peek = 0
@@ -47,6 +48,21 @@ module Cure
         return scan_identifier if identifier_start? @peek
 
         return scan_number if number? @peek
+
+        start = @scanner.pos
+
+        case @peek.ord
+        when PERIOD
+          # We need to peek and see if the char following the current peek is a number,
+          # if so, treat it as a decimal
+          return number?(@scanner.peek(1)) ? scan_number : Token.new(start, ".")
+        when L_PAREN, R_PAREN, L_BRACE, L_BRACKET, R_BRACKET, COMMA, COLON, SEMI_COLON
+          return scan_character
+        when SINGLE_QUOTE, DOUBLE_QUOTE
+          return scan_string
+        else
+          print_current_peek
+        end
 
         @peek
       end
@@ -83,18 +99,18 @@ module Cure
 
         loop do
           unless number?(@peek)
-            if @peek == PERIOD
+            if @peek.ord == PERIOD
               is_integer = false
-            elsif e_notation_start? @peek
+            elsif sci_notation_start? @peek
               nums << @peek
               advance
 
-              if e_notation_sign? @peek
+              if sci_notation_sign? @peek
                 nums << @peek
                 advance
               end
 
-              raise "Invalid E notation" unless number? @peek
+              raise "Invalid scientific notation" unless number? @peek
 
               is_integer = false
             else
@@ -108,6 +124,15 @@ module Cure
 
         number_str = nums.join
         Token.new(idx, is_integer ? Integer(number_str) : Float(number_str))
+      end
+
+      def scan_character
+        idx = @scanner.pos
+        Token.new(idx, @peek)
+      end
+
+      def scan_string
+
       end
 
       # @param [String, Integer] char
@@ -129,14 +154,14 @@ module Cure
 
       # @param [String, Integer] char
       # @return [TrueClass, FalseClass]
-      def e_notation_start?(char)
+      def sci_notation_start?(char)
         char_ord = char.ord
         [LOWER_E, UPPER_E].include?(char_ord)
       end
 
       # @param [String, Integer] char
       # @return [TrueClass, FalseClass]
-      def e_notation_sign?(char)
+      def sci_notation_sign?(char)
         char_ord = char.ord
         [MINUS, PLUS].include?(char_ord)
       end
@@ -149,12 +174,21 @@ module Cure
       EOF = -1
       SPACE = 32
 
+      DOUBLE_QUOTE = 34
       DOLLAR = 36
-      UNDERSCORE = 94
+      SINGLE_QUOTE = 39
+      L_PAREN = 40
+      R_PAREN = 41
       PLUS = 43
+      COMMA = 44
       MINUS = 45
       PERIOD = 46
 
+      NUM_ZERO = 48
+      NUM_NINE = 57
+
+      COLON = 58
+      SEMI_COLON = 59
 
       LOWER_A = 65
       LOWER_E = 101
@@ -164,9 +198,20 @@ module Cure
       UPPER_E = 69
       UPPER_Z = 90
 
-      NUM_ZERO = 48
-      NUM_NINE = 57
+      L_BRACKET = 91
+      BACKSLASH = 92
+      R_BRACKET = 93
+      CARET = 94
+      UNDERSCORE = 95
+
+      L_BRACE = 123
+      PIPE = 124
+      R_BRACE = 125
+      NBSP = 160
+
     end
+
+    # rubocop:enable Metrics/AbcSize
 
     class Token
 
