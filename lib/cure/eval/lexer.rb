@@ -26,7 +26,7 @@ module Cure
 
       # @param [String] input
       # @param [Hash] opts
-      def initialize(input, opts = {})
+      def initialize(input, opts={})
         @scanner = StringScanner.new(input)
         @length = input.length
         @peek = 0
@@ -60,6 +60,8 @@ module Cure
           return scan_character
         when SINGLE_QUOTE, DOUBLE_QUOTE
           return scan_string
+        when PLUS, MINUS
+          return scan_operator
         else
           print_current_peek
         end
@@ -91,6 +93,7 @@ module Cure
         Token.new(idx, chars.join)
       end
 
+      # @return [Cure::Eval::Token]
       def scan_number
         idx = @scanner.pos
         nums = []
@@ -126,15 +129,37 @@ module Cure
         Token.new(idx, is_integer ? Integer(number_str) : Float(number_str))
       end
 
+      # @return [Cure::Eval::Token]
       def scan_character
         idx = @scanner.pos
         Token.new(idx, @peek)
       end
 
+      # @return [Cure::Eval::Token]
       def scan_string
+        idx = @scanner.pos
+        chars = []
 
+        quote = @peek.ord
+
+        advance
+
+        # while the quote hasn't closed
+        while @peek.ord != quote
+          raise "Unterminated quote" if @peek.ord == EOF
+
+          chars << @peek
+          advance
+        end
+
+        Token.new(idx, chars.join)
       end
 
+      # @return [Cure::Eval::Token]
+      def scan_operator
+        
+      end
+      
       # @param [String, Integer] char
       # @return [TrueClass, FalseClass]
       def identifier_start?(char)
@@ -170,6 +195,8 @@ module Cure
       def print_current_peek
         "#{@peek.ord} [#{@peek}]"
       end
+
+      OPERATOR = %w[+ - * / % ^ = == != < > <= >= && || ! ? true false nil].freeze
 
       EOF = -1
       SPACE = 32
@@ -208,7 +235,6 @@ module Cure
       PIPE = 124
       R_BRACE = 125
       NBSP = 160
-
     end
 
     # rubocop:enable Metrics/AbcSize
