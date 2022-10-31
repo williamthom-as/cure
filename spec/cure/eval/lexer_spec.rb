@@ -40,6 +40,12 @@ RSpec.describe Cure::Eval::Lexer do
       puts tokens
       expect(tokens.map { |x| x.text }).to eq(%w[- +])
     end
+
+    it "will find complex operators" do
+      tokens = described_class.lex("<= >= == >")
+      puts tokens
+      expect(tokens.map { |x| x.text }).to eq(%w[<= >= == >])
+    end
   end
 end
 

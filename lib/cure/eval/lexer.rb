@@ -61,8 +61,10 @@ module Cure
           return scan_character
         when SINGLE_QUOTE, DOUBLE_QUOTE
           return scan_string
-        when OPERATOR_SEARCH
+        when SIMPLE_OPERATOR_SEARCH
           return scan_operator
+        when GREATER_THAN, LESS_THAN, BANG, EQUALS
+          return scan_complex_operator("=")
         else
           print_current_peek
         end
@@ -163,6 +165,18 @@ module Cure
         Token.new(idx, @peek)
       end
 
+      def scan_complex_operator(check_val)
+        idx = @scanner.pos
+        current = @peek
+
+        if @scanner.peek(1) == check_val
+          current << check_val
+          advance
+        end
+
+        Token.new(idx, current)
+      end
+
       # @param [String, Integer] char
       # @return [TrueClass, FalseClass]
       def identifier_start?(char)
@@ -199,11 +213,16 @@ module Cure
         "#{@peek.ord} [#{@peek}]"
       end
 
-      OPERATORS = %w[+ - * / % ^ = == != < > <= >= && || ! ? true false nil].freeze
-      OPERATOR_SEARCH = ->(op) { OPERATORS.map(&:ord).include?(op) }
+      COMPLEX_OPERATORS = %w[= == != < > <= >= && || ! ? true false nil].freeze
+      SIMPLE_OPERATORS = %w[+ - * / % ^].freeze
+
+      COMPLEX_OPERATOR_SEARCH = ->(op) { COMPLEX_OPERATORS.map(&:ord).include?(op) }
+      SIMPLE_OPERATOR_SEARCH = ->(op) { SIMPLE_OPERATORS.map(&:ord).include?(op) }
+
       EOF = -1
       SPACE = 32
 
+      BANG = 33
       DOUBLE_QUOTE = 34
       DOLLAR = 36
       SINGLE_QUOTE = 39
@@ -219,6 +238,10 @@ module Cure
 
       COLON = 58
       SEMI_COLON = 59
+      LESS_THAN = 60
+      EQUALS = 61
+      GREATER_THAN = 62
+      QUESTION_MARK = 63
 
       LOWER_A = 65
       LOWER_E = 101
