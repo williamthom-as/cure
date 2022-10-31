@@ -34,6 +34,7 @@ module Cure
         @opts = opts
       end
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def scan_next_token
         advance
 
@@ -60,7 +61,7 @@ module Cure
           return scan_character
         when SINGLE_QUOTE, DOUBLE_QUOTE
           return scan_string
-        when PLUS, MINUS
+        when OPERATOR_SEARCH
           return scan_operator
         else
           print_current_peek
@@ -68,6 +69,7 @@ module Cure
 
         @peek
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       def advance
         if @scanner.eos?
@@ -157,9 +159,10 @@ module Cure
 
       # @return [Cure::Eval::Token]
       def scan_operator
-        
+        idx = @scanner.pos
+        Token.new(idx, @peek)
       end
-      
+
       # @param [String, Integer] char
       # @return [TrueClass, FalseClass]
       def identifier_start?(char)
@@ -196,8 +199,8 @@ module Cure
         "#{@peek.ord} [#{@peek}]"
       end
 
-      OPERATOR = %w[+ - * / % ^ = == != < > <= >= && || ! ? true false nil].freeze
-
+      OPERATORS = %w[+ - * / % ^ = == != < > <= >= && || ! ? true false nil].freeze
+      OPERATOR_SEARCH = ->(op) { OPERATORS.map(&:ord).include?(op) }
       EOF = -1
       SPACE = 32
 

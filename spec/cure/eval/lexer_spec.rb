@@ -34,6 +34,12 @@ RSpec.describe Cure::Eval::Lexer do
       puts tokens
       expect(tokens.map { |x| x.text }).to eq(%w[test test1])
     end
+
+    it "will find operators" do
+      tokens = described_class.lex("- +")
+      puts tokens
+      expect(tokens.map { |x| x.text }).to eq(%w[- +])
+    end
   end
 end
 
