@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
 require "cure/generator/imports"
+require "cure/transformation/transform"
 
 RSpec.describe Cure::Generator::NumberGenerator do
   before :all do
-    @number_generator = Cure::Generator::NumberGenerator.new({"length" => 10})
+    @number_generator = Cure::Generator::NumberGenerator.new({ "length" => 10 })
   end
 
   describe "#new" do
     it "should load options" do
-      expect(@number_generator.options).to eq({"length" => 10})
+      expect(@number_generator.options).to eq({ "length" => 10 })
     end
   end
 
@@ -22,12 +23,12 @@ end
 
 RSpec.describe Cure::Generator::HexGenerator do
   before :all do
-    @generator = Cure::Generator::HexGenerator.new({"length" => 10})
+    @generator = Cure::Generator::HexGenerator.new({ "length" => 10 })
   end
 
   describe "#new" do
     it "should load options" do
-      expect(@generator.options).to eq({"length" => 10})
+      expect(@generator.options).to eq({ "length" => 10 })
     end
   end
 
@@ -99,7 +100,7 @@ end
 
 RSpec.describe Cure::Generator::PlaceholderGenerator do
   before :all do
-    @generator = Cure::Generator::PlaceholderGenerator.new({"name" => "$account_number"})
+    @generator = Cure::Generator::PlaceholderGenerator.new({ "name" => "$account_number" })
 
     conf = {
       "transformations" => {
@@ -119,7 +120,7 @@ RSpec.describe Cure::Generator::PlaceholderGenerator do
 
   describe "#new" do
     it "should load options" do
-      expect(@generator.options).to eq({"name" => "$account_number"})
+      expect(@generator.options).to eq({ "name" => "$account_number" })
     end
   end
 
@@ -150,7 +151,7 @@ RSpec.describe Cure::Generator::CharacterGenerator do
     end
 
     it "should be config length if provided" do
-      generator = Cure::Generator::CharacterGenerator.new({"length" => 3})
+      generator = Cure::Generator::CharacterGenerator.new({ "length" => 3 })
       expect(generator.generate(nil, nil).length).to eq(3)
     end
   end
@@ -239,7 +240,7 @@ end
 
 RSpec.describe Cure::Generator::VariableGenerator do
   before :all do
-    @generator = described_class.new({"name" => "variable"})
+    @generator = described_class.new({ "name" => "variable" })
 
     conf = {
       "transformations" => {
@@ -255,12 +256,51 @@ RSpec.describe Cure::Generator::VariableGenerator do
     mc = MockClass.new
     config = mc.create_config("abc", template)
     mc.register_config(config)
-    mc.config.variables = {"variable" => "test"}
+    mc.config.variables = { "variable" => "test" }
   end
 
   describe "#generate" do
     it "should raise if called on base class" do
       expect(@generator.generate(nil, nil)).to eq("test")
+    end
+  end
+end
+
+RSpec.describe Cure::Generator::EvalGenerator do
+  before :all do
+    @generator = described_class.new(
+      {
+        "eval" => "from_column('column_1', row_ctx).upcase + ' ' + from_column('column_2', row_ctx).upcase"
+      }
+    )
+
+    conf = {
+      "transformations" => {
+        "candidates" => [],
+        "placeholders" => {
+          "$account_number" => "123456"
+        }
+      }
+    }
+
+    template = Cure::Template.from_hash(conf)
+
+    mc = MockClass.new
+    config = mc.create_config("abc", template)
+    mc.register_config(config)
+  end
+
+  describe "#generate" do
+    it "should raise if called on base class" do
+      row_ctx = Cure::Transformation::RowCtx.new(
+        %w[abc def ghi],
+        {
+          "column_1" => 0,
+          "column_2" => 1,
+          "column_3" => 2,
+        }
+      )
+      expect(@generator.generate("abc", row_ctx)).to eq("ABC DEF")
     end
   end
 end

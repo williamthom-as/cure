@@ -68,9 +68,9 @@ module Cure
     class RowCtx
       attr_accessor :rows, :column_headers
 
-      def initialize(rows, headers)
+      def initialize(rows, column_headers)
         @rows = rows
-        @headers = headers
+        @column_headers = column_headers
       end
     end
 

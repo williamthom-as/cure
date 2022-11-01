@@ -4,17 +4,20 @@ require "cure/generator/base_generator"
 
 module Cure
   module Generator
-    class GuidGenerator < BaseGenerator
+    class EvalGenerator < BaseGenerator
       private
 
       # @param [Object] _source_value
-      # @param [RowCtx] _row_ctx
+      # @param [Transformation::RowCtx] row_ctx
       # This will be changed with expression evaluator
-      def _generate(_source_value, _row_ctx)
+      def _generate(_source_value, row_ctx)
         eval_str = extract_property("eval", nil)
+        result = nil
         with_safe do
-          eval(eval_str)
+          result = eval(eval_str)
         end
+
+        result
       rescue StandardError => e
         raise "Cannot eval statement #{extract_property("eval", nil)} [#{e.message}]"
       end
@@ -25,8 +28,14 @@ module Cure
         $SAFE = 0
       end
 
+      # @param [String] col_name
+      # @param [Transformation::RowCtx] row_ctx
+      def from_column(col_name, row_ctx)
+        col_idx = row_ctx.column_headers.fetch(col_name, nil)
+        raise "Missing column for #{col_name}" unless col_idx
+
+        row_ctx.rows[col_idx]
+      end
     end
-
-
   end
 end
