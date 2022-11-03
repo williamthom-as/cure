@@ -5,7 +5,8 @@ require "strscan"
 module Cure
   module Eval
     class Lexer
-      def self.lex(text, opts = {})
+      # @return [Array<Cure::Eval::Token>]
+      def self.lex(text, opts={})
         scanner = Scanner.new(text, opts)
         tokens = []
 
@@ -35,6 +36,7 @@ module Cure
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity
+      # @return [Cure::Eval::Token]
       def scan_next_token
         advance
 
@@ -65,11 +67,15 @@ module Cure
           return scan_operator
         when GREATER_THAN, LESS_THAN, BANG, EQUALS
           return scan_complex_operator("=")
+        when AMPERSAND
+          return scan_complex_operator("&")
+        when PIPE
+          return scan_complex_operator("|")
         else
           print_current_peek
         end
 
-        @peek
+        scan_next_token
       end
       # rubocop:enable Metrics/CyclomaticComplexity
 
@@ -225,6 +231,7 @@ module Cure
       BANG = 33
       DOUBLE_QUOTE = 34
       DOLLAR = 36
+      AMPERSAND = 38
       SINGLE_QUOTE = 39
       L_PAREN = 40
       R_PAREN = 41
