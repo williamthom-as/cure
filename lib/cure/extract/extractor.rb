@@ -62,10 +62,6 @@ module Cure
           rows = extract_from_rows(csv_rows, nr["section"])
           ctx = Extract::CSVContent.new
 
-          # TODO: We should allow someone to choose the row header.. this could be troublesome if the headers come
-          # from a different NR/part of doc. Need to think about it.
-          # Current working thought, add it to the extraction
-
           if nr["headers"]
             ctx.extract_column_headers(extract_from_rows(csv_rows, nr["headers"])&.first)
             ctx.add_rows(rows)

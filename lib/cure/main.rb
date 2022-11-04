@@ -4,6 +4,7 @@ require "cure/template/template"
 require "cure/transformation/candidate"
 require "cure/transformation/transform"
 require "cure/coordinator"
+require "cure/planner"
 
 require "json"
 require "yaml"
@@ -50,10 +51,15 @@ module Cure
     def initialize
       @is_initialised = false
       @coordinator = Coordinator.new
+      @planner = Planner.new
     end
 
     def run_export
       @coordinator.process
+    end
+
+    def query_plan
+      @planner.process
     end
 
     # @param [File] csv_file

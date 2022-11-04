@@ -18,6 +18,9 @@ module Cure
     def logger
       @logger ||= Logger.new($stdout).tap do |log|
         log.progname = name
+        log.formatter = proc do |severity, _datetime, _progname, msg|
+          "[#{severity}] #{msg}\n"
+        end
       end
     end
   end
