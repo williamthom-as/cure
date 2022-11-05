@@ -9,9 +9,18 @@ module Cure
     include Log
 
     def process
+      print_starter
       print_extract_plan
       print_build_plan
       print_transformations_plan
+    end
+
+    def print_starter
+      print_title("Cure Execution Plan")
+      log_info "Source file location: #{config.source_file.path}"
+      log_info "Template file descriptor below"
+
+      print_spacer
     end
 
     def print_extract_plan # rubocop:disable Metrics/AbcSize
