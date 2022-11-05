@@ -5,7 +5,7 @@ module Cure
     # @param [Array<Transformation::Candidate>] candidates
     attr_accessor :candidates
 
-    # @param [Array<Hash>] placeholders
+    # @param [Hash] placeholders
     # TODO: make class Placeholder
     attr_accessor :placeholders
 

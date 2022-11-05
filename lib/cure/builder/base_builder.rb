@@ -19,6 +19,10 @@ module Cure
       def process(_wrapped_csv)
         raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
+
+      def to_s
+        "Base Builder"
+      end
     end
 
     class ExplodeBuilder < BaseBuilder
@@ -87,6 +91,10 @@ module Cure
         keys
       end
       #  rubocop:enable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
+
+      def to_s
+        "Exploder Builder"
+      end
     end
 
     class AddBuilder < BaseBuilder
@@ -100,6 +108,10 @@ module Cure
         content.rows.each { |row| row.append("") }
 
         wrapped_csv
+      end
+
+      def to_s
+        "Add Builder"
       end
     end
 
@@ -115,6 +127,10 @@ module Cure
 
         wrapped_csv
       end
+
+      def to_s
+        "Remove Builder"
+      end
     end
 
     class CopyBuilder < BaseBuilder
@@ -129,6 +145,10 @@ module Cure
         content.rows.each { |row| row.append(row[column_idx]) }
 
         wrapped_csv
+      end
+
+      def to_s
+        "Copy Builder"
       end
     end
   end
