@@ -17,7 +17,7 @@ module Cure
 
     def print_starter
       print_title("Cure Execution Plan")
-      log_info "Source file location: #{config.source_file.path}"
+      log_info "Source file location: #{File.basename(config.source_file)}"
       log_info "Template file descriptor below"
 
       print_spacer

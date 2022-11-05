@@ -18,7 +18,7 @@ RSpec.describe Cure::Planner do
         [INFO] Cure Execution Plan
         [INFO] =====
         [INFO] 
-        [INFO] Source file location: /home/william/RubymineProjects/cure/lib/cure/helpers/../../../spec/cure/test_files/sectioned_csv.csv
+        [INFO] Source file location: sectioned_csv.csv
         [INFO] Template file descriptor below
         [INFO] 
         [INFO] Extract
