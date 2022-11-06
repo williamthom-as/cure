@@ -101,7 +101,7 @@ module Cure
 
       print_spacer
 
-      if placeholders.nil? || placeholders.values.size.zero?
+      if placeholders.nil? || placeholders.size.zero?
         print_empty("Placeholders")
       else
         log_info "-- Variables"
