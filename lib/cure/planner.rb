@@ -2,6 +2,9 @@
 
 require "cure/log"
 require "cure/config"
+require "cure/helpers/string"
+
+require "artii"
 
 module Cure
   class Planner
@@ -13,13 +16,27 @@ module Cure
       print_extract_plan
       print_build_plan
       print_transformations_plan
+      print_ender
     end
 
-    def print_starter
-      print_title("Cure Execution Plan")
+    def print_starter # rubocop:disable Metrics/AbcSize
+      a = Artii::Base.new({font: "isometric1"})
+      puts a.asciify("Cure")
+      puts "\nIf you require assistance, please read:"
+      puts "https://github.com/williamthom-as/cure/tree/main/docs\n"
+      puts ""
+      log_info "_______________________________________________"
+      print_spacer
+      log_info "Cure Execution Plan".bold.underline
+      log_info ""
       log_info "Source file location: #{File.basename(config.source_file)}"
       log_info "Template file descriptor below"
 
+      print_spacer
+    end
+
+    def print_ender
+      log_info "_______________________________________________"
       print_spacer
     end
 
@@ -77,32 +94,34 @@ module Cure
         candidates.each do |c|
           log_info "-- #{c.column} from #{c.named_range} will be changed with #{c.translations.size} translation"
           c.translations.each do |tr|
-            log_info "\t -- Replacement: #{tr.strategy.class}, Generator: #{tr.generator.class}"
+            log_info "\t\t> Replacement: #{tr.strategy.class}, Generator: #{tr.generator.class}"
           end
         end
       end
 
       print_spacer
 
-      if placeholders.values.size.zero?
+      if placeholders.nil? || placeholders.values.size.zero?
         print_empty("Placeholders")
       else
+        log_info "-- Variables"
         placeholders.each do |k, v|
-          log_info "-- #{k} => #{v}"
+          log_info "\t\t> #{k} => #{v}"
         end
       end
+
+      print_spacer
     end
 
     private
 
     def print_title(title)
-      log_info title
-      log_info "====="
+      log_info title.bold.underline
       print_spacer
     end
 
     def print_empty(descriptor, remedy=nil)
-      log_info("No #{descriptor} specified.")
+      log_info "No #{descriptor} specified.".italic
       log_info "[Remedy: #{remedy}]" unless remedy.nil?
     end
 
@@ -110,4 +129,6 @@ module Cure
       log_info ""
     end
   end
+
+
 end

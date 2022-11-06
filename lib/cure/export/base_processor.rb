@@ -19,6 +19,45 @@ module Cure
       def process(_transformed_result)
         raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
+
+      private
+
+      # @param [Hash<String,Cure::Transformation::TransformResult>] transformed_result
+      # @return [Cure::Transformation::TransformResult]
+      def content_from_result(transformed_result)
+        content = transformed_result.fetch(@named_range, nil)
+        unless content
+          raise "Missing named range - #{@named_range} from candidates [#{transformed_result.keys.join(", ")}]"
+        end
+
+        content
+      end
+    end
+
+    require "terminal-table"
+
+    class TerminalProcessor < BaseProcessor
+      def process(transformed_result)
+        log_info "Exporting [#{@named_range}] to terminal."
+
+        title = @opts["title"] || "<No Title Set>"
+        style = @opts["style"] || {}
+        row_count = @opts["row_count"] || -1
+
+        content = content_from_result(transformed_result)
+        rows = content.transformed_rows[0..row_count]
+
+        log_info "Showing #{row_count} records from a total #{content.transformed_rows.size}"
+
+        table = Terminal::Table.new(
+          title: title,
+          headings: content.column_headers.keys,
+          rows: rows,
+          style: style
+        )
+
+        puts table
+      end
     end
 
     class CsvProcessor < BaseProcessor
@@ -27,10 +66,7 @@ module Cure
       # @param [Hash<String,Cure::Transformation::TransformResult>] transformed_result
       # @return [Hash<String,Cure::Transformation::TransformResult>]
       def process(transformed_result)
-        content = transformed_result.fetch(@named_range, nil)
-        unless content
-          raise "Missing named range - #{@named_range} from candidates [#{transformed_result.keys.join(", ")}]"
-        end
+        content = content_from_result(transformed_result)
 
         export(@opts["directory"], @opts["file_name"], content.transformed_rows, content.column_headers.keys)
       end

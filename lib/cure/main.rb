@@ -55,6 +55,7 @@ module Cure
     end
 
     def run_export
+      query_plan
       @coordinator.process
     end
 

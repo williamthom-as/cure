@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     cure (0.1.2)
+      artii
       faker
       rcsv
       terminal-table
@@ -9,6 +10,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    artii (2.1.2)
     ast (2.4.2)
     concurrent-ruby (1.1.10)
     diff-lcs (1.4.4)
