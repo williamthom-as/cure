@@ -76,6 +76,10 @@ module Cure
         value
       end
 
+      def describe
+        _describe
+      end
+
       private
 
       def replace_partial_record
@@ -98,6 +102,10 @@ module Cure
       # @param [String] _generated_value
       # @return [String]
       def _replace_value(_source_value, _generated_value)
+        raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
+      end
+
+      def _describe
         raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
     end

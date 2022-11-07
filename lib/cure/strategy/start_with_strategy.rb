@@ -31,6 +31,10 @@ module Cure
 
         @params.match + generated_value
       end
+
+      def _describe
+        "Start with replacement will partially replace the start if matched"
+      end
     end
 
     class StartWithStrategyParams < BaseStrategyParams

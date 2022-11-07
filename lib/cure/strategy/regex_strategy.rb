@@ -33,6 +33,11 @@ module Cure
 
         source_value.gsub(m[1], generated_value)
       end
+
+      def _describe
+        "Regex replacement will partially replace the value extracted by the regex"
+      end
+
     end
 
     class RegexStrategyParams < BaseStrategyParams

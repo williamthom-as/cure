@@ -30,6 +30,10 @@ module Cure
         generated_value + @params.match
         # generated_value + source_value.reverse.chomp(@options["match"].reverse).reverse
       end
+
+      def _describe
+        "End with replacement will partially replace the end if matched"
+      end
     end
 
     class EndWithStrategyParams < BaseStrategyParams

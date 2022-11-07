@@ -33,6 +33,10 @@ module Cure
         result_arr[@params.index] = generated_value if value?(result_arr[@params.index])
         result_arr.join(split_token)
       end
+
+      def _describe
+        "Split replacement will partially replace the value split on"
+      end
     end
 
     class SplitStrategyParams < BaseStrategyParams

@@ -21,7 +21,7 @@ module Cure
 
     def print_starter # rubocop:disable Metrics/AbcSize
       a = Artii::Base.new({font: "isometric1"})
-      puts a.asciify("Cure")
+      puts a.asciify("C u r e")
       puts "\nIf you require assistance, please read:"
       puts "https://github.com/williamthom-as/cure/tree/main/docs\n"
       puts ""
@@ -83,7 +83,7 @@ module Cure
       print_spacer
     end
 
-    def print_transformations_plan # rubocop:disable Metrics/AbcSize
+    def print_transformations_plan # rubocop:disable Metrics/AbcSize,Metrics/PerceivedComplexity
       print_title "Transforms"
       candidates = config.template.transformations.candidates
       placeholders = config.template.transformations.placeholders
@@ -94,7 +94,8 @@ module Cure
         candidates.each do |c|
           log_info "-- #{c.column} from #{c.named_range} will be changed with #{c.translations.size} translation"
           c.translations.each do |tr|
-            log_info "\t\t> Replacement: #{tr.strategy.class}, Generator: #{tr.generator.class}"
+            log_info "\t\t> Replacement: #{tr.strategy.describe} [#{tr.strategy.class}]"
+            log_info "\t\t> Generator: #{tr.generator.class}"
           end
         end
       end

@@ -19,6 +19,10 @@ module Cure
       def _replace_value(_source_value, generated_value)
         generated_value
       end
+
+      def _describe
+        "Full replacement of source value with generated value"
+      end
     end
   end
 end

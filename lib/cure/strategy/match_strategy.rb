@@ -27,6 +27,10 @@ module Cure
 
         source_value.gsub(@params.match, generated_value)
       end
+
+      def _describe
+        "Match replacement will partially replace the value matched against"
+      end
     end
 
     class MatchStrategyParams < BaseStrategyParams

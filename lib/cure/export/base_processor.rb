@@ -64,11 +64,13 @@ module Cure
       include Helpers::FileHelpers
 
       # @param [Hash<String,Cure::Transformation::TransformResult>] transformed_result
-      # @return [Hash<String,Cure::Transformation::TransformResult>]
       def process(transformed_result)
+        log_info "Exporting [#{@named_range}] to CSV..."
         content = content_from_result(transformed_result)
 
         export(@opts["directory"], @opts["file_name"], content.transformed_rows, content.column_headers.keys)
+
+        log_info "...exporting [#{@named_range}] to CSV has been completed successfully."
       end
 
       # @param [Array] rows
