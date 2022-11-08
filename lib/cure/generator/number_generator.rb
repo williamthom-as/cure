@@ -12,6 +12,10 @@ module Cure
       def _generate(_source_value, _row_ctx)
         1.upto(length(rand(0..9))).map { rand(1..9) }.join("").to_i
       end
+
+      def _describe
+        "Will create a random list of numbers matching the length of the source string."
+      end
     end
   end
 end

@@ -36,7 +36,6 @@ module Cure
         "It will do a #{replace_partial_record ? "partial" : "full"} replacement. " \
         "[Note: If the value does not include '#{@params.match}', no substitution is made.]"
       end
-
     end
 
     class EndWithStrategyParams < BaseStrategyParams

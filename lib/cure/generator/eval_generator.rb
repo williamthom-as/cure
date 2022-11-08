@@ -36,6 +36,8 @@ module Cure
 
         row_ctx.rows[col_idx]
       end
+
+      def _describe; end
     end
   end
 end

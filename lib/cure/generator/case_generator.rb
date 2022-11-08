@@ -21,6 +21,10 @@ module Cure
       def case_options
         @case_options ||= extract_property("statement", nil)
       end
+
+      def _describe
+        "Will match source value against a value included in #{case_options}"
+      end
     end
   end
 end

@@ -31,6 +31,11 @@ module Cure
         arr << ("!".."+") if type_array.include? "symbol"
         arr
       end
+
+      def _describe
+        "Will create a random list of #{@options["types"]} " \
+        "with as many characters as the source string."
+      end
     end
   end
 end

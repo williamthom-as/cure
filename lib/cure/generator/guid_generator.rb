@@ -12,6 +12,10 @@ module Cure
       def _generate(_source_value, _row_ctx)
         SecureRandom.uuid.to_s
       end
+
+      def _describe
+        "Will create a random GUID."
+      end
     end
   end
 end

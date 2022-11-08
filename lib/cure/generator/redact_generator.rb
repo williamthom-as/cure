@@ -12,6 +12,11 @@ module Cure
       def _generate(source_value, _row_ctx)
         1.upto(length(source_value&.length || 5)).map { "X" }.join("")
       end
+
+      def _describe
+        "Will replace the length of the source string with X."
+      end
+
     end
   end
 end

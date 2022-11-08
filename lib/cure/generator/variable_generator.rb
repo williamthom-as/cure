@@ -16,6 +16,10 @@ module Cure
         value = config.variables[property_name]
         value || raise("Missing placeholder value. Available candidates: [#{config.variables.keys.join(", ")}]")
       end
+
+      def _describe
+        "Will look up the variables defined using '#{property_name}'."
+      end
     end
   end
 end

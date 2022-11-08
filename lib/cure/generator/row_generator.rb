@@ -18,6 +18,8 @@ module Cure
       def columns
         @opts.fetch("columns", [])
       end
+
+      def _describe; end
     end
   end
 end

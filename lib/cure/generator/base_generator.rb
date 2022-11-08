@@ -20,12 +20,20 @@ module Cure
         translated
       end
 
+      def describe
+        _describe
+      end
+
       private
 
       # @param [RowCtx] _row_ctx
       # @param [Object/Nil] _source_value
       # @return [String]
       def _generate(_source_value, _row_ctx)
+        raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
+      end
+
+      def _describe
         raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
 

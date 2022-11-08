@@ -21,6 +21,11 @@ module Cure
 
         mod.send(meth_code)
       end
+
+      def _describe
+        "Will create a Faker value from [#{extract_property("module", nil)}::" \
+        "#{extract_property("method", nil)}]"
+      end
     end
   end
 end

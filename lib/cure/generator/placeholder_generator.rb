@@ -16,6 +16,11 @@ module Cure
         value = config.placeholders[property_name]
         value || raise("Missing placeholder value. Available candidates: [#{config.placeholders.keys.join(", ")}]")
       end
+
+      def _describe
+        "Will look up placeholders using '#{property_name}'. " \
+        "[Set as '#{config.placeholders[property_name]}']"
+      end
     end
   end
 end
