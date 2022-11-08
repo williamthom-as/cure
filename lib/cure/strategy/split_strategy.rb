@@ -35,7 +35,8 @@ module Cure
       end
 
       def _describe
-        "Split replacement will partially replace the value split on"
+        "Splitting on '#{@params.token}', at index #{@params.index}) " \
+        "[Note: If the value does not include '#{@params.token}', no substitution is made.]"
       end
     end
 

@@ -29,7 +29,8 @@ module Cure
       end
 
       def _describe
-        "Match replacement will partially replace the value matched against"
+        "Match replacement will look for the presence of '#{@params.match}', and replace that value. " \
+        "[Note: If the value does not include '#{@params.match}', no substitution is made.]"
       end
     end
 

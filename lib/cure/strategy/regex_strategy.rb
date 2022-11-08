@@ -35,7 +35,8 @@ module Cure
       end
 
       def _describe
-        "Regex replacement will partially replace the value extracted by the regex"
+        "Matching on '#{@params.regex_cg}'. " \
+        "[Note: If the regex does not match, or has no capture group, no substitution is made.]"
       end
 
     end

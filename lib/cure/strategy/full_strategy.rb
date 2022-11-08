@@ -21,7 +21,7 @@ module Cure
       end
 
       def _describe
-        "Full replacement of source value with generated value"
+        "Full replacement of source value with generated value."
       end
     end
   end

@@ -94,8 +94,8 @@ module Cure
         candidates.each do |c|
           log_info "-- #{c.column} from #{c.named_range} will be changed with #{c.translations.size} translation"
           c.translations.each do |tr|
-            log_info "\t\t> Replacement: #{tr.strategy.describe} [#{tr.strategy.class}]"
-            log_info "\t\t> Generator: #{tr.generator.class}"
+            log_info "\t\t> #{"Replacement".bold} [#{tr.strategy.class}]: #{tr.strategy.describe}"
+            log_info "\t\t> #{"Generator".bold}: #{tr.generator.class}"
           end
         end
       end

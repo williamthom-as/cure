@@ -11,8 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        ruby:
-          - 3.0.2
+        ruby: ['3.0.2', truffleruby-head]
 
     steps:
       - uses: actions/checkout@v2

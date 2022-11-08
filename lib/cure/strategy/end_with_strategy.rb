@@ -32,8 +32,11 @@ module Cure
       end
 
       def _describe
-        "End with replacement will partially replace the end if matched"
+        "End with replacement will look for '#{@params.match}'. " \
+        "It will do a #{replace_partial_record ? "partial" : "full"} replacement. " \
+        "[Note: If the value does not include '#{@params.match}', no substitution is made.]"
       end
+
     end
 
     class EndWithStrategyParams < BaseStrategyParams
