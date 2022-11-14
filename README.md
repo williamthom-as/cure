@@ -19,6 +19,8 @@ It has several key features:
     - For example, once a replacement **Account Number** is generated, any further use of that number sequence is other columns will be used, keeping data real(ish) and functional in a relational sense.
 - [Export](docs/export/main.md) into one (or many) files, in a selection of chosen formats (CSV at the moment, coming soon with JSON, Parquet).
 
+If you need help crafting templates with a visual tool, you can checkout [Cure UI](https://github.com/williamthom-as/cure-ui) (still under development). 
+
 ## Use Cases
 
 - Strip out and transform personal data from a CSV so that may be used for public demo.

@@ -1,0 +1,16 @@
+{
+  "build": {
+    "candidates": []
+  },
+  "extraction": {
+    "named_ranges": [],
+    "variables": []
+  },
+  "transformations": {
+    "candidates": [],
+    "placeholders": {}
+  },
+  "exporter": {
+    "sections" : []
+  }
+}
