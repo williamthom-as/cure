@@ -3,6 +3,7 @@
 require "cure/log"
 require "cure/config"
 require "cure/helpers/file_helpers"
+require "cure/helpers/perf_helpers"
 
 require "cure/extract/extractor"
 require "cure/transformation/transform"
@@ -15,15 +16,24 @@ module Cure
   class Coordinator
     include Configuration
     include Log
+    include Helpers::PerfHelpers
 
-    # @return [Hash<String,Cure::Transformation::TransformResult>]
+    # @return [Hash<String,Cure::Transformation::TransformResult>, Nil] transformed_result
     def process
       # need to check config is init'd
+      result = nil
+      print_memory_usage do
+        print_time_spent do
+          extracted_csv = extract
+          built_csv = build(extracted_csv)
+          transformed_csv = transform(built_csv)
+          export(transformed_csv)
 
-      extracted_csv = extract
-      built_csv = build(extracted_csv)
-      transformed_csv = transform(built_csv)
-      export(transformed_csv)
+          result = transformed_csv
+        end
+      end
+
+      result
     end
 
     private
