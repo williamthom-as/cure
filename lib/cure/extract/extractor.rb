@@ -4,6 +4,7 @@ require "cure/log"
 require "cure/config"
 require "cure/extract/csv_lookup"
 require "cure/helpers/file_helpers"
+require "cure/helpers/perf_helpers"
 require "cure/extract/wrapped_csv"
 
 module Cure
@@ -12,6 +13,7 @@ module Cure
       include Log
       include Configuration
       include Helpers::FileHelpers
+      include Helpers::PerfHelpers
 
       # @param [Hash] opts
       attr_reader :opts
@@ -40,12 +42,16 @@ module Cure
       # @return [WrappedCSV]
       def parse_csv(file_contents, opts={})
         csv_rows = []
-        Rcsv.parse(file_contents, opts) { |row| csv_rows << row }
+
+        print_memory_usage("rcsv_load") do
+          Rcsv.parse(file_contents, opts) { |row| csv_rows << row }
+        end
+
+        log_info "[#{csv_rows.length}] total rows parsed from CSV"
 
         result = WrappedCSV.new
         result.content = extract_named_ranges(csv_rows)
         result.variables = extract_variables(csv_rows)
-
         result
       end
 

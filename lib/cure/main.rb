@@ -45,11 +45,7 @@ module Cure
     # @return [Cure::Coordinator]
     attr_accessor :coordinator
 
-    # @return [Boolean]
-    attr_reader :is_initialised
-
     def initialize
-      @is_initialised = false
       @coordinator = Coordinator.new
       @planner = Planner.new
     end
@@ -73,6 +69,7 @@ module Cure
       self
     end
 
+    # @param [String] template_file_loc
     def load_template(template_file_loc)
       ext = File.extname(template_file_loc).tr(".", "")
       return JSON.parse(read_file(template_file_loc)) if ext.downcase == "json"

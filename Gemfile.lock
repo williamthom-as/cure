@@ -4,7 +4,6 @@ PATH
     cure (0.1.2)
       artii
       faker
-      memory_profiler
       rcsv
       terminal-table
 
@@ -20,7 +19,6 @@ GEM
       i18n (>= 1.8.11, < 2)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
-    memory_profiler (1.0.1)
     parallel (1.21.0)
     parser (3.0.2.0)
       ast (~> 2.4.1)
