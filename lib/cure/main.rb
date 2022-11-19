@@ -15,34 +15,6 @@ module Cure
     include Configuration
     include Helpers::FileHelpers
 
-    # # @param [String] template_file_loc
-    # # @param [String] csv_file_loc
-    # # @return [Cure::Main]
-    # def self.init_from_file_locations(template_file_loc, csv_file_loc)
-    #   # Run all init stuff here.
-    #   # Run validator?
-    #
-    #   main = Main.new
-    #   csv_file = main.open_file(csv_file_loc)
-    #   template_hash = main.load_template(template_file_loc)
-    #   template = Template.from_hash(template_hash)
-    #   main.setup(csv_file, template)
-    #   main
-    # end
-    #
-    # # @param [Hash] template_hash
-    # # @param [File] csv_file
-    # # @return [Cure::Main]
-    # def self.init(template_hash, csv_file)
-    #   # Run all init stuff here.
-    #   # Run validator?
-    #
-    #   main = Main.new
-    #   template = Template.from_hash(template_hash)
-    #   main.setup(csv_file, template)
-    #   main
-    # end
-
     # @return [Cure::Coordinator]
     attr_accessor :coordinator
 

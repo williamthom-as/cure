@@ -33,7 +33,11 @@ OptionParser.new do |opts|
 end.parse!
 
 log_info "Config loaded successfully, initialising environment ..."
-main = Cure::Main.init_from_file_locations(conf[:template_file_location], conf[:source_file_location])
+main = Cure::Main.new
+                 .with_csv_file(:pathname, Pathname.new(conf[:source_file_location]))
+                 .with_template(:file, Pathname.new(conf[:template_file_location]))
+                 .init
+                 .run_export
 
 log_info "... set up complete. Beginning process"
 main.run_export

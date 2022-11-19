@@ -25,24 +25,17 @@ module Cure
         @opts = opts
       end
 
-      # @param [File, Not Nil] csv_file
+      # @param [Cure::Configuration::CsvFileProxy] file_proxy
       # @return [WrappedCSV]
-      def extract_from_file(csv_file)
-        extract_from_contents(csv_file)
-      end
-
-      # @param [String] file_contents
-      # @return [WrappedCSV]
-      def extract_from_contents(file_contents)
-        parsed_content = parse_csv(file_contents, header: :none, buffer_size: 20 * 1024 * 1024)
+      def extract_from_file(file_proxy)
+        parsed_content = parse_csv(file_proxy)
         log_info("Parsed CSV into #{parsed_content.content.length} sections.")
         parsed_content
       end
 
       # @param [Cure::Configuration::CsvFileProxy] file_proxy
-      # @param [Hash] opts
       # @return [WrappedCSV]
-      def parse_csv(file_proxy, opts={})
+      def parse_csv(file_proxy)
         csv_rows = []
 
         print_memory_usage("rcsv_load") do
