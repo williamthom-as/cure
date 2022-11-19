@@ -4,10 +4,14 @@ require "cure/builder/base_builder"
 
 RSpec.describe Cure::Builder::ExplodeBuilder do
   before :all do
-    @source_file_loc = "../../../spec/cure/test_files/explode_csv.csv"
+    @source_file_loc = "spec/cure/test_files/explode_csv.csv"
     template_file_loc = "../../../spec/cure/test_files/explode_template.json"
 
-    Cure::Main.init_from_file_locations(template_file_loc, @source_file_loc)
+    Cure::Main.new
+     .with_csv_file(:pathname, Pathname.new(@source_file_loc))
+     .with_template(:file, Pathname.new(template_file_loc))
+     .init
+
     @coordinator = Cure::Coordinator.new
   end
 
@@ -49,10 +53,14 @@ end
 
 RSpec.describe Cure::Builder::RemoveBuilder do
   before :all do
-    @source_file_loc = "../../../spec/cure/test_files/explode_csv.csv"
+    @source_file_loc = "spec/cure/test_files/explode_csv.csv"
     template_file_loc = "../../../spec/cure/test_files/explode_template.json"
 
-    Cure::Main.init_from_file_locations(template_file_loc, @source_file_loc)
+    Cure::Main.new
+              .with_csv_file(:pathname, Pathname.new(@source_file_loc))
+              .with_template(:file, Pathname.new(template_file_loc))
+              .init
+
     @coordinator = Cure::Coordinator.new
   end
 
@@ -91,10 +99,14 @@ end
 
 RSpec.describe Cure::Builder::AddBuilder do
   before :all do
-    @source_file_loc = "../../../spec/cure/test_files/explode_csv.csv"
+    @source_file_loc = "spec/cure/test_files/explode_csv.csv"
     template_file_loc = "../../../spec/cure/test_files/explode_template.json"
 
-    Cure::Main.init_from_file_locations(template_file_loc, @source_file_loc)
+    Cure::Main.new
+              .with_csv_file(:pathname, Pathname.new(@source_file_loc))
+              .with_template(:file, Pathname.new(template_file_loc))
+              .init
+
     @coordinator = Cure::Coordinator.new
   end
 

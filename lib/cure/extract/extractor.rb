@@ -7,6 +7,8 @@ require "cure/helpers/file_helpers"
 require "cure/helpers/perf_helpers"
 require "cure/extract/wrapped_csv"
 
+require "csv"
+
 module Cure
   module Extract
     class Extractor
@@ -37,14 +39,21 @@ module Cure
         parsed_content
       end
 
-      # @param [String] file_contents
+      # @param [Cure::Configuration::CsvFileProxy] file_proxy
       # @param [Hash] opts
       # @return [WrappedCSV]
-      def parse_csv(file_contents, opts={})
+      def parse_csv(file_proxy, opts={})
         csv_rows = []
 
         print_memory_usage("rcsv_load") do
-          Rcsv.parse(file_contents, opts) { |row| csv_rows << row }
+          # Removed as an option for now, not as performant as stream
+          # Rcsv.parse(file_contents, opts) { |row| csv_rows << row }
+
+          file_proxy.with_file do |file|
+            CSV.foreach(file) do |row|
+              csv_rows << row
+            end
+          end
         end
 
         log_info "[#{csv_rows.length}] total rows parsed from CSV"
