@@ -6,10 +6,14 @@ require "cure/coordinator"
 RSpec.describe Cure::Coordinator do
   describe "#extract" do
     it "will extract required sections" do
-      source_file_loc = "../../../spec/cure/test_files/test_csv_file.csv"
+      source_file_loc = "spec/cure/test_files/test_csv_file.csv"
       template_file_loc = "../../../spec/cure/test_files/test_template.json"
 
-      Cure::Main.init_from_file_locations(template_file_loc, source_file_loc)
+      Cure::Main.new
+                .with_csv_file(:pathname, Pathname.new(source_file_loc))
+                .with_template(:file, Pathname.new(template_file_loc))
+                .init
+
       coordinator = Cure::Coordinator.new
       result = coordinator.send(:extract)
 
@@ -29,10 +33,14 @@ RSpec.describe Cure::Coordinator do
 
   describe "#extract" do
     it "will extract required sections" do
-      source_file_loc = "../../../spec/cure/test_files/sectioned_csv.csv"
+      source_file_loc = "spec/cure/test_files/sectioned_csv.csv"
       template_file_loc = "../../../spec/cure/test_files/sectioned_template.json"
 
-      Cure::Main.init_from_file_locations(template_file_loc, source_file_loc)
+      Cure::Main.new
+                .with_csv_file(:pathname, Pathname.new(source_file_loc))
+                .with_template(:file, Pathname.new(template_file_loc))
+                .init
+
       coordinator = Cure::Coordinator.new
       result = coordinator.send(:extract)
 
@@ -53,10 +61,14 @@ RSpec.describe Cure::Coordinator do
   # rubocop:disable Metrics/BlockLength
   describe "#build" do
     it "will extract required sections" do
-      source_file_loc = "../../../spec/cure/test_files/sectioned_csv.csv"
+      source_file_loc = "spec/cure/test_files/sectioned_csv.csv"
       template_file_loc = "../../../spec/cure/test_files/sectioned_template.json"
 
-      Cure::Main.init_from_file_locations(template_file_loc, source_file_loc)
+      Cure::Main.new
+                .with_csv_file(:pathname, Pathname.new(source_file_loc))
+                .with_template(:file, Pathname.new(template_file_loc))
+                .init
+
       coordinator = Cure::Coordinator.new
       wrapped_csv = coordinator.send(:extract)
       result = coordinator.send(:build, wrapped_csv)

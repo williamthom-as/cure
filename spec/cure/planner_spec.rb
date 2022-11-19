@@ -8,10 +8,14 @@ RSpec.describe Cure::Planner do
   # rubocop:disable Metrics/BlockLength
   describe "#build" do
     it "will extract required sections" do
-      source_file_loc = "../../../spec/cure/test_files/sectioned_csv.csv"
+      source_file_loc = "spec/cure/test_files/sectioned_csv.csv"
       template_file_loc = "../../../spec/cure/test_files/sectioned_template.json"
 
-      Cure::Main.init_from_file_locations(template_file_loc, source_file_loc)
+      Cure::Main.new
+                .with_csv_file(:pathname, Pathname.new(source_file_loc))
+                .with_template(:file, Pathname.new(template_file_loc))
+                .init
+
       planner = Cure::Planner.new
 
       # expect { planner.process }.to output(<<~MESSAGE).to_stdout
