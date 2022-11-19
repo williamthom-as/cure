@@ -25,20 +25,45 @@ If you need help crafting templates with a visual tool, you can checkout [Cure U
 
 - Strip out and transform personal data from a CSV so that may be used for public demo.
 - Extract specific parts of a CSV file and junk the rest.
+- Doing complex transformations on values under specific rules.
 - Explode JSON values into individual columns per key.
-
-## Usage
-
-Cure requires a template and source CSV file to be provided.  The template file can be either JSON or YAML, and it must
-contain all the instructions you wish to perform.
-
-Please see the [Getting Started](docs/examples/getting_started.md) article in the examples directory for more information.
 
 ## Installation
 
 Install it yourself as:
 
     $ gem install cure
+
+## Usage
+
+### CLI
+Cure requires a template and source CSV file to be provided.  The template file can be either JSON or YAML, and it must
+contain all the instructions you wish to perform.
+
+Please see the [Getting Started](docs/examples/getting_started.md) article in the examples directory for more information.
+
+You can run the CLI using the following command:
+
+    $ cure -t /file/path/to/template.json -s /file/path/to/source_file.csv
+
+### In Code
+Cure can be used as part of your existing application. 
+
+```ruby
+# CSV file can either be path to file, File object or file contents
+# Template can either be path to template, or Cure::Template object
+
+require "cure"
+
+transformed_csv = Cure::Main.new
+                            .with_csv_file(:pathname, Pathname.new(source_file_loc))
+                            .with_template(:pathname, Pathname.new(template_file_loc))
+                            .init
+
+result = main.run_export
+
+# This will return a result object consisting of extracted/transformed headers and rows.
+```
 
 ### Getting started *quickly*
 
