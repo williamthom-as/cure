@@ -4,8 +4,7 @@
 [![Gem Version](https://badge.fury.io/rb/cure.svg)](https://badge.fury.io/rb/cure)
 
 Cure is a simple tool to **extract/clean/transform/remove/redact/anonymize** and **replace** information in a spreadsheet.
-It has been written to anonymize and prepare private cloud billing data for use in public demo environments.  Since then, it has grown to 
-additional processing capabilities that can take a CSV from junk to workable data.
+It operates purely in memory, and can be easily integrated into an existing work flow or controlled via CLI.
 
 It has several key features:
 - Operate on your data to build what you need. 
@@ -20,6 +19,8 @@ It has several key features:
 - [Export](docs/export/main.md) into one (or many) files, in a selection of chosen formats (CSV at the moment, coming soon with JSON, Parquet).
 
 If you need help crafting templates with a visual tool, you can checkout [Cure UI](https://github.com/williamthom-as/cure-ui) (still under development). 
+
+**Please note**: Cure is under active development, and will have frequent breaking changes. Use at your own risk!
 
 ## Use Cases
 

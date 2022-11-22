@@ -33,6 +33,12 @@ module Cure
           next unless nr.row_in_bounds?(row_idx)
 
           @results[nr.name] = Extract::CSVContent.new unless @results.key?(nr.name)
+
+          if nr.header_in_bounds?(row_idx)
+            @results[nr.name].extract_column_headers(csv_row[nr.section[0]..nr.section[1]])
+            next
+          end
+
           @results[nr.name].add_row(csv_row[nr.section[0]..nr.section[1]])
         end
       end

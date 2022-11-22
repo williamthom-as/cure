@@ -9,7 +9,7 @@ module Cure
     attr_accessor :variables
 
     def initialize
-      @named_ranges = [NamedRange.new("default", -1, nil)]
+      @named_ranges = []
       @variables = []
     end
 
@@ -20,6 +20,8 @@ module Cure
       this.variables.push(*hash["variables"]) if hash.key? "variables"
       if hash.key? "named_ranges"
         this.named_ranges = hash["named_ranges"].map { |nr| NamedRange.new(nr["name"], nr["section"], nr["headers"]) }
+      else
+        this.named_ranges << NamedRange.new("default", -1, nil)
       end
 
       this
@@ -37,14 +39,21 @@ module Cure
     end
   end
 
+  # Move to extract/named_range
   class NamedRange
 
     attr_reader :name, :section, :headers
 
-    def initialize(name, section, header)
+    # This is complex purely to support headers not being the 0th row.
+    # A template can specify that the headers row be completely disconnected
+    # from the content, thus we have three bounds:
+    # - Content bounds
+    # - Header bounds
+    # - Sheet bounds (headers AND content)
+    def initialize(name, section, headers)
       @name = name
       @section = Extract::CsvLookup.array_position_lookup(section)
-      @headers = Extract::CsvLookup.array_position_lookup(header) || 0..-1
+      @headers = calculate_headers(headers)
     end
 
     # @param [Integer] row_idx
@@ -53,18 +62,47 @@ module Cure
       row_bounds_range.cover?(row_idx)
     end
 
-    # @return [Array, nil]
-    def row_bounds
-      @row_bounds ||= @section[2..3]
+    def header_in_bounds?(row_idx)
+      header_bounds_range.cover?(row_idx)
     end
 
-    def header_bounds
-
+    def content_in_bounds?(row_idx)
+      content_bounds_range.cover?(row_idx)
     end
 
     # @return [Range]
     def row_bounds_range
       @row_bounds_range ||= (row_bounds&.first..row_bounds&.last)
+    end
+
+    def row_bounds
+      # Do this better, memoization makes it hard
+      @row_bounds ||= [(content_bounds.concat(header_bounds).uniq.sort)[0],
+                       (content_bounds.concat(header_bounds).uniq.sort)[-1]]
+    end
+
+    def content_bounds_range
+      @content_bounds_range ||= (content_bounds&.first..content_bounds&.last)
+    end
+
+    def content_bounds
+      @content_bounds ||= @section[2..3]
+    end
+
+    def header_bounds_range
+      @header_bounds_range ||= (header_bounds&.first..header_bounds&.last)
+    end
+
+    def header_bounds
+      @header_bounds ||= @headers[2..3]
+    end
+
+    private
+
+    def calculate_headers(headers)
+      return Extract::CsvLookup.array_position_lookup(headers) if headers
+
+      [@section[0], @section[1], @section[2], @section[2]]
     end
 
   end
