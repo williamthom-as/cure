@@ -3,75 +3,54 @@
 require "cure/log"
 require "cure/config"
 require "cure/extract/csv_lookup"
-require "cure/helpers/file_helpers"
-require "cure/helpers/perf_helpers"
-
-require "cure/extract/wrapped_csv"
 
 require "csv"
 require "objspace"
 
 module Cure
   module Extract
-    class Extractor
-      include Log
-      include Configuration
-      include Helpers::FileHelpers
-      include Helpers::PerfHelpers
+    class NamedRangeProcessor
 
-      # @param [Hash] opts
-      attr_reader :opts
+      # @return [Array<Extraction::NamedRange>] named_ranges
+      attr_reader :candidate_nrs
 
-      # @param [Hash] opts
-      def initialize(opts)
-        @opts = opts
+      # @return [Hash<String,Extract::CSVContent>] named_ranges
+      attr_reader :results
+
+      def initialize(candidate_nrs)
+        @candidate_nrs = candidate_nrs
+        @results = {}
       end
 
-      # @param [Cure::Configuration::CsvFileProxy] file_proxy
-      # @return [WrappedCSV]
-      def extract_from_file(file_proxy)
-        parsed_content = parse_csv(file_proxy)
-        log_info("Parsed CSV into #{parsed_content.content.length} sections.")
-        parsed_content
-      end
+      # @param [Integer] row_idx
+      # @param [Array] csv_row
+      def process_row(row_idx, csv_row) # rubocop:disable Metrics/AbcSize
+        # Return if row is not in any named range
+        return unless row_bounds.cover?(row_idx)
 
-      # @param [Cure::Configuration::CsvFileProxy] file_proxy
-      # @return [WrappedCSV]
-      def parse_csv(file_proxy)
-        nr_processor = named_range_processor
+        # Iterate over the NR's, if its inside those bounds, add it
+        @candidate_nrs.each do |nr|
+          next unless nr.row_in_bounds?(row_idx)
 
-        print_time_spent("rcsv_load") do
-          print_memory_usage("rcsv_load") do
-            # Removed as an option for now, not as performant as stream
-            # Rcsv.parse(file_contents, opts) { |row| csv_rows << row }
-
-            file_proxy.with_file do |file|
-              x = 0
-              CSV.foreach(file) do |row|
-                nr_processor.process_row(x, row)
-                x += 1
-              end
-            end
-          end
+          @results[nr.name] = Extract::CSVContent.new unless @results.key?(nr.name)
+          @results[nr.name].add_row(csv_row[nr.section[0]..nr.section[1]])
         end
-
-        result = WrappedCSV.new
-        result.content = extract_named_ranges(csv_rows)
-        result.variables = extract_variables(csv_rows)
-
-        log_info "[#{csv_rows.length}] total rows parsed from CSV"
-
-        result
       end
 
-      private
-
-      # @return [Cure::Extract::NamedRangeProcessor]
-      def named_range_processor
-          candidates = config.template.transformations.candidates
-          candidate_nrs = config.template.extraction.required_named_ranges(candidates.map(&:named_range).uniq)
-          Extract::NamedRangeProcessor.new(candidate_nrs)
+      # @return [Range]
+      def row_bounds
+        @row_bounds ||= calculate_row_bounds
       end
+
+      # @return [Range]
+      def calculate_row_bounds
+        positions = @candidate_nrs.map(&:row_bounds).flatten.sort
+        (positions.first..positions.last)
+      end
+
+
+
+      ## Old code
 
       # # @param [Array<Array>] csv_rows
       # # @return [Array<Hash>]
@@ -131,16 +110,7 @@ module Cure
       #   rows[psx[1]][psx[0]]
       # end
 
-      # Commented out for now, not needed.rsp
-      # @param [Integer] row_idx
-      # @param [Array] row
-      # @param [Array] psx
-      # @return [Array, nil]
-      # def handle_row(row_idx, row, psx)
-      #   return nil unless psx[3] == -1 || (row_idx >= psx[2] && row_idx <= psx[3])
-      #
-      #   row[psx[0]..psx[1]]
-      # end
     end
   end
 end
+
