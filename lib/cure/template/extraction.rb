@@ -5,7 +5,7 @@ module Cure
     # @return [Array<Extraction::NamedRange>] named_ranges
     attr_accessor :named_ranges
 
-    # @return [Array<Hash>] variables
+    # @return [Array<Extraction::Variable>] variables
     attr_accessor :variables
 
     def initialize
@@ -15,9 +15,12 @@ module Cure
 
     # @param [Hash] hash
     # @return [Cure::Extraction]
-    def self.from_hash(hash)
+    def self.from_hash(hash) # rubocop:disable Metrics/AbcSize
       this = Cure::Extraction.new
-      this.variables.push(*hash["variables"]) if hash.key? "variables"
+      if hash.key? "variables"
+        this.variables = hash["variables"].map { |v| Variable.new(v["name"], v["type"], v["location"]) }
+      end
+
       if hash.key? "named_ranges"
         this.named_ranges = hash["named_ranges"].map { |nr| NamedRange.new(nr["name"], nr["section"], nr["headers"]) }
       else
@@ -103,6 +106,27 @@ module Cure
       return Extract::CsvLookup.array_position_lookup(headers) if headers
 
       [@section[0], @section[1], @section[2], @section[2]]
+    end
+
+  end
+
+  class Variable
+    attr_reader :name, :type, :location
+
+    def initialize(name, type, location)
+      @name = name
+      @type = type
+      @location = [Extract::CsvLookup.position_for_letter(location),
+                   Extract::CsvLookup.position_for_digit(location)]
+    end
+
+    def row_in_bounds?(row_idx)
+      row_bounds_range.cover?(row_idx)
+    end
+
+    # @return [Range]
+    def row_bounds_range
+      @row_bounds_range ||= (@location&.last..@location&.last)
     end
 
   end

@@ -3,7 +3,7 @@
 require "json"
 require "cure/extract/named_range_processor"
 
-RSpec.describe Cure::Extract::NamedRangeProcessor do
+RSpec.describe Cure::Extract::VariableProcessor do
   before :all do
     @source_file_loc = "spec/cure/test_files/sectioned_csv.csv"
     @template_file_loc = "../../../spec/cure/test_files/sectioned_template.json"
@@ -16,23 +16,20 @@ RSpec.describe Cure::Extract::NamedRangeProcessor do
 
   describe "#process_row" do
     it "will extract the bounds" do
-      nrs = @main.config.template.extraction.named_ranges
-      nr_processor = described_class.new(nrs)
+      vs = @main.config.template.extraction.variables
+      v_processor = described_class.new(vs)
 
-      expect(nr_processor.calculate_row_bounds).to eq(1..19)
-      expect(nr_processor.calculate_row_bounds.class).to eq(Range)
+      expect(v_processor.candidate_rows).to eq([15, 15])
+      expect(v_processor.candidate_rows.class).to eq(Array)
 
       idx = 0
       CSV.foreach("spec/cure/test_files/sectioned_csv.csv") do |row|
-        nr_processor.process_row(idx, row)
+        v_processor.process_row(idx, row)
         idx += 1
       end
 
-      csv = nr_processor.results["section_1"]
-      expect(csv.column_headers.keys).to eq(%w[column_1 column_2 column_3 column_4 column_5 column_6])
-      expect(csv.rows[0]).to eq(%w[a1 a2 a3 a4 a5 a6])
-      expect(csv.rows[1]).to eq(%w[b1 b2 b3 b4 b5 b6])
-      expect(csv.rows[2]).to eq(%w[c1 c2 c3 c4 c5 c6])
+      variables = v_processor.results
+      expect(variables).to eq({"new_field"=>"new_value", "new_field_2"=>"new_value_2"})
     end
   end
 
