@@ -5,6 +5,7 @@ require "cure/config"
 require "cure/extract/csv_lookup"
 require "cure/helpers/file_helpers"
 require "cure/helpers/perf_helpers"
+require "cure/extract/named_range_processor"
 
 require "cure/extract/wrapped_csv"
 
@@ -56,7 +57,7 @@ module Cure
 
         result = WrappedCSV.new
         result.content = nr_processor.results
-        result.variables = variable_processor.results
+        result.variables = v_processor.results
 
         # log_info "[#{csv_rows.length}] total rows parsed from CSV"
 

@@ -4,7 +4,8 @@ require "cure/extract/extractor"
 
 # rubocop:disable Metrics/BlockLength
 RSpec.describe Cure::Extract::Extractor do
-  describe "#array_position" do
+  # This has been refactored out
+  pending describe "#array_position" do
     it "should create subset array from a named range" do
       test_arr = [
         %w[a1 b1 c1 d1],
@@ -30,7 +31,7 @@ RSpec.describe Cure::Extract::Extractor do
     end
   end
 
-  describe "#lookup_location" do
+  pending describe "#lookup_location" do
     it "will return the variable" do
       test_arr = [
         %w[a1 b1 c1 d1],

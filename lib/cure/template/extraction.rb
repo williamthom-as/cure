@@ -38,7 +38,7 @@ module Cure
     def required_named_ranges(candidate_nrs)
       return @named_ranges if candidate_nrs.empty?
 
-      @named_ranges.select { |nr| candidate_nrs.include?(nr["name"]) }
+      @named_ranges.select { |nr| candidate_nrs.include?(nr.name) }
     end
   end
 
