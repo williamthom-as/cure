@@ -41,26 +41,25 @@ module Cure
       def parse_csv(file_proxy)
         nr_processor = named_range_processor
         v_processor = variable_processor
+        row_count = 0
 
         print_time_spent("rcsv_load") do
           print_memory_usage("rcsv_load") do
             file_proxy.with_file do |file|
-              x = 0
               CSV.foreach(file) do |row|
-                nr_processor.process_row(x, row)
-                v_processor.process_row(x, row)
-                x += 1
+                nr_processor.process_row(row_count, row)
+                v_processor.process_row(row_count, row)
+                row_count += 1
               end
             end
           end
         end
 
+        log_info "[#{row_count}] total rows parsed from CSV"
+
         result = WrappedCSV.new
         result.content = nr_processor.results
         result.variables = v_processor.results
-
-        # log_info "[#{csv_rows.length}] total rows parsed from CSV"
-
         result
       end
 

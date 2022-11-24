@@ -21,7 +21,7 @@ module Cure
         this.variables = hash["variables"].map { |v| Variable.new(v["name"], v["type"], v["location"]) }
       end
 
-      if hash.key? "named_ranges"
+      if hash.key?("named_ranges") && !hash["named_ranges"].empty?
         this.named_ranges = hash["named_ranges"].map { |nr| NamedRange.new(nr["name"], nr["section"], nr["headers"]) }
       else
         this.named_ranges << NamedRange.new("default", -1, nil)

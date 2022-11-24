@@ -50,7 +50,7 @@ module Cure
       else
         log_info("[#{named_ranges.length}] named ranges specified")
         named_ranges.each do |nr|
-          log_info "-- #{nr["name"]} will extract values from #{nr["section"]}"
+          log_info "-- #{nr.name} will extract values from #{nr.section}"
         end
       end
 

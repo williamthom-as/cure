@@ -3,7 +3,7 @@
 module Cure
   module Extract
     class WrappedCSV
-      # @return [Array<Hash<String,CSVContent>]
+      # @return [Hash<String,CSVContent>]
       attr_accessor :content
 
       # @return [Hash]
@@ -16,12 +16,11 @@ module Cure
 
       # @return [CSVContent]
       def find_named_range(named_range)
-        range = @content.find { |x| x["name"] == named_range }
-        unless range
-          raise "Missing range for [#{named_range}]. Candidates are [#{@content.map { |x| x["name"] }.join(", ")}]"
-        end
+        nr = @content[named_range]
 
-        range.fetch("content")
+        raise "Missing named range for [#{named_range}]. Candidates are [#{@content.values.join(", ")}]" unless nr
+
+        nr
       end
     end
 

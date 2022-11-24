@@ -18,7 +18,7 @@ It has several key features:
     - For example, once a replacement **Account Number** is generated, any further use of that number sequence is other columns will be used, keeping data real(ish) and functional in a relational sense.
 - [Export](docs/export/main.md) into one (or many) files, in a selection of chosen formats (CSV at the moment, coming soon with JSON, Parquet).
 
-If you need help crafting templates with a visual tool, you can checkout [Cure UI](https://github.com/williamthom-as/cure-ui) (still under development). 
+If you need help crafting templates with a visual tool, you can checkout [Cure UI](https://github.com/williamthom-as/cure-ui) (still under development)
 
 **Please note**: Cure is under active development, and will have frequent breaking changes. Use at your own risk!
 
@@ -28,6 +28,7 @@ If you need help crafting templates with a visual tool, you can checkout [Cure U
 - Extract specific parts of a CSV file and junk the rest.
 - Doing complex transformations on values under specific rules.
 - Explode JSON values into individual columns per key.
+- Sequential processing for large files, whilst maintaining variable history.
 
 ## Installation
 
