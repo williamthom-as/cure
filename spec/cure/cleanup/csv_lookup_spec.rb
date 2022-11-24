@@ -11,7 +11,7 @@ RSpec.describe Cure::Extract::CsvLookup do
 
     it "should handle -1 as entire sheet" do
       arr = described_class.array_position_lookup(-1)
-      expect(arr).to eq([0, -1, 0, -1])
+      expect(arr).to eq([0, 100, 0, 10000000])
     end
   end
 end
