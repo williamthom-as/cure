@@ -42,17 +42,10 @@ module Cure
 
     def print_extract_plan # rubocop:disable Metrics/AbcSize
       print_title "Extract"
-      named_ranges = config.template.extraction.named_ranges
+      named_range = config.template.extraction.named_range
       variables = config.template.extraction.variables
 
-      if named_ranges.size.zero?
-        print_empty(named_ranges, "If you wanted to add a named range, please read docs/extraction.md")
-      else
-        log_info("[#{named_ranges.length}] named ranges specified")
-        named_ranges.each do |nr|
-          log_info "-- #{nr.name} will extract values from #{nr.section}"
-        end
-      end
+      log_info "[#{named_range.name}] will extract values from #{named_range.section}"
 
       print_spacer
 

@@ -16,7 +16,9 @@ module Cure
         @opts = opts
       end
 
-      def process(_wrapped_csv)
+      # @param [Cure::Extract::RowContext] _row_ctx
+      # @return [Cure::Extract::RowContext]
+      def process(_row_ctx)
         raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
 
@@ -27,12 +29,10 @@ module Cure
 
     class ExplodeBuilder < BaseBuilder
 
-      # TODO: remove original column
-      # @param [Cure::Extract::WrappedCSV] wrapped_csv
-      # @return [Cure::Extract::WrappedCSV]
-      def process(wrapped_csv)
-        content = wrapped_csv.find_named_range(@named_range)
-        json_store, new_keys = extract_json_data(content)
+      # @param [Cure::Extract::RowContext] row_ctx
+      # @return [Cure::Extract::RowContext]
+      def process(row_ctx)
+        json_store, new_keys = extract_json_data(row_ctx)
 
         new_keys.each { |key| content.add_column_key(key) unless content.column_headers.key? key }
 
@@ -43,7 +43,25 @@ module Cure
           end
         end
 
-        wrapped_csv
+        row_ctx
+      end
+
+      # @param [Cure::Extract::RowContext] row_ctx
+      def extract_json_data(row_ctx)
+        json_column_idx = row_ctx.headers[@column]
+
+        temp_json_store = {}
+        temp_new_keys = []
+
+        hash = safe_parse_json(row[json_column_idx])
+        temp_json_store[idx] = hash
+        hash.each_key do |key|
+          temp_new_keys.push(key) unless temp_new_keys.include?(key)
+        end
+
+        temp_new_keys = filter_keys(temp_new_keys)
+
+        [temp_json_store, temp_new_keys]
       end
 
       def safe_parse_json(candidate_str)
@@ -51,24 +69,6 @@ module Cure
         JSON.parse(candidate_str)
       rescue StandardError
         {}
-      end
-
-      def extract_json_data(content)
-        json_column_idx = content.column_headers[@column]
-
-        temp_json_store = {}
-        temp_new_keys = []
-        content.rows.each_with_index do |row, idx|
-          hash = safe_parse_json(row[json_column_idx])
-          temp_json_store[idx] = hash
-          hash.each_key do |key|
-            temp_new_keys.push(key) unless temp_new_keys.include?(key)
-          end
-        end
-
-        temp_new_keys = filter_keys(temp_new_keys)
-
-        [temp_json_store, temp_new_keys]
       end
 
       #  rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity

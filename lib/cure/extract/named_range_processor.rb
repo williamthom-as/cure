@@ -11,36 +11,26 @@ module Cure
   module Extract
     class NamedRangeProcessor
 
-      # @return [Array<Extraction::NamedRange>] named_ranges
-      attr_reader :candidate_nrs
+      # @return [Array<Extraction::NamedRange>]
+      attr_reader :nr
 
-      # @return [Hash<String,Extract::CSVContent>] named_ranges
-      attr_reader :results
-
-      def initialize(candidate_nrs)
-        @candidate_nrs = candidate_nrs
-        @results = {}
+      def initialize(candidate_nr)
+        @nr = candidate_nr
       end
 
       # @param [Integer] row_idx
       # @param [Array] csv_row
-      def process_row(row_idx, csv_row) # rubocop:disable Metrics/AbcSize
+      # @return [Array, nil]
+      def process_row(row_idx, csv_row)
         # Return if row is not in any named range
-        return unless row_bounds.cover?(row_idx)
 
-        # Iterate over the NR's, if its inside those bounds, add it
-        @candidate_nrs.each do |nr|
-          next unless nr.row_in_bounds?(row_idx)
+        return unless @nr.row_in_bounds?(row_idx)
 
-          @results[nr.name] = Extract::CSVContent.new unless @results.key?(nr.name)
-
-          if nr.header_in_bounds?(row_idx)
-            @results[nr.name].extract_column_headers(csv_row[nr.section[0]..nr.section[1]])
-            next
-          end
-
-          @results[nr.name].add_row(csv_row[nr.section[0]..nr.section[1]])
+        if @nr.header_in_bounds?(row_idx)
+          return [:headers, extract_column_headers(csv_row[@nr.section[0]..@nr.section[1]])]
         end
+
+        [:row, csv_row[@nr.section[0]..@nr.section[1]]]
       end
 
       # @return [Range]
@@ -50,10 +40,24 @@ module Cure
 
       # @return [Range]
       def calculate_row_bounds
-        positions = @candidate_nrs.map(&:row_bounds).flatten.sort
+        positions = @nr.row_bounds.sort
         (positions.first..positions.last)
       end
+
+      def extract_column_headers(row)
+        column_headers = {}
+        row.each_with_index { |column, idx| column_headers[column] = idx }
+
+        column_headers
+      end
     end
+
+    class RowValue
+
+      attr_accessor :headers, :row_values
+
+    end
+
 
     class VariableProcessor
       # @return [Array<Extraction::Variable>] variables

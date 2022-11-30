@@ -8,6 +8,7 @@ require "cure/helpers/perf_helpers"
 require "cure/extract/named_range_processor"
 
 require "cure/extract/wrapped_csv"
+require "cure/extract/row_context"
 
 require "csv"
 require "objspace"
@@ -29,55 +30,41 @@ module Cure
       end
 
       # @param [Cure::Configuration::CsvFileProxy] file_proxy
-      # @return [WrappedCSV]
-      def extract_from_file(file_proxy)
-        parsed_content = parse_csv(file_proxy)
-        log_info("Parsed CSV into #{parsed_content.content.length} sections.")
-        parsed_content
-      end
-
-      # @param [Cure::Configuration::CsvFileProxy] file_proxy
-      # @return [WrappedCSV]
-      def parse_csv(file_proxy)
+      # @@yield [RowContext]
+      def parse_csv_rows(file_proxy, &_block)
         nr_processor = named_range_processor
-        v_processor = variable_processor
-        row_count = 0
+        row_count = -1
+        headers = nil
 
+        # TODO: Add cache here to collect rows until headers hit and do a flush
         print_time_spent("rcsv_load") do
           print_memory_usage("rcsv_load") do
             file_proxy.with_file do |file|
               CSV.foreach(file) do |row|
-                nr_processor.process_row(row_count, row)
-                v_processor.process_row(row_count, row)
                 row_count += 1
+                row = nr_processor.process_row(row_count, row)
+
+                next unless row
+
+                if row[0] == :headers
+                  headers = row[1]
+                  next
+                end
+
+                yield RowContext.new(headers, row[1])
               end
             end
           end
         end
 
         log_info "[#{row_count}] total rows parsed from CSV"
-
-        result = WrappedCSV.new
-        result.content = nr_processor.results
-        result.variables = v_processor.results
-        result
       end
 
       private
 
       # @return [Cure::Extract::NamedRangeProcessor]
       def named_range_processor
-        candidates = config.template.transformations.candidates
-        candidate_nrs = config.template.extraction.required_named_ranges(candidates.map(&:named_range).uniq)
-        Extract::NamedRangeProcessor.new(candidate_nrs)
-      end
-
-      # @return [Cure::Extract::VariableProcessor]
-      def variable_processor
-        variables = config.template.extraction.variables
-        # return nil unless variables.size.positive?
-
-        Extract::VariableProcessor.new(variables || [])
+        Extract::NamedRangeProcessor.new(config.template.extraction.named_range)
       end
     end
   end

@@ -1,18 +1,9 @@
 {
   "extraction": {
-    "named_ranges": [
-      {
-        "name": "section_1",
-        "section": "B2:G6"
-      },{
-        "name": "section_2",
-        "section": "B9:H14"
-      },{
-        "name" : "section_3",
-        "section" : "B18:G20",
-        "headers" : "B2:G2"
-      }
-    ],
+    "named_range": {
+      "name": "section_1",
+      "section": "B2:G6"
+    },
     "variables" : [
       {
         "name" : "new_field",

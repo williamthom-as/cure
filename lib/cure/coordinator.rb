@@ -18,51 +18,49 @@ module Cure
     include Log
     include Helpers::PerfHelpers
 
-    # @return [Hash<String,Cure::Transformation::TransformResult>, Nil] transformed_result
+    def initialize
+      @build_candidates = config.template.build.candidates
+    end
+
     def process
-      # need to check config is init'd
-      result = nil
       print_memory_usage do
         print_time_spent do
-          extracted_csv = extract
-          built_csv = build(extracted_csv)
-          transformed_csv = transform(built_csv)
-          export(transformed_csv)
+          extract do |row_ctx|
+            # built_csv = build(row_ctx)
+            # transformed_csv = transform(built_csv)
+            # export(transformed_csv)
+            #
+            # result = transformed_csv
 
-          result = transformed_csv
+            puts row_ctx
+          end
+
         end
       end
 
-      result
+      # result
     end
 
     private
 
-    # @return [Cure::Extract::WrappedCSV]
-    def extract
+    # @yield [Cure::Extract::RowContext]
+    def extract(&block)
       log_info "Beginning the extraction process..."
 
       extractor = Extract::Extractor.new({})
-      result = extractor.extract_from_file(config.source_file)
-
-      log_debug "Setting extracted variables to global conf for access downstream"
-      config.variables = result.variables
-
-      log_info "...extraction complete"
-      result
+      extractor.parse_csv_rows(config.source_file, &block)
     end
 
-    # @param [Cure::Extract::WrappedCSV] wrapped_csv
-    # @return [Cure::Extract::WrappedCSV]
-    def build(wrapped_csv)
+    # @param [Cure::Extract::RowCtx] row_ctx
+    # @return [Cure::Extract::RowCtx]
+    def build(row_ctx)
       log_info "Beginning the building process..."
-      candidates = config.template.build.candidates
-      candidates.each do |candidate|
-        candidate.perform(wrapped_csv)
+      @build_candidates.each do |candidate|
+        candidate.perform(row_ctx)
       end
 
       log_info "... building complete"
-      wrapped_csv
+      row_ctx
     end
 
     # @param [Cure::Extract::WrappedCSV] parsed_csv

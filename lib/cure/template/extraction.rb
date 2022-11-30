@@ -2,14 +2,14 @@
 
 module Cure
   class Extraction
-    # @return [Array<Extraction::NamedRange>] named_ranges
-    attr_accessor :named_ranges
+    # @return [Extraction::NamedRange] named_ranges
+    attr_accessor :named_range
 
     # @return [Array<Extraction::Variable>] variables
     attr_accessor :variables
 
     def initialize
-      @named_ranges = []
+      @named_range = NamedRange.new("default", -1, nil)
       @variables = []
     end
 
@@ -21,10 +21,9 @@ module Cure
         this.variables = hash["variables"].map { |v| Variable.new(v["name"], v["type"], v["location"]) }
       end
 
-      if hash.key?("named_ranges") && !hash["named_ranges"].empty?
-        this.named_ranges = hash["named_ranges"].map { |nr| NamedRange.new(nr["name"], nr["section"], nr["headers"]) }
-      else
-        this.named_ranges << NamedRange.new("default", -1, nil)
+      if hash.key?("named_range")
+        nr = hash["named_range"]
+        this.named_range = NamedRange.new(nr["name"], nr["section"], nr["headers"])
       end
 
       this
@@ -36,7 +35,7 @@ module Cure
     # @param [Array] candidate_nrs
     # @return [Array]
     def required_named_ranges(candidate_nrs)
-      return @named_ranges if candidate_nrs.empty?
+      return @named_range if candidate_nrs.empty?
 
       @named_ranges.select { |nr| candidate_nrs.include?(nr.name) }
     end

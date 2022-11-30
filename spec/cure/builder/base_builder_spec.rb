@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "cure/builder/base_builder"
+require "cure/extract/row_context"
 
 RSpec.describe Cure::Builder::ExplodeBuilder do
   before :all do
@@ -17,8 +18,6 @@ RSpec.describe Cure::Builder::ExplodeBuilder do
 
   describe "#process" do
     it "will extract required sections" do
-      wrapped_csv = @coordinator.send(:extract)
-
       opts = {
         "build" => {
           "candidates" => [
@@ -35,12 +34,19 @@ RSpec.describe Cure::Builder::ExplodeBuilder do
         }
       }
 
+      row_ctx = Cure::Extract::RowCtx.new(
+        %w[index json],
+        ["1", "{\"abc\": \"def\",\"def\": 123}"]
+      )
+
       exploder = Cure::Builder::ExplodeBuilder.new(
         "default",
         opts["build"]["candidates"][0]["column"],
         opts["build"]["candidates"][0]["action"]["options"]
       )
-      result = exploder.process(wrapped_csv)
+
+
+      result = exploder.process(row_ctx)
 
       expect(exploder.safe_parse_json("dfsdfd")).to eq({})
 

@@ -27,11 +27,11 @@ module Cure
         @named_range = "default"
       end
 
-      # @param [Cure::Extract::WrappedCSV] wrapped_csv
-      def perform(wrapped_csv)
-        return wrapped_csv if @action.nil?
+      # @param [Cure::Extract::RowContext] row_ctx
+      def perform(row_ctx)
+        return row_ctx if @action.nil?
 
-        @action.process(wrapped_csv)
+        @action.process(row_ctx)
       end
 
       # @param [Hash] opts
