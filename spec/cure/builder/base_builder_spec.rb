@@ -34,9 +34,9 @@ RSpec.describe Cure::Builder::ExplodeBuilder do
         }
       }
 
-      row_ctx = Cure::Extract::RowCtx.new(
-        %w[index json],
-        ["1", "{\"abc\": \"def\",\"def\": 123}"]
+      row_ctx = Cure::Extract::RowContext.new(
+        {"index" => 0, "json" => 1},
+        ["1", "{\"abc\": \"def\",\"def\": 123}".to_json]
       )
 
       exploder = Cure::Builder::ExplodeBuilder.new(

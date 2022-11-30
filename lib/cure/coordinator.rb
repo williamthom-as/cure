@@ -18,10 +18,6 @@ module Cure
     include Log
     include Helpers::PerfHelpers
 
-    def initialize
-      @build_candidates = config.template.build.candidates
-    end
-
     def process
       print_memory_usage do
         print_time_spent do
@@ -55,7 +51,7 @@ module Cure
     # @return [Cure::Extract::RowCtx]
     def build(row_ctx)
       log_info "Beginning the building process..."
-      @build_candidates.each do |candidate|
+      config.template.build.candidates.each do |candidate|
         candidate.perform(row_ctx)
       end
 

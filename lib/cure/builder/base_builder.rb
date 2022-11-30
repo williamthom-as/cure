@@ -53,7 +53,7 @@ module Cure
         temp_json_store = {}
         temp_new_keys = []
 
-        hash = safe_parse_json(row[json_column_idx])
+        hash = safe_parse_json(row_ctx.row[json_column_idx])
         temp_json_store[idx] = hash
         hash.each_key do |key|
           temp_new_keys.push(key) unless temp_new_keys.include?(key)

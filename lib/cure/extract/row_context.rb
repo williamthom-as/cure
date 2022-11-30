@@ -6,7 +6,7 @@ module Cure
   module Extract
     class RowContext
 
-      # @return [Map<String, Integer>]
+      # @return [Hash<String, Integer>]
       attr_accessor :headers
 
       # @return [Array]
