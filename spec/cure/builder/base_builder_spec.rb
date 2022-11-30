@@ -44,9 +44,9 @@ RSpec.describe Cure::Builder::ExplodeBuilder do
 
       expect(exploder.safe_parse_json("dfsdfd")).to eq({})
 
-      expect(result.content.first["content"].column_headers.keys).to eq(%w[index json abc def ghi])
-      expect(result.content.first["content"].rows[0]).to eq(["1", "{\"abc\": \"def\",\"def\": 123}", "def", 123, ""])
-      expect(result.content.first["content"].rows[1]).to eq(["2", "{\"abc\": \"def\",\"ghi\": 123}", "def", "", 123])
+      expect(result.content["default"].column_headers.keys).to eq(%w[index json abc def ghi])
+      expect(result.content["default"].rows[0]).to eq(["1", "{\"abc\": \"def\",\"def\": 123}", "def", 123, ""])
+      expect(result.content["default"].rows[1]).to eq(["2", "{\"abc\": \"def\",\"ghi\": 123}", "def", "", 123])
     end
   end
 end
@@ -90,9 +90,9 @@ RSpec.describe Cure::Builder::RemoveBuilder do
 
       result = exploder.process(wrapped_csv)
 
-      expect(result.content.first["content"].column_headers.keys).to eq(%w[index])
-      expect(result.content.first["content"].rows[0]).to eq(["1"])
-      expect(result.content.first["content"].rows[1]).to eq(["2"])
+      expect(result.content["default"].column_headers.keys).to eq(%w[index])
+      expect(result.content["default"].rows[0]).to eq(["1"])
+      expect(result.content["default"].rows[1]).to eq(["2"])
     end
   end
 end
@@ -138,9 +138,9 @@ RSpec.describe Cure::Builder::AddBuilder do
 
       result = exploder.process(wrapped_csv)
 
-      expect(result.content.first["content"].column_headers.keys).to eq(%w[index json new])
-      expect(result.content.first["content"].rows[0]).to eq(["1", "{\"abc\": \"def\",\"def\": 123}", ""])
-      expect(result.content.first["content"].rows[1]).to eq(["2", "{\"abc\": \"def\",\"ghi\": 123}", ""])
+      expect(result.content["default"].column_headers.keys).to eq(%w[index json new])
+      expect(result.content["default"].rows[0]).to eq(["1", "{\"abc\": \"def\",\"def\": 123}", ""])
+      expect(result.content["default"].rows[1]).to eq(["2", "{\"abc\": \"def\",\"ghi\": 123}", ""])
     end
   end
 end

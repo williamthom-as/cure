@@ -7,7 +7,9 @@ module Cure
       # @param [String] position - [Ex A1:B1, A1:B1,A2:B2]
       # @return [Array] [column_start_idx, column_end_idx, row_start_idx, row_end_idx]
       def self.array_position_lookup(position)
-        return [0, -1, 0, -1] if position.is_a?(Integer) && position == -1 # Whole sheet
+        # This is a better way, still trying to figure out a better way but -1 doesn't work for ranges.
+        # return [0, -1, 0, -1] if position.is_a?(Integer) && position == -1
+        return [0, 100, 0, 10_000_000] if position.is_a?(Integer) && position == -1 # Whole sheet
 
         start, finish, *_excess = position.split(":")
         raise "Invalid format" unless start || finish

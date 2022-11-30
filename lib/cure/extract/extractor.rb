@@ -5,9 +5,12 @@ require "cure/config"
 require "cure/extract/csv_lookup"
 require "cure/helpers/file_helpers"
 require "cure/helpers/perf_helpers"
+require "cure/extract/named_range_processor"
+
 require "cure/extract/wrapped_csv"
 
 require "csv"
+require "objspace"
 
 module Cure
   module Extract
@@ -36,95 +39,46 @@ module Cure
       # @param [Cure::Configuration::CsvFileProxy] file_proxy
       # @return [WrappedCSV]
       def parse_csv(file_proxy)
-        csv_rows = []
+        nr_processor = named_range_processor
+        v_processor = variable_processor
+        row_count = 0
 
-        print_memory_usage("rcsv_load") do
-          # Removed as an option for now, not as performant as stream
-          # Rcsv.parse(file_contents, opts) { |row| csv_rows << row }
-
-          file_proxy.with_file do |file|
-            CSV.foreach(file) do |row|
-              csv_rows << row
+        print_time_spent("rcsv_load") do
+          print_memory_usage("rcsv_load") do
+            file_proxy.with_file do |file|
+              CSV.foreach(file) do |row|
+                nr_processor.process_row(row_count, row)
+                v_processor.process_row(row_count, row)
+                row_count += 1
+              end
             end
           end
         end
 
-        log_info "[#{csv_rows.length}] total rows parsed from CSV"
+        log_info "[#{row_count}] total rows parsed from CSV"
 
         result = WrappedCSV.new
-        result.content = extract_named_ranges(csv_rows)
-        result.variables = extract_variables(csv_rows)
+        result.content = nr_processor.results
+        result.variables = v_processor.results
         result
       end
 
-      # @param [Array<Array>] csv_rows
-      # @return [Array<Hash>]
-      # rubocop:disable Metrics/AbcSize
-      def extract_named_ranges(csv_rows)
-        # Use only the NR's that are defined from the candidates list
+      private
+
+      # @return [Cure::Extract::NamedRangeProcessor]
+      def named_range_processor
         candidates = config.template.transformations.candidates
         candidate_nrs = config.template.extraction.required_named_ranges(candidates.map(&:named_range).uniq)
-
-        candidate_nrs.map do |nr|
-          rows = extract_from_rows(csv_rows, nr["section"])
-          ctx = Extract::CSVContent.new
-
-          if nr["headers"]
-            ctx.extract_column_headers(extract_from_rows(csv_rows, nr["headers"])&.first)
-            ctx.add_rows(rows)
-          else
-            ctx.extract_column_headers(rows[0])
-            ctx.add_rows(rows[1..])
-          end
-
-          {
-            "content" => ctx,
-            "name" => nr["name"]
-          }
-        end
-      end
-      # rubocop:enable Metrics/AbcSize
-
-      # @param [Array<Array>] csv_rows
-      # @return [Hash]
-      def extract_variables(csv_rows)
-        config.template.extraction.variables.each_with_object({}) do |variable, hash|
-          hash[variable["name"]] = lookup_location(csv_rows, variable["location"])
-        end
+        Extract::NamedRangeProcessor.new(candidate_nrs)
       end
 
-      # @param [Array<Array>] rows
-      def extract_from_rows(rows, named_range)
-        psx = CsvLookup.array_position_lookup(named_range)
+      # @return [Cure::Extract::VariableProcessor]
+      def variable_processor
+        variables = config.template.extraction.variables
+        # return nil unless variables.size.positive?
 
-        ret_val = []
-        rows.each_with_index do |row, idx|
-          # If the position of the end row is -1, we need all,
-          # otherwise if its between/equal to start/finish
-          ret_val << row[psx[0]..psx[1]] if psx[3] == -1 || (idx >= psx[2] && idx <= psx[3])
-        end
-
-        ret_val
+        Extract::VariableProcessor.new(variables || [])
       end
-
-      # @param [Array<Array>] rows
-      # @param [String] variable_location
-      def lookup_location(rows, variable_location)
-        psx = [CsvLookup.position_for_letter(variable_location),
-               CsvLookup.position_for_digit(variable_location)]
-        rows[psx[1]][psx[0]]
-      end
-
-      # Commented out for now, not needed.rsp
-      # @param [Integer] row_idx
-      # @param [Array] row
-      # @param [Array] psx
-      # @return [Array, nil]
-      # def handle_row(row_idx, row, psx)
-      #   return nil unless psx[3] == -1 || (row_idx >= psx[2] && row_idx <= psx[3])
-      #
-      #   row[psx[0]..psx[1]]
-      # end
     end
   end
 end

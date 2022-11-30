@@ -26,16 +26,19 @@ module Cure
       # @param [Cure::Extract::WrappedCSV] wrapped_csv
       # @return [Hash<String,TransformResult>] # make this transformation results?
       def transform_content(wrapped_csv)
-        wrapped_csv.content.each_with_object({}) do |section, hash|
+        trans_hash = {}
+        wrapped_csv.content.each do |named_range, csv_content|
           ctx = TransformResult.new
-          ctx.column_headers = section["content"].column_headers
-          section["content"].rows.each do |row|
-            row = transform(section["name"], ctx.column_headers, row)
+          ctx.column_headers = csv_content.column_headers
+          csv_content.rows.each do |row|
+            row = transform(named_range, ctx.column_headers, row)
             ctx.add_transformed_row(row)
           end
 
-          hash[section["name"]] = ctx
+          trans_hash[named_range] = ctx
         end
+
+        trans_hash
       end
 
       private
