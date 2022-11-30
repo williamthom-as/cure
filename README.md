@@ -28,6 +28,20 @@ If you need help crafting templates with a visual tool, you can checkout [Cure U
 - Doing complex transformations on values under specific rules.
 - Explode JSON values into individual columns per key.
 
+## When not to use
+
+Cure operates on a spreadsheet as a whole. There are features available that require a full parse of the file to extract
+the required data. These include:
+  - Extracting variables (ex. extract a value from A1 and add to each row).
+  - Non-zero indexed headers (ex. taking values from rows 4 -> 10, and using row 2 as the source header row).
+  - Expanding JSON fields into columns (ex. If row 1 has values [{"a":1, "b":2}], and row 2 has [{"c":3}], each
+row needs columns A,B,C, but row 1 doesn't know that until row 2.)
+
+If you have large datasets of streamable CSV data, there are more efficient and performant tools to use, with the
+caveat that you will not have access to the above features.
+
+**Tldr; if your spreadsheet size is large, you will need to consider your memory footprint.**
+
 ## Installation
 
 Install it yourself as:
@@ -56,8 +70,8 @@ Cure can be used as part of your existing application.
 require "cure"
 
 transformed_csv = Cure::Main.new
-                            .with_csv_file(:pathname, Pathname.new(source_file_loc))
-                            .with_template(:pathname, Pathname.new(template_file_loc))
+                            .with_csv_file(:pathname, Pathname.new("my_source_file_location"))
+                            .with_template(:pathname, Pathname.new("my_template_file_location"))
                             .init
 
 result = main.run_export
