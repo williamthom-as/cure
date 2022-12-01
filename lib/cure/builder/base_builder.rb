@@ -151,5 +151,19 @@ module Cure
         "Copy Builder"
       end
     end
+
+    class RenameBuilder < BaseBuilder
+
+      def process(wrapped_csv)
+        content = wrapped_csv.find_named_range(@named_range)
+        content.column_headers[@opts.fetch("new_name")] = content.column_headers.delete(@column)
+        wrapped_csv
+      end
+
+      def to_s
+        "Rename Builder"
+      end
+    end
+
   end
 end
