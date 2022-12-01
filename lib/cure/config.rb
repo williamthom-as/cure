@@ -66,6 +66,7 @@ module Cure
       end
     end
 
+    # All of this shit below should be moved
     class CsvFileProxy
 
       # @return [TrueClass,FalseClass]
