@@ -43,6 +43,9 @@ module Cure
         v_processor = variable_processor
         row_count = 0
 
+        # TOOD: Needs to insert into SQLite3 file
+        # This will require a new interface to row persistence
+
         print_time_spent("rcsv_load") do
           print_memory_usage("rcsv_load") do
             file_proxy.with_file do |file|

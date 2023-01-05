@@ -24,8 +24,14 @@ module Cure
       result = nil
       print_memory_usage do
         print_time_spent do
+          # Extract into SQLite file
           extracted_csv = extract
+
+          # Manipulate SQLite file w new columns
           built_csv = build(extracted_csv)
+
+          # Extract rows from a SQLite file
+          # - This can be enhanced with a sort query, order, aggregate query etc.
           transformed_csv = transform(built_csv)
           export(transformed_csv)
 
