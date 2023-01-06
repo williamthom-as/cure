@@ -2,6 +2,7 @@
 
 require "cure/log"
 require "cure/config"
+require "cure/database"
 require "cure/helpers/file_helpers"
 require "cure/helpers/perf_helpers"
 
@@ -14,8 +15,9 @@ module Cure
   # Coordinates the entire process:
   # Extract -> Build -> Transform -> Export
   class Coordinator
-    include Configuration
     include Log
+    include Database
+    include Configuration
     include Helpers::PerfHelpers
 
     # @return [Hash<String,Cure::Transformation::TransformResult>, Nil] transformed_result

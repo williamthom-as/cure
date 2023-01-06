@@ -2,6 +2,7 @@
 
 require "cure/log"
 require "cure/config"
+require "cure/database"
 require "cure/extract/csv_lookup"
 require "cure/helpers/file_helpers"
 require "cure/helpers/perf_helpers"
@@ -16,6 +17,7 @@ module Cure
   module Extract
     class Extractor
       include Log
+      include Database
       include Configuration
       include Helpers::FileHelpers
       include Helpers::PerfHelpers
@@ -72,7 +74,7 @@ module Cure
       def named_range_processor
         candidates = config.template.transformations.candidates
         candidate_nrs = config.template.extraction.required_named_ranges(candidates.map(&:named_range).uniq)
-        Extract::NamedRangeProcessor.new(candidate_nrs)
+        Extract::NamedRangeProcessor.new(database_service, candidate_nrs)
       end
 
       # @return [Cure::Extract::VariableProcessor]
@@ -80,7 +82,7 @@ module Cure
         variables = config.template.extraction.variables
         # return nil unless variables.size.positive?
 
-        Extract::VariableProcessor.new(variables || [])
+        Extract::VariableProcessor.new(database_service, variables || [])
       end
     end
   end

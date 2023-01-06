@@ -11,13 +11,17 @@ module Cure
   module Extract
     class NamedRangeProcessor
 
+      # @return [Cure::DatabaseService]
+      attr_reader :database_service
+
       # @return [Array<Extraction::NamedRange>] named_ranges
       attr_reader :candidate_nrs
 
       # @return [Hash<String,Extract::CSVContent>] named_ranges
       attr_reader :results
 
-      def initialize(candidate_nrs)
+      def initialize(database_service, candidate_nrs)
+        @database_service = database_service
         @candidate_nrs = candidate_nrs
         @results = {}
       end
@@ -56,13 +60,17 @@ module Cure
     end
 
     class VariableProcessor
+      # @return [Cure::DatabaseService]
+      attr_reader :database_service
+
       # @return [Array<Extraction::Variable>] variables
       attr_reader :candidate_variables
 
       # @return [Hash<String,Object>] csv_variables
       attr_reader :results
 
-      def initialize(candidate_variables)
+      def initialize(database_service, candidate_variables)
+        @database_service = database_service
         @candidate_variables = candidate_variables
         @results = {}
 

@@ -4,6 +4,7 @@ require "cure/template/template"
 require "cure/transformation/candidate"
 require "cure/transformation/transform"
 require "cure/coordinator"
+require "cure/database"
 require "cure/planner"
 require "cure/config"
 
@@ -12,6 +13,7 @@ require "yaml"
 
 module Cure
   class Main
+    include Database
     include Configuration
     include Helpers::FileHelpers
 
@@ -44,6 +46,8 @@ module Cure
 
       config = create_config(@csv_file, @template)
       register_config(config)
+
+      init_database
 
       @validated = true
       self
