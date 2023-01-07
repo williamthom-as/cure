@@ -25,7 +25,7 @@ module Cure
         @candidate_nrs = candidate_nrs
         @results = {}
 
-        # @cache = init_cache
+        @cache = init_cache
       end
 
       # @param [Integer] row_idx
@@ -42,11 +42,32 @@ module Cure
           @results[nr.name] = Extract::CSVContent.new unless @results.key?(nr.name)
 
           if nr.header_in_bounds?(row_idx)
-            @results[nr.name].extract_column_headers(csv_row[nr.section[0]..nr.section[1]])
+            column_headers = csv_row[nr.section[0]..nr.section[1]]
+            @results[nr.name].extract_column_headers(column_headers)
+
+            # Create table, flush cache
+            create_nr_table(nr.name, column_headers)
+            @cache[nr.name].each do |val|
+              insert_row(nr.name, row_idx, val)
+            end
+
+            @cache[nr.name] = []
+
             next
           end
 
-          @results[nr.name].add_row(csv_row[nr.section[0]..nr.section[1]])
+          # If the table exists, add it to the database
+          if @database_service.table_exist? nr.name.to_sym
+            values = csv_row[nr.section[0]..nr.section[1]]
+
+            @results[nr.name].add_row(values) # legacy
+
+            insert_row(nr.name, row_idx, values)
+            next
+          end
+
+          # If the table doesnt exist, cache it for now.
+          @cache[nr.name] << csv_row[nr.section[0]..nr.section[1]]
         end
       end
 
@@ -60,6 +81,27 @@ module Cure
       def calculate_row_bounds
         positions = @candidate_nrs.map(&:row_bounds).flatten.sort
         (positions.first..positions.last)
+      end
+
+      private
+
+      def init_cache
+        cache = {}
+        @candidate_nrs.each do |nr|
+          cache[nr.name] = []
+        end
+
+        cache
+      end
+
+      def create_nr_table(nr_name, columns)
+        @database_service.create_table(nr_name.to_sym, columns)
+      end
+
+      def insert_row(nr_name, row_idx, values)
+        values.unshift(row_idx)
+
+        @database_service.insert_row(nr_name.to_sym, values)
       end
     end
 

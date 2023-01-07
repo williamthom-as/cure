@@ -64,9 +64,9 @@ module Cure
     end
 
     # @param [Symbol,String] tbl_name
-    # @param [Hash<String,String>] row_hash
-    def insert_row(tbl_name, row_hash)
-      @database[tbl_name.to_sym].insert(row_hash)
+    # @param [Array<String>] row
+    def insert_row(tbl_name, row)
+      @database[tbl_name.to_sym].insert(row)
     end
 
     def with_paged_result(tbl_name, chunk_size: 100, &block)
