@@ -16,8 +16,10 @@ RSpec.describe Cure::Extract::VariableProcessor do
 
   describe "#process_row" do
     it "will extract the bounds" do
+      db_svc = Cure::DatabaseService.new
+
       vs = @main.config.template.extraction.variables
-      v_processor = described_class.new(vs)
+      v_processor = described_class.new(db_svc, vs)
 
       expect(v_processor.candidate_rows).to eq([15, 15])
       expect(v_processor.candidate_rows.class).to eq(Array)
@@ -34,4 +36,5 @@ RSpec.describe Cure::Extract::VariableProcessor do
   end
 
 end
+
 

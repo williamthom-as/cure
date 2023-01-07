@@ -24,6 +24,8 @@ module Cure
         @database_service = database_service
         @candidate_nrs = candidate_nrs
         @results = {}
+
+        # @cache = init_cache
       end
 
       # @param [Integer] row_idx
@@ -36,6 +38,7 @@ module Cure
         @candidate_nrs.each do |nr|
           next unless nr.row_in_bounds?(row_idx)
 
+          # Row is inbounds - we need to do two things, create the table, insert the row
           @results[nr.name] = Extract::CSVContent.new unless @results.key?(nr.name)
 
           if nr.header_in_bounds?(row_idx)
@@ -48,6 +51,7 @@ module Cure
       end
 
       # @return [Range]
+      # This covers the max size of all named ranges
       def row_bounds
         @row_bounds ||= calculate_row_bounds
       end

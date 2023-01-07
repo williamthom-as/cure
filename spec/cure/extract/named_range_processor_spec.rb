@@ -16,8 +16,10 @@ RSpec.describe Cure::Extract::NamedRangeProcessor do
 
   describe "#process_row" do
     it "will extract the bounds" do
+      db_svc = Cure::DatabaseService.new
+
       nrs = @main.config.template.extraction.named_ranges
-      nr_processor = described_class.new(nrs)
+      nr_processor = described_class.new(db_svc, nrs)
 
       expect(nr_processor.calculate_row_bounds).to eq(1..19)
       expect(nr_processor.calculate_row_bounds.class).to eq(Range)

@@ -34,19 +34,33 @@ module Cure
   class DatabaseService
     # include Cure::Configuration
 
+    # @return [Sequel::SQLite::Database]
+    attr_reader :database
+
     def initialize
       @database = init_database
+      @tables = []
     end
 
     # @param [Symbol,String] tbl_name
     # @param [Array] columns
     def create_table(tbl_name, columns)
-      @database.create_table tbl_name.to_sym do
+      tbl_name = tbl_name.to_sym if tbl_name.class != Symbol
+
+      @database.create_table tbl_name do
         primary_key :id
         columns.each do |col_name|
           column col_name.to_sym, String
         end
       end
+
+      @tables << tbl_name
+    end
+
+    # @param [Symbol,String] tbl_name
+    # @return [TrueClass, FalseClass]
+    def table_exist?(tbl_name)
+      @tables.include?(tbl_name)
     end
 
     # @param [Symbol,String] tbl_name
@@ -70,10 +84,10 @@ module Cure
   end
 end
 
-db = Cure::DatabaseService.new
-db.create_table(:test, %w[name age])
-db.insert_row(:test, {name: "abc"})
-db.with_paged_result(:test) do |row|
-  puts row
-end
+# db = Cure::DatabaseService.new
+# db.create_table(:test, %w[name age])
+# db.insert_row(:test, {name: "abc"})
+# db.with_paged_result(:test) do |row|
+#   puts row
+# end
 
