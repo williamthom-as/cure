@@ -39,7 +39,6 @@ RSpec.describe Cure::Extract::VariableProcessor do
       expect(results[1]).to eq({:id=>2, :name=>"new_field_2", :value=>"new_value_2"})
     end
   end
-
 end
 
 

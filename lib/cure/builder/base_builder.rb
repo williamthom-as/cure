@@ -164,6 +164,5 @@ module Cure
         "Rename Builder"
       end
     end
-
   end
 end

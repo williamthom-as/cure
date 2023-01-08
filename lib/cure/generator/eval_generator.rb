@@ -8,13 +8,13 @@ module Cure
       private
 
       # @param [Object] _source_value
-      # @param [Transformation::RowCtx] row_ctx
+      # @param [Transformation::RowCtx] _row_ctx
       # This will be changed with expression evaluator
-      def _generate(_source_value, row_ctx)
+      def _generate(_source_value, _row_ctx)
         eval_str = extract_property("eval", nil)
         result = nil
         with_safe do
-          result = eval(eval_str)
+          result = eval(eval_str) # rubocop:disable Security/Eval
         end
 
         result

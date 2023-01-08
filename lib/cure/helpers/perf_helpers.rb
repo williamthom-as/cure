@@ -8,7 +8,6 @@ module Cure
     # This module uses some code sourced from here:
     # https://torrocus.com/blog/different-ways-to-processing-large-csv-file-in-ruby/
     module PerfHelpers
-
       def print_memory_usage(process_name="default")
         cmd = "ps -o rss= -p #{Process.pid}"
         before_mem = `#{cmd}`.to_i
@@ -26,7 +25,6 @@ module Cure
         time = Benchmark.realtime(&block)
         log_info "Total Processing Time [#{process_name}]: #{time.round(2)}"
       end
-
     end
   end
 end

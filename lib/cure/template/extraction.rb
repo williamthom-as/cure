@@ -80,8 +80,7 @@ module Cure
 
     def row_bounds
       # Do this better, memoization makes it hard
-      @row_bounds ||= [(content_bounds.concat(header_bounds).uniq.sort)[0],
-                       (content_bounds.concat(header_bounds).uniq.sort)[-1]]
+      @row_bounds ||= content_bounds.concat(header_bounds).uniq.minmax
     end
 
     def content_bounds_range

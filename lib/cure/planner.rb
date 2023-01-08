@@ -130,6 +130,4 @@ module Cure
       log_info ""
     end
   end
-
-
 end

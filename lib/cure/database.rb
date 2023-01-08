@@ -8,7 +8,6 @@ require "singleton"
 
 module Cure
   module Database
-
     def database_service
       database = DatabaseSource.instance.database_service
       raise "Init database first" unless database
@@ -90,4 +89,3 @@ end
 # db.with_paged_result(:test) do |row|
 #   puts row
 # end
-

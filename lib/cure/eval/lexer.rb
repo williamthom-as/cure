@@ -285,6 +285,5 @@ module Cure
         "Token(#{text})"
       end
     end
-
   end
 end
