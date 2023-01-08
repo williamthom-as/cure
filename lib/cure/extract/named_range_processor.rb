@@ -9,23 +9,38 @@ require "objspace"
 
 module Cure
   module Extract
-    class NamedRangeProcessor
+    class BaseProcessor
 
       # @return [Cure::DatabaseService]
       attr_reader :database_service
 
+      def initialize(database_service)
+        @database_service = database_service
+      end
+
+      protected
+
+      def create_table(tbl_name, columns)
+        @database_service.create_table(tbl_name.to_sym, columns)
+      end
+
+      def insert_record(tbl_name, row_idx, values)
+        values.unshift(row_idx) # Add id to front of array
+        @database_service.insert_row(tbl_name.to_sym, values)
+      end
+
+    end
+
+    class NamedRangeProcessor < BaseProcessor
+
       # @return [Array<Extraction::NamedRange>] named_ranges
       attr_reader :candidate_nrs
 
-      # @return [Hash<String,Extract::CSVContent>] named_ranges
-      attr_reader :results
-
       def initialize(database_service, candidate_nrs)
-        @database_service = database_service
         @candidate_nrs = candidate_nrs
-        @results = {}
-
         @cache = init_cache
+
+        super database_service
       end
 
       # @param [Integer] row_idx
@@ -39,16 +54,14 @@ module Cure
           next unless nr.row_in_bounds?(row_idx)
 
           # Row is inbounds - we need to do two things, create the table, insert the row
-          @results[nr.name] = Extract::CSVContent.new unless @results.key?(nr.name)
-
           if nr.header_in_bounds?(row_idx)
             column_headers = csv_row[nr.section[0]..nr.section[1]]
-            @results[nr.name].extract_column_headers(column_headers)
 
             # Create table, flush cache
-            create_nr_table(nr.name, column_headers)
+            create_table(nr.name, column_headers)
             @cache[nr.name].each do |val|
-              insert_row(nr.name, row_idx, val)
+              # This row idx will fail, cannot use same id
+              insert_record(nr.name, row_idx, val)
             end
 
             @cache[nr.name] = []
@@ -58,11 +71,7 @@ module Cure
 
           # If the table exists, add it to the database
           if @database_service.table_exist? nr.name.to_sym
-            values = csv_row[nr.section[0]..nr.section[1]]
-
-            @results[nr.name].add_row(values) # legacy
-
-            insert_row(nr.name, row_idx, values)
+            insert_record(nr.name, row_idx, csv_row[nr.section[0]..nr.section[1]])
             next
           end
 
@@ -93,35 +102,21 @@ module Cure
 
         cache
       end
-
-      def create_nr_table(nr_name, columns)
-        @database_service.create_table(nr_name.to_sym, columns)
-      end
-
-      def insert_row(nr_name, row_idx, values)
-        values.unshift(row_idx)
-
-        @database_service.insert_row(nr_name.to_sym, values)
-      end
     end
 
-    class VariableProcessor
-      # @return [Cure::DatabaseService]
-      attr_reader :database_service
+    class VariableProcessor < BaseProcessor
 
       # @return [Array<Extraction::Variable>] variables
       attr_reader :candidate_variables
 
-      # @return [Hash<String,Object>] csv_variables
-      attr_reader :results
-
       def initialize(database_service, candidate_variables)
-        @database_service = database_service
-        @candidate_variables = candidate_variables
-        @results = {}
+        super database_service
 
+        @candidate_variables = candidate_variables
         @candidate_count = candidate_variables.length
         @processed = 0
+
+        init_db
       end
 
       # @param [Integer] row_idx
@@ -136,7 +131,7 @@ module Cure
         @candidate_variables.each do |cv|
           next unless cv.row_in_bounds?(row_idx)
 
-          @results[cv.name] = csv_row[cv.location.first]
+          insert_record(:variables, (@processed + 1), [cv.name, csv_row[cv.location.first]])
           @processed += 1
         end
       end
@@ -144,6 +139,12 @@ module Cure
       # @return [Array]
       def candidate_rows
         @candidate_rows ||= @candidate_variables.map { |v| v.location.last }
+      end
+
+      private
+
+      def init_db
+        create_table(:variables, %w[name value])
       end
     end
   end

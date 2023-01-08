@@ -30,8 +30,13 @@ RSpec.describe Cure::Extract::VariableProcessor do
         idx += 1
       end
 
-      variables = v_processor.results
-      expect(variables).to eq({"new_field"=>"new_value", "new_field_2"=>"new_value_2"})
+      results = []
+      v_processor.database_service.with_paged_result(:variables) do |row|
+        results << row
+      end
+
+      expect(results[0]).to eq({:id=>1, :name=>"new_field", :value=>"new_value"})
+      expect(results[1]).to eq({:id=>2, :name=>"new_field_2", :value=>"new_value_2"})
     end
   end
 

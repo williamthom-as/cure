@@ -30,16 +30,15 @@ RSpec.describe Cure::Extract::NamedRangeProcessor do
         idx += 1
       end
 
+      results = []
       nr_processor.database_service.with_paged_result(:section_1) do |row|
-        puts row
+        results << row
       end
 
-
-      # csv = nr_processor.results["section_1"]
-      # expect(csv.column_headers.keys).to eq(%w[column_1 column_2 column_3 column_4 column_5 column_6])
-      # expect(csv.rows[0]).to eq(%w[a1 a2 a3 a4 a5 a6])
-      # expect(csv.rows[1]).to eq(%w[b1 b2 b3 b4 b5 b6])
-      # expect(csv.rows[2]).to eq(%w[c1 c2 c3 c4 c5 c6])
+      expect(results[0]).to eq({:id=>2, :column_1=>"a1", :column_2=>"a2", :column_3=>"a3", :column_4=>"a4", :column_5=>"a5", :column_6=>"a6"})
+      expect(results[1]).to eq({:id=>3, :column_1=>"b1", :column_2=>"b2", :column_3=>"b3", :column_4=>"b4", :column_5=>"b5", :column_6=>"b6"})
+      expect(results[2]).to eq({:id=>4, :column_1=>"c1", :column_2=>"c2", :column_3=>"c3", :column_4=>"c4", :column_5=>"c5", :column_6=>"c6"})
+      expect(results[3]).to eq({:id=>5, :column_1=>"d1", :column_2=>"d2", :column_3=>"d3", :column_4=>"d4", :column_5=>"d5", :column_6=>"d6"})
     end
   end
 
