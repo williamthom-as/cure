@@ -2,6 +2,7 @@
 
 module Cure
   module Extract
+    # Deprecated
     class WrappedCSV
       # @return [Hash<String,CSVContent>]
       attr_accessor :content

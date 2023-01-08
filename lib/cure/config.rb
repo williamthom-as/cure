@@ -39,9 +39,6 @@ module Cure
       # @return [Cure::Template]
       attr_accessor :template
 
-      # @return [Hash] variables
-      attr_accessor :variables
-
       # @param [Cure::Configuration::CsvFileProxy] source_file
       # @param [Cure::Template] template
       def initialize(source_file, template)

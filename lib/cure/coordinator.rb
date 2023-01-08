@@ -26,15 +26,16 @@ module Cure
       result = nil
       print_memory_usage do
         print_time_spent do
-          # Extract into SQLite file
-          extracted_csv = extract
+          # 1. Extract into SQLite
+          extract
 
-          # Manipulate SQLite file w new columns
-          built_csv = build(extracted_csv)
+          # 2. Manipulate SQLite columns
+          build
 
-          # Extract rows from a SQLite file
+          # 3. Transform rows from SQLite, stream to exporter
           # - This can be enhanced with a sort query, order, aggregate query etc.
-          transformed_csv = transform(built_csv)
+          transform(nil)
+
           export(transformed_csv)
 
           result = transformed_csv
@@ -46,31 +47,21 @@ module Cure
 
     private
 
-    # @return [Cure::Extract::WrappedCSV]
     def extract
       log_info "Beginning the extraction process..."
 
       extractor = Extract::Extractor.new({})
-      result = extractor.extract_from_file(config.source_file)
-
-      log_debug "Setting extracted variables to global conf for access downstream"
-      config.variables = result.variables
+      extractor.parse_csv(config.source_file)
 
       log_info "...extraction complete"
-      result
     end
 
-    # @param [Cure::Extract::WrappedCSV] wrapped_csv
-    # @return [Cure::Extract::WrappedCSV]
-    def build(wrapped_csv)
+    def build
       log_info "Beginning the building process..."
       candidates = config.template.build.candidates
-      candidates.each do |candidate|
-        candidate.perform(wrapped_csv)
-      end
+      candidates.each(&:perform)
 
       log_info "... building complete"
-      wrapped_csv
     end
 
     # @param [Cure::Extract::WrappedCSV] parsed_csv

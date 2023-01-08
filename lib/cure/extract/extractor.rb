@@ -31,22 +31,10 @@ module Cure
       end
 
       # @param [Cure::Configuration::CsvFileProxy] file_proxy
-      # @return [WrappedCSV]
-      def extract_from_file(file_proxy)
-        parsed_content = parse_csv(file_proxy)
-        log_info("Parsed CSV into #{parsed_content.content.length} sections.")
-        parsed_content
-      end
-
-      # @param [Cure::Configuration::CsvFileProxy] file_proxy
-      # @return [WrappedCSV]
       def parse_csv(file_proxy)
         nr_processor = named_range_processor
         v_processor = variable_processor
         row_count = 0
-
-        # TOOD: Needs to insert into SQLite3 file
-        # This will require a new interface to row persistence
 
         print_time_spent("rcsv_load") do
           print_memory_usage("rcsv_load") do
@@ -61,11 +49,6 @@ module Cure
         end
 
         log_info "[#{row_count}] total rows parsed from CSV"
-
-        result = WrappedCSV.new
-        result.content = nr_processor.results
-        result.variables = v_processor.results
-        result
       end
 
       private
@@ -80,8 +63,6 @@ module Cure
       # @return [Cure::Extract::VariableProcessor]
       def variable_processor
         variables = config.template.extraction.variables
-        # return nil unless variables.size.positive?
-
         Extract::VariableProcessor.new(database_service, variables || [])
       end
     end
