@@ -68,6 +68,9 @@ RSpec.describe Cure::Coordinator do
       expect(coordinator.database_service.table_exists?("section_2")).to eq(false)
       expect(coordinator.database_service.table_exists?("section_3")).to eq(true)
 
+      expect(coordinator.database_service.database[:section_1].count).to eq(4)
+      expect(coordinator.database_service.database[:section_3].count).to eq(3)
+
       expect(rows.length).to be(4)
       expect(rows[0]).to eq({
         column_1: "a1",
