@@ -24,7 +24,7 @@ module Cure
       if hash.key?("named_ranges") && !hash["named_ranges"].empty?
         this.named_ranges = hash["named_ranges"].map { |nr| NamedRange.new(nr["name"], nr["section"], nr["headers"]) }
       else
-        this.named_ranges << NamedRange.new("default", -1, nil)
+        this.named_ranges << NamedRange.new(default_named_range, -1, nil)
       end
 
       this
@@ -39,6 +39,10 @@ module Cure
       return @named_ranges if candidate_nrs.empty?
 
       @named_ranges.select { |nr| candidate_nrs.include?(nr.name) }
+    end
+
+    def self.default_named_range
+      "_default"
     end
   end
 
@@ -80,6 +84,8 @@ module Cure
 
     def row_bounds
       # Do this better, memoization makes it hard
+      # TODO: This is a bug, if the headers are disconnected it includes all of it
+      # Ex. headers in row 1, content in row 20-24, will return 1-24
       @row_bounds ||= content_bounds.concat(header_bounds).uniq.minmax
     end
 

@@ -3,6 +3,7 @@
 require "cure/helpers/object_helpers"
 require "cure/strategy/imports"
 require "cure/generator/imports"
+require "cure/extract/extractor"
 require "cure/log"
 
 module Cure
@@ -29,7 +30,7 @@ module Cure
 
       def initialize
         @translations = []
-        @named_range = "default"
+        @named_range = Cure::Extraction.default_named_range
       end
 
       # @param [String] source_value

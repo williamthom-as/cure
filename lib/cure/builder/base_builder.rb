@@ -1,37 +1,98 @@
 # frozen_string_literal: true
 
 require "cure/log"
-require "cure/helpers/file_helpers"
 require "cure/config"
+require "cure/database"
+require "cure/helpers/file_helpers"
 require "cure/extract/extractor"
 
 require "rcsv"
 
 module Cure
   module Builder
+    include Database
+
     class BaseBuilder
+      include Database
+
       def initialize(named_range, column, opts)
         @named_range = named_range
         @column = column
         @opts = opts
       end
 
-      def process(_wrapped_csv)
+      def process
         raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
 
       def to_s
         "Base Builder"
       end
+
+      def with_database(&block)
+        raise "Missing block" unless block
+
+        yield database_service
+      end
+    end
+
+    class AddBuilder < BaseBuilder
+
+      def process
+        with_database do |db_svc|
+          db_svc.add_column(@named_range.to_sym, @column.to_sym)
+        end
+      end
+
+      def to_s
+        "Add Builder"
+      end
+    end
+
+    class RemoveBuilder < BaseBuilder
+
+      def process
+        with_database do |db_svc|
+          db_svc.remove_column(@named_range.to_sym, @column.to_sym)
+        end
+      end
+
+      def to_s
+        "Remove Builder"
+      end
+    end
+
+    class RenameBuilder < BaseBuilder
+
+      def process
+        with_database do |db_svc|
+          db_svc.rename_column(@named_range.to_sym, @column.to_sym, @opts.fetch("new_name"))
+        end
+      end
+
+      def to_s
+        "Rename Builder"
+      end
+    end
+
+    class CopyBuilder < BaseBuilder
+
+      def process
+        with_database do |db_svc|
+          db_svc.copy_column(@named_range.to_sym, @column.to_sym, @opts.fetch("to_column"))
+        end
+      end
+
+      def to_s
+        "Copy Builder"
+      end
     end
 
     class ExplodeBuilder < BaseBuilder
 
       # TODO: remove original column
-      # @param [Cure::Extract::WrappedCSV] wrapped_csv
-      # @return [Cure::Extract::WrappedCSV]
-      def process(wrapped_csv)
-        content = wrapped_csv.find_named_range(@named_range)
+      def process
+        # content = wrapped_csv.find_named_range(@named_range)
         json_store, new_keys = extract_json_data(content)
 
         new_keys.each { |key| content.add_column_key(key) unless content.column_headers.key? key }
@@ -42,8 +103,6 @@ module Cure
             row << new_data.fetch(key, "")
           end
         end
-
-        wrapped_csv
       end
 
       def safe_parse_json(candidate_str)
@@ -97,72 +156,5 @@ module Cure
       end
     end
 
-    class AddBuilder < BaseBuilder
-
-      # @param [Cure::Extract::WrappedCSV] wrapped_csv
-      # @return [Cure::Extract::WrappedCSV]
-      def process(wrapped_csv)
-        content = wrapped_csv.find_named_range(@named_range)
-        content.add_column_key(@column)
-
-        content.rows.each { |row| row.append("") }
-
-        wrapped_csv
-      end
-
-      def to_s
-        "Add Builder"
-      end
-    end
-
-    class RemoveBuilder < BaseBuilder
-
-      # @param [Cure::Extract::WrappedCSV] wrapped_csv
-      # @return [Cure::Extract::WrappedCSV]
-      def process(wrapped_csv)
-        content = wrapped_csv.find_named_range(@named_range)
-        column_idx = content.remove_column_key(@column)
-
-        content.rows.each { |row| row.delete_at(column_idx) }
-
-        wrapped_csv
-      end
-
-      def to_s
-        "Remove Builder"
-      end
-    end
-
-    class CopyBuilder < BaseBuilder
-
-      def process(wrapped_csv)
-        content = wrapped_csv.find_named_range(@named_range)
-        column_idx = content.column_headers[@column]
-        raise "Missing column to copy from [#{@column}]" unless column_idx
-
-        new_column_header = @opts.fetch("copy_column", "#{@column}_copy")
-        content.add_column_key(new_column_header)
-        content.rows.each { |row| row.append(row[column_idx]) }
-
-        wrapped_csv
-      end
-
-      def to_s
-        "Copy Builder"
-      end
-    end
-
-    class RenameBuilder < BaseBuilder
-
-      def process(wrapped_csv)
-        content = wrapped_csv.find_named_range(@named_range)
-        content.column_headers[@opts.fetch("new_name")] = content.column_headers.delete(@column)
-        wrapped_csv
-      end
-
-      def to_s
-        "Rename Builder"
-      end
-    end
   end
 end

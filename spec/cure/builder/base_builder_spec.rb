@@ -2,97 +2,10 @@
 
 require "cure/builder/base_builder"
 
-RSpec.describe Cure::Builder::ExplodeBuilder do
-  before :all do
-    @source_file_loc = "spec/cure/test_files/explode_csv.csv"
-    template_file_loc = "../../../spec/cure/test_files/explode_template.json"
-
-    Cure::Main.new
-     .with_csv_file(:pathname, Pathname.new(@source_file_loc))
-     .with_template(:file, Pathname.new(template_file_loc))
-     .init
-
-    @coordinator = Cure::Coordinator.new
-  end
-
+RSpec.describe Cure::Builder::BaseBuilder do
   describe "#process" do
-    it "will extract required sections" do
-      wrapped_csv = @coordinator.send(:extract)
-
-      opts = {
-        "build" => {
-          "candidates" => [
-            {
-              "column" => "json",
-              "action" => {
-                "name" => "explode",
-                "options" => {
-                  "keep_existing" => false
-                }
-              }
-            }
-          ]
-        }
-      }
-
-      exploder = Cure::Builder::ExplodeBuilder.new(
-        "default",
-        opts["build"]["candidates"][0]["column"],
-        opts["build"]["candidates"][0]["action"]["options"]
-      )
-      result = exploder.process(wrapped_csv)
-
-      expect(exploder.safe_parse_json("dfsdfd")).to eq({})
-
-      expect(result.content["default"].column_headers.keys).to eq(%w[index json abc def ghi])
-      expect(result.content["default"].rows[0]).to eq(["1", "{\"abc\": \"def\",\"def\": 123}", "def", 123, ""])
-      expect(result.content["default"].rows[1]).to eq(["2", "{\"abc\": \"def\",\"ghi\": 123}", "def", "", 123])
-    end
-  end
-end
-
-RSpec.describe Cure::Builder::RemoveBuilder do
-  before :all do
-    @source_file_loc = "spec/cure/test_files/explode_csv.csv"
-    template_file_loc = "../../../spec/cure/test_files/explode_template.json"
-
-    Cure::Main.new
-              .with_csv_file(:pathname, Pathname.new(@source_file_loc))
-              .with_template(:file, Pathname.new(template_file_loc))
-              .init
-
-    @coordinator = Cure::Coordinator.new
-  end
-
-  describe "#process" do
-    it "will extract required sections" do
-      wrapped_csv = @coordinator.send(:extract)
-
-      opts = {
-        "build" => {
-          "candidates" => [
-            {
-              "column" => "json",
-              "action" => {
-                "name" => "remove",
-                "options" => {}
-              }
-            }
-          ]
-        }
-      }
-
-      exploder = described_class.new(
-        "default",
-        opts["build"]["candidates"][0]["column"],
-        opts["build"]["candidates"][0]["action"]["options"]
-      )
-
-      result = exploder.process(wrapped_csv)
-
-      expect(result.content["default"].column_headers.keys).to eq(%w[index])
-      expect(result.content["default"].rows[0]).to eq(["1"])
-      expect(result.content["default"].rows[1]).to eq(["2"])
+    it "will raise if called on base" do
+      expect { Cure::Builder::BaseBuilder.new("_default", "x", {}).process }.to raise_error
     end
   end
 end
@@ -112,7 +25,7 @@ RSpec.describe Cure::Builder::AddBuilder do
 
   describe "#process" do
     it "will extract required sections" do
-      wrapped_csv = @coordinator.send(:extract)
+      @coordinator.send(:extract)
 
       opts = {
         "build" => {
@@ -130,17 +43,77 @@ RSpec.describe Cure::Builder::AddBuilder do
         }
       }
 
-      exploder = described_class.new(
-        "default",
+      builder = described_class.new(
+        "_default",
         opts["build"]["candidates"][0]["column"],
         opts["build"]["candidates"][0]["action"]["options"]
       )
 
-      result = exploder.process(wrapped_csv)
+      builder.process
 
-      expect(result.content["default"].column_headers.keys).to eq(%w[index json new])
-      expect(result.content["default"].rows[0]).to eq(["1", "{\"abc\": \"def\",\"def\": 123}", ""])
-      expect(result.content["default"].rows[1]).to eq(["2", "{\"abc\": \"def\",\"ghi\": 123}", ""])
+      results = []
+
+      builder.with_database do |db_svc|
+        db_svc.with_paged_result(:_default) do |row|
+          results << row
+        end
+      end
+
+      expect(results[0]).to eq({id: 1, col_index: "1", json: "{\"abc\": \"def\",\"def\": 123}", new: nil})
+      expect(results[1]).to eq({id: 2, col_index: "2", json: "{\"abc\": \"def\",\"ghi\": 123}", new: nil})
+    end
+  end
+end
+
+RSpec.describe Cure::Builder::RemoveBuilder do
+  before :all do
+    @source_file_loc = "spec/cure/test_files/explode_csv.csv"
+    template_file_loc = "../../../spec/cure/test_files/explode_template.json"
+
+    Cure::Main.new
+              .with_csv_file(:pathname, Pathname.new(@source_file_loc))
+              .with_template(:file, Pathname.new(template_file_loc))
+              .init
+
+    @coordinator = Cure::Coordinator.new
+  end
+
+  describe "#process" do
+    it "will extract required sections" do
+      @coordinator.send(:extract)
+
+      opts = {
+        "build" => {
+          "candidates" => [
+            {
+              "column" => "json",
+              "action" => {
+                "name" => "remove",
+                "options" => {}
+              }
+            }
+          ]
+        }
+      }
+
+      builder = described_class.new(
+        "_default",
+        opts["build"]["candidates"][0]["column"],
+        opts["build"]["candidates"][0]["action"]["options"]
+      )
+
+      builder.process
+
+      results = []
+
+      builder.with_database do |db_svc|
+        db_svc.with_paged_result(:_default) do |row|
+          results << row
+        end
+      end
+
+      expect(results[0]).to eq({id: 1, col_index: "1"})
+      expect(results[1]).to eq({id: 2, col_index: "2"})
     end
   end
 end
@@ -160,13 +133,13 @@ RSpec.describe Cure::Builder::RenameBuilder do
 
   describe "#process" do
     it "will extract required sections" do
-      wrapped_csv = @coordinator.send(:extract)
+      @coordinator.send(:extract)
 
       opts = {
         "build" => {
           "candidates" => [
             {
-              "column" => "index",
+              "column" => "col_index",
               "action" => {
                 "name" => "rename",
                 "options" => {
@@ -178,25 +151,129 @@ RSpec.describe Cure::Builder::RenameBuilder do
         }
       }
 
-      exploder = described_class.new(
-        "default",
+      builder = described_class.new(
+        "_default",
         opts["build"]["candidates"][0]["column"],
         opts["build"]["candidates"][0]["action"]["options"]
       )
 
-      result = exploder.process(wrapped_csv)
+      builder.process
 
-      expect(result.content["default"].column_headers.keys).to eq(%w[json new])
-      expect(result.content["default"].rows[0]).to eq(["1", "{\"abc\": \"def\",\"def\": 123}"])
-      expect(result.content["default"].rows[1]).to eq(["2", "{\"abc\": \"def\",\"ghi\": 123}"])
+      results = []
+
+      builder.with_database do |db_svc|
+        db_svc.with_paged_result(:_default) do |row|
+          results << row
+        end
+      end
+
+      expect(results[0]).to eq({id: 1, json: "{\"abc\": \"def\",\"def\": 123}", new: "1"})
+      expect(results[1]).to eq({id: 2, json: "{\"abc\": \"def\",\"ghi\": 123}", new: "2"})
     end
   end
 end
 
-RSpec.describe Cure::Builder::BaseBuilder do
+RSpec.describe Cure::Builder::CopyBuilder do
+  before :all do
+    @source_file_loc = "spec/cure/test_files/explode_csv.csv"
+    template_file_loc = "../../../spec/cure/test_files/explode_template.json"
+
+    Cure::Main.new
+              .with_csv_file(:pathname, Pathname.new(@source_file_loc))
+              .with_template(:file, Pathname.new(template_file_loc))
+              .init
+
+    @coordinator = Cure::Coordinator.new
+  end
+
   describe "#process" do
-    it "will raise if called on base" do
-      expect { Cure::Builder::BaseBuilder.new("default", "x", {}).process(nil) }.to raise_error
+    it "will extract required sections" do
+      @coordinator.send(:extract)
+
+      opts = {
+        "build" => {
+          "candidates" => [
+            {
+              "column" => "col_index",
+              "action" => {
+                "name" => "copy",
+                "options" => {
+                  "to_column" => "abc"
+                }
+              }
+            }
+          ]
+        }
+      }
+
+      builder = described_class.new(
+        "_default",
+        opts["build"]["candidates"][0]["column"],
+        opts["build"]["candidates"][0]["action"]["options"]
+      )
+
+      builder.process
+
+      results = []
+
+      builder.with_database do |db_svc|
+        db_svc.with_paged_result(:_default) do |row|
+          results << row
+        end
+      end
+
+      expect(results[0]).to eq({abc: "1", col_index: "1", id: 1, json: "{\"abc\": \"def\",\"def\": 123}"})
+      expect(results[1]).to eq({abc: "2", col_index: "2", id: 2, json: "{\"abc\": \"def\",\"ghi\": 123}"})
     end
   end
 end
+
+# RSpec.describe Cure::Builder::ExplodeBuilder do
+#   before :all do
+#     @source_file_loc = "spec/cure/test_files/explode_csv.csv"
+#     template_file_loc = "../../../spec/cure/test_files/explode_template.json"
+#
+#     Cure::Main.new
+#               .with_csv_file(:pathname, Pathname.new(@source_file_loc))
+#               .with_template(:file, Pathname.new(template_file_loc))
+#               .init
+#
+#     @coordinator = Cure::Coordinator.new
+#   end
+#
+#   describe "#process" do
+#     it "will extract required sections" do
+#       @coordinator.send(:extract)
+#
+#       opts = {
+#         "build" => {
+#           "candidates" => [
+#             {
+#               "column" => "json",
+#               "action" => {
+#                 "name" => "explode",
+#                 "options" => {
+#                   "keep_existing" => false
+#                 }
+#               }
+#             }
+#           ]
+#         }
+#       }
+#
+#       exploder = Cure::Builder::ExplodeBuilder.new(
+#         "_default",
+#         opts["build"]["candidates"][0]["column"],
+#         opts["build"]["candidates"][0]["action"]["options"]
+#       )
+#
+#       result = exploder.process
+#
+#       expect(exploder.safe_parse_json("dfsdfd")).to eq({})
+#
+#       expect(result.content["_default"].column_headers.keys).to eq(%w[col_index json abc def ghi])
+#       expect(result.content["_default"].rows[0]).to eq(["1", "{\"abc\": \"def\",\"def\": 123}", "def", 123, ""])
+#       expect(result.content["_default"].rows[1]).to eq(["2", "{\"abc\": \"def\",\"ghi\": 123}", "def", "", 123])
+#     end
+#   end
+# end

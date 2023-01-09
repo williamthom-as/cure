@@ -2,6 +2,7 @@
 
 require "cure/helpers/object_helpers"
 require "cure/builder/base_builder"
+require "cure/extract/extractor"
 require "cure/log"
 
 module Cure
@@ -24,7 +25,7 @@ module Cure
       attr_reader :action
 
       def initialize
-        @named_range = "default"
+        @named_range = Cure::Extraction.default_named_range
       end
 
       def perform

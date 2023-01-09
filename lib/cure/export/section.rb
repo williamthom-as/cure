@@ -2,6 +2,7 @@
 
 require "cure/export/base_processor"
 require "cure/helpers/object_helpers"
+require "cure/extract/extractor"
 require "cure/log"
 
 module Cure
@@ -19,7 +20,7 @@ module Cure
       attr_reader :processor
 
       def initialize
-        @named_range = "default"
+        @named_range = Cure::Extraction.default_named_range
       end
 
       # @param [Hash<String,Cure::Transformation::TransformResult>] transformed_result

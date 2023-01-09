@@ -28,17 +28,29 @@ module Cure
         print_time_spent do
           # 1. Extract into SQLite
           extract
-
           # 2. Manipulate SQLite columns
           build
 
+          # 3. Transform each row
+
+          with_transformer do |transformer|
+            database_service.list_tables.each do |table|
+              database_service.with_paged_result(table) do |row|
+                puts "#{table} -> #{row}"
+              end
+            end
+          end
+
+          # with_transformer do |transformer|
+          #   transformer.transform_content
+          # end
           # 3. Transform rows from SQLite, stream to exporter
           # - This can be enhanced with a sort query, order, aggregate query etc.
-          transform(nil)
-
-          export(transformed_csv)
-
-          result = transformed_csv
+          # transform(nil)
+          #
+          # export(transformed_csv)
+          #
+          # result = transformed_csv
         end
       end
 
@@ -64,15 +76,15 @@ module Cure
       log_info "... building complete"
     end
 
-    # @param [Cure::Extract::WrappedCSV] parsed_csv
-    # @return [Hash<String,Cure::Transformation::TransformResult>]
-    def transform(parsed_csv)
+    # @yieldreturn [Cure::Transformation::Transform]
+    def with_transformer(&block)
+      raise "No block passed" unless block
+
       log_info "Beginning the transformation process..."
       transformer = Cure::Transformation::Transform.new(config.template.transformations.candidates)
-      content = transformer.transform_content(parsed_csv)
+      yield transformer
 
       log_info "...transform complete"
-      content
     end
 
     # @param [Hash<String,Cure::Transformation::TransformResult>] transformed_result

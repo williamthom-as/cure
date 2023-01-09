@@ -1,3 +1,3 @@
-index,json
+col_index,json
 1,"{""abc"": ""def"",""def"": 123}"
 2,"{""abc"": ""def"",""ghi"": 123}"
