@@ -45,7 +45,7 @@ module Cure
 
       # @param [Integer] row_idx
       # @param [Array] csv_row
-      def process_row(row_idx, csv_row) # rubocop:disable Metrics/AbcSize
+      def process_row(row_idx, csv_row) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity
         # Return if row is not in any named range
         return unless row_bounds.cover?(row_idx)
 
@@ -68,6 +68,8 @@ module Cure
 
             next
           end
+
+          next unless nr.content_in_bounds?(row_idx)
 
           # If the table exists, add it to the database
           if @database_service.table_exist? nr.name.to_sym

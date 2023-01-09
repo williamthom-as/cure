@@ -83,14 +83,11 @@ module Cure
     end
 
     def row_bounds
-      # Do this better, memoization makes it hard
-      # TODO: This is a bug, if the headers are disconnected it includes all of it
-      # Ex. headers in row 1, content in row 20-24, will return 1-24
       @row_bounds ||= content_bounds.concat(header_bounds).uniq.minmax
     end
 
     def content_bounds_range
-      @content_bounds_range ||= (content_bounds&.first..content_bounds&.last)
+      @content_bounds_range ||= (content_bounds[0]..content_bounds[1])
     end
 
     def content_bounds
