@@ -6,15 +6,15 @@ require "cure/config"
 module Cure
   module Generator
     class VariableGenerator < BaseGenerator
-      include Cure::Configuration
+      include Database
 
       private
 
       # @param [object] _source_value
       # @param [RowCtx] _row_ctx
       def _generate(_source_value, _row_ctx)
-        value = config.variables[property_name]
-        value || raise("Missing placeholder value. Available candidates: [#{config.variables.keys.join(", ")}]")
+        value = database_service.find_variable(property_name)
+        value || raise("Missing placeholder value")
       end
 
       def _describe

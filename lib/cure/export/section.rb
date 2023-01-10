@@ -32,7 +32,7 @@ module Cure
       end
 
       # @param [Hash] opts
-      # @return [Cure::Export::Processor]
+      # @return [Cure::Export::BaseProcessor]
       def processor=(opts)
         clazz_name = "Cure::Export::#{opts["type"].to_s.capitalize}Processor"
         processor = Kernel.const_get(clazz_name).new(

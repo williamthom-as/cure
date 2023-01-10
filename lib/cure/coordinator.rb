@@ -32,11 +32,10 @@ module Cure
           build
 
           # 3. Transform each row
-
-          with_transformer do |transformer|
-            database_service.list_tables.each do |table|
+          database_service.list_tables.each do |table|
+            with_transformer(table) do |transformer|
               database_service.with_paged_result(table) do |row|
-                puts "#{table} -> #{row}"
+                transformer.transform(row)
               end
             end
           end
@@ -77,11 +76,12 @@ module Cure
     end
 
     # @yieldreturn [Cure::Transformation::Transform]
-    def with_transformer(&block)
+    def with_transformer(named_range, &block)
       raise "No block passed" unless block
 
       log_info "Beginning the transformation process..."
-      transformer = Cure::Transformation::Transform.new(config.template.transformations.candidates)
+      candidates = config.template.transformations.candidates.select { |c| c.named_range == named_range.to_s }
+      transformer = Cure::Transformation::Transform.new(candidates)
       yield transformer
 
       log_info "...transform complete"
@@ -89,6 +89,21 @@ module Cure
 
     # @param [Hash<String,Cure::Transformation::TransformResult>] transformed_result
     # @return [Hash<String,Cure::Transformation::TransformResult>]
+
+    def with_exporter(named_range, &block)
+      raise "No block passed" unless block
+
+      log_info "Beginning export process..."
+      sections = config.template.exporter.sections.select { |c| c.named_range == named_range.to_s }
+      sections.each do |section|
+        section.perform(transformed_result)
+      end
+
+      log_info "... export complete."
+
+      transformed_result
+    end
+
     def export(transformed_result)
       log_info "Beginning export process..."
       sections = config.template.exporter.sections

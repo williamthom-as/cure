@@ -40,6 +40,11 @@ module Cure
       @database = init_database
     end
 
+    # App Service calls
+    def find_variable(property_name)
+      @database.from(:variables).where(name: property_name).get(:value)
+    end
+
     # @param [Symbol,String] tbl_name
     # @param [Array] columns
     def create_table(tbl_name, columns)
@@ -72,7 +77,7 @@ module Cure
       tbl_name = tbl_name.to_sym if tbl_name.class != Symbol
       new_column = new_column.to_sym if new_column.class != Symbol
 
-      @database.add_column(tbl_name, new_column, String)
+      @database.add_column(tbl_name, new_column, String, default: "")
     end
 
     def remove_column(tbl_name, remove_column)
@@ -131,3 +136,4 @@ end
 # db.with_paged_result(:test) do |row|
 #   puts row
 # end
+
