@@ -7,6 +7,7 @@ require "cure/log"
 
 module Cure
   module Export
+    # This is a shit name
     class Section
       include Helpers::ObjectHelpers
       include Log
@@ -20,15 +21,13 @@ module Cure
       attr_reader :processor
 
       def initialize
-        @named_range = Cure::Extraction.default_named_range
+        @named_range = Cure::Extraction.default_named_range # TODO: this needs to not be hardcoded
       end
 
-      # @param [Hash<String,Cure::Transformation::TransformResult>] transformed_result
-      # @return [Hash<String,Cure::Transformation::TransformResult>]
-      def perform(transformed_result)
-        return transformed_result if @processor.nil?
-
-        @processor.process(transformed_result)
+      # @param [Hash] row
+      # @return [Hash]
+      def perform(row)
+        @processor.process_row(row)
       end
 
       # @param [Hash] opts

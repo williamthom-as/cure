@@ -34,8 +34,10 @@ module Cure
           # 3. Transform each row
           database_service.list_tables.each do |table|
             with_transformer(table) do |transformer|
-              database_service.with_paged_result(table) do |row|
-                transformer.transform(row)
+              with_exporter(table) do |exporter|
+                database_service.with_paged_result(table) do |row|
+                  exporter.perform(transformer.transform(row))
+                end
               end
             end
           end
@@ -87,23 +89,16 @@ module Cure
       log_info "...transform complete"
     end
 
-    # @param [Hash<String,Cure::Transformation::TransformResult>] transformed_result
-    # @return [Hash<String,Cure::Transformation::TransformResult>]
-
+    # @yieldreturn [Cure::Export::Section]
     def with_exporter(named_range, &block)
       raise "No block passed" unless block
 
       log_info "Beginning export process..."
       sections = config.template.exporter.sections.select { |c| c.named_range == named_range.to_s }
-      sections.each do |section|
-        section.perform(transformed_result)
-      end
-
-      log_info "... export complete."
-
-      transformed_result
+      sections.each(&block)
     end
 
+    # @deprecated - I think?
     def export(transformed_result)
       log_info "Beginning export process..."
       sections = config.template.exporter.sections
