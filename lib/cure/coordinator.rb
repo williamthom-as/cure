@@ -8,6 +8,7 @@ require "cure/helpers/perf_helpers"
 
 require "cure/extract/extractor"
 require "cure/transformation/transform"
+require "cure/export/manager"
 
 require "rcsv"
 
@@ -20,7 +21,6 @@ module Cure
     include Configuration
     include Helpers::PerfHelpers
 
-    # @return [Hash<String,Cure::Transformation::TransformResult>, Nil] transformed_result
     def process
       # need to check config is init'd
       result = nil
@@ -34,9 +34,12 @@ module Cure
           # 3. Transform each row
           database_service.list_tables.each do |table|
             with_transformer(table) do |transformer|
-              with_exporter(table) do |exporter|
+              with_exporters(table) do |exporters|
                 database_service.with_paged_result(table) do |row|
-                  exporter.perform(transformer.transform(row))
+                  transformed_row = transformer.transform(row)
+                  exporters.each do |exporter|
+                    exporter.process_row(transformed_row)
+                  end
                 end
               end
             end
@@ -90,12 +93,16 @@ module Cure
     end
 
     # @yieldreturn [Cure::Export::Section]
-    def with_exporter(named_range, &block)
+    def with_exporters(named_range, &block)
       raise "No block passed" unless block
 
       log_info "Beginning export process..."
-      sections = config.template.exporter.sections.select { |c| c.named_range == named_range.to_s }
-      sections.each(&block)
+      processors = config.template.exporters.processors.select { |c| c.named_range == named_range.to_s }
+      manager = Cure::Export::Manager.new(named_range, processors)
+
+      manager.with_processors(&block)
+
+      log_info "...export complete"
     end
 
     # @deprecated - I think?

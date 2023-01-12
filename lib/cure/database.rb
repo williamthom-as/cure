@@ -58,6 +58,10 @@ module Cure
       end
     end
 
+    def with_transaction(&block)
+      @database.transaction({}, &block)
+    end
+
     # @param [Symbol,String] tbl_name
     # @return [TrueClass, FalseClass]
     def table_exist?(tbl_name)
@@ -73,11 +77,11 @@ module Cure
       @database[tbl_name.to_sym].insert(row)
     end
 
-    def add_column(tbl_name, new_column)
+    def add_column(tbl_name, new_column, default: "")
       tbl_name = tbl_name.to_sym if tbl_name.class != Symbol
       new_column = new_column.to_sym if new_column.class != Symbol
 
-      @database.add_column(tbl_name, new_column, String, default: "")
+      @database.add_column(tbl_name, new_column, String, default: default)
     end
 
     def remove_column(tbl_name, remove_column)

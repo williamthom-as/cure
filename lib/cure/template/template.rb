@@ -3,7 +3,7 @@
 require "cure/template/transformations"
 require "cure/template/extraction"
 require "cure/template/build"
-require "cure/template/exporter"
+require "cure/template/exporters"
 
 module Cure
   class Template
@@ -16,8 +16,8 @@ module Cure
     # @return [Cure::Build]
     attr_accessor :build
 
-    # @return [Cure::Exporter]
-    attr_accessor :exporter
+    # @return [Cure::Exporters]
+    attr_accessor :exporters
 
     # @param [Hash] hash
     # @return [Cure::Template]
@@ -26,7 +26,7 @@ module Cure
       this.transformations = Cure::Transformations.from_hash(hash.fetch("transformations", {}))
       this.extraction = Cure::Extraction.from_hash(hash.fetch("extraction", {}))
       this.build = Cure::Build.from_hash(hash.fetch("build", {}))
-      this.exporter = Cure::Exporter.from_hash(hash.fetch("exporter", {}))
+      this.exporters = Cure::Exporters.from_hash(hash.fetch("exporters", {}))
 
       this
     end

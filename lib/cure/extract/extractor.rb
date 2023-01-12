@@ -39,10 +39,14 @@ module Cure
         print_time_spent("rcsv_load") do
           print_memory_usage("rcsv_load") do
             file_proxy.with_file do |file|
-              CSV.foreach(file) do |row|
-                nr_processor.process_row(row_count, row)
-                v_processor.process_row(row_count, row)
-                row_count += 1
+              database_service.with_transaction do
+                CSV.foreach(file) do |row|
+                  nr_processor.process_row(row_count, row)
+                  v_processor.process_row(row_count, row)
+                  row_count += 1
+
+                  log_info "#{row_count} rows processed [#{Time.now}]" if (row_count % 10_000).zero?
+                end
               end
             end
           end

@@ -59,8 +59,8 @@ RSpec.describe Cure::Builder::AddBuilder do
         end
       end
 
-      expect(results[0]).to eq({id: 1, col_index: "1", json: "{\"abc\": \"def\",\"def\": 123}", new: nil})
-      expect(results[1]).to eq({id: 2, col_index: "2", json: "{\"abc\": \"def\",\"ghi\": 123}", new: nil})
+      expect(results[0]).to eq({id: 1, col_index: "1", json: "{\"abc\": \"def\",\"def\": 123}", new: "abc"})
+      expect(results[1]).to eq({id: 2, col_index: "2", json: "{\"abc\": \"def\",\"ghi\": 123}", new: "abc"})
     end
   end
 end
