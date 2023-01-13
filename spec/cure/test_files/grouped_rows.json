@@ -1,0 +1,47 @@
+{
+  "build": {
+    "candidates": [
+      {
+        "column": "full_name",
+        "action": {
+          "type": "add",
+          "options": {}
+        }
+      }
+    ]
+  },
+  "extraction": {
+    "named_ranges": [],
+    "variables": []
+  },
+  "transformations": {
+    "candidates": [
+      {
+        "column": "full_name",
+        "translations": [
+          {
+            "strategy": {
+              "name": "full",
+              "options": {}
+            },
+            "generator": {
+              "name": "row",
+              "options": {}
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "exporters": {
+    "candidates": [
+      {
+        "type": "terminal",
+        "options": {
+          "title": "Results",
+          "row_count": 50
+        }
+      }
+    ]
+  }
+}

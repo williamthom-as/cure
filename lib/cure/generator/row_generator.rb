@@ -7,10 +7,11 @@ module Cure
     class RowGenerator < BaseGenerator
       private
 
-      # @param [Object] source_value
+      # @param [Cure::Transformation::RowCtx] source_value
       # @param [RowCtx] row_ctx
       def _generate(source_value, row_ctx)
-        puts row_ctx
+        template = '<p class="foo"><%=content%></p>'
+        html = Erb.new(template).result(row_ctx.rows)
 
         source_value
       end

@@ -38,23 +38,13 @@ module Cure
                 database_service.with_paged_result(table) do |row|
                   transformed_row = transformer.transform(row)
                   exporters.each do |exporter|
+                    # 4. Export
                     exporter.process_row(transformed_row)
                   end
                 end
               end
             end
           end
-
-          # with_transformer do |transformer|
-          #   transformer.transform_content
-          # end
-          # 3. Transform rows from SQLite, stream to exporter
-          # - This can be enhanced with a sort query, order, aggregate query etc.
-          # transform(nil)
-          #
-          # export(transformed_csv)
-          #
-          # result = transformed_csv
         end
       end
 

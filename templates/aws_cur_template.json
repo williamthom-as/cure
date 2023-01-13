@@ -142,7 +142,7 @@
       "$account_number" : "1234567891234"
     }
   },
-  "exporter": {
+  "exporters": {
     "sections" : [{
       "named_range": "default",
       "processor" : {

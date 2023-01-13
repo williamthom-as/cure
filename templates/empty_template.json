@@ -10,7 +10,7 @@
     "candidates": [],
     "placeholders": {}
   },
-  "exporter": {
-    "sections" : []
+  "exporters": {
+    "candidates" : []
   }
 }
