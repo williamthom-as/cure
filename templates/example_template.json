@@ -45,15 +45,14 @@
     }
   },
   "exporters": {
-    "sections" : [{
-      "named_range" : "main",
-      "processor" : {
+    "candidates" : [
+      {
         "type": "csv",
         "options" : {
           "file_name" : "abc",
           "directory" : "/tmp/cure"
         }
       }
-    }]
+    ]
   }
 }

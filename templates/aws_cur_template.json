@@ -143,14 +143,11 @@
     }
   },
   "exporters": {
-    "sections" : [{
-      "named_range": "default",
-      "processor" : {
-        "type": "csv",
-        "options" : {
-          "file_name" : "aws_file",
-          "directory" : "/tmp/cure"
-        }
+    "candidates" : [{
+      "type": "csv",
+      "options" : {
+        "file_name" : "aws_file",
+        "directory" : "/tmp/cure"
       }
     }]
   }

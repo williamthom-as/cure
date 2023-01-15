@@ -18,21 +18,6 @@
   },
   "transformations": {
     "candidates": [
-      {
-        "column": "full_name",
-        "translations": [
-          {
-            "strategy": {
-              "name": "full",
-              "options": {}
-            },
-            "generator": {
-              "name": "erb",
-              "options": {}
-            }
-          }
-        ]
-      }
     ]
   },
   "exporters": {

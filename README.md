@@ -4,7 +4,7 @@
 [![Gem Version](https://badge.fury.io/rb/cure.svg)](https://badge.fury.io/rb/cure)
 
 Cure is a simple tool to **extract/clean/transform/remove/redact/anonymize** and **replace** information in a spreadsheet.
-It operates purely in memory, and can be easily integrated into an existing work flow or controlled via CLI.
+It operates in memory by default, and can be easily integrated into an existing work flow or controlled via CLI.
 
 It has several key features:
 - Operate on your data to build what you need. 
@@ -33,18 +33,22 @@ If you need help crafting templates with a visual tool, you can checkout [Cure U
 ## When not to use
 
 Cure operates on a spreadsheet as a whole. There are features available that require a full parse of the file to extract
-the required data. These include:
+the required data prior to transforming the data. These include:
   - Extracting variables (ex. extract a value from A1 and add to each row).
   - Non-zero indexed headers (ex. taking values from rows 4 -> 10, and using row 2 as the source header row).
   - Expanding JSON fields into columns (ex. If row 1 has values [{"a":1, "b":2}], and row 2 has [{"c":3}], each
 row needs columns A,B,C, but row 1 doesn't know that until row 2.)
 
-If you have large datasets of streamable CSV data, there are more efficient and performant tools to use, with the
-caveat that you will not have access to the above features.
-
-**Tldr; if your spreadsheet size is large, you will need to consider your memory footprint.**
+If you have large datasets of streamable CSV data, there are more efficient and performant tools to use. If you would 
+still like to use Cure to process large files, you can elect to persist the datastore to disk, instead of in memory, 
+and have a small performance impact.
 
 ## Installation
+
+### Requirements
+
+  - Ruby 2.6 or above
+  - SQLite3
 
 Install it yourself as:
 

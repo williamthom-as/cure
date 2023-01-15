@@ -47,8 +47,6 @@ changes to
 
 ---
 
-
-
 See below an example configuration block:
 
 ### Example
