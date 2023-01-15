@@ -5,7 +5,9 @@
         "column": "full_name",
         "action": {
           "type": "add",
-          "options": {}
+          "options": {
+            "default_value" : ""
+          }
         }
       }
     ]
@@ -25,7 +27,7 @@
               "options": {}
             },
             "generator": {
-              "name": "row",
+              "name": "erb",
               "options": {}
             }
           }
