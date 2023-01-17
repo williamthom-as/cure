@@ -7,6 +7,7 @@ require "cure/version"
 require "cure/helpers/file_helpers"
 
 require "cure/template/template"
+require "cure/dsl/template"
 require "cure/transformation/transform"
 
 require "logger"
