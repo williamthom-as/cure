@@ -67,22 +67,36 @@ You can run the CLI using the following command:
     $ cure -t /file/path/to/template.json -s /file/path/to/source_file.csv
 
 ### In Code
-Cure can be used as part of your existing application. 
+Cure can be used as part of your existing application. It is configured using a simple DSL that can either be inline,
+or as a file.
 
 ```ruby
-# CSV file can either be path to file, File object or file contents
-# Template can either be path to template, or Cure::Template object
-
 require "cure"
 
-transformed_csv = Cure::Main.new
-                            .with_csv_file(:pathname, Pathname.new("my_source_file_location"))
-                            .with_template(:pathname, Pathname.new("my_template_file_location"))
-                            .init
+# Inline initialisation
 
-result = main.run_export
+cure = Cure.init do
+  csv file: "location", encoding: "utf-8"
 
-# This will return a result object consisting of extracted/transformed headers and rows.
+  extraction do
+    named_range name: "section_1", at: "B2:G6"
+    variable name: "new_field", location: "A16"
+  end
+
+  transformations do
+    candidate column: "new_column", named_range: "section_1" do
+      strategy name: "full", options: {}
+      generator name: "variable", options: { name: "new_field" }
+    end
+  end
+
+  exporters do
+    terminal named_range: "section_1", title: "Exported", limit_rows: 5
+    csv named_range: "section_1", file: "/tmp/cure/section_1.csv"
+  end
+end
+
+cure.process
 ```
 
 ### Getting started *quickly*
