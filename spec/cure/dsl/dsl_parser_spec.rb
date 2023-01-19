@@ -2,7 +2,7 @@
 
 require "cure/dsl/template"
 
-RSpec.describe Cure::Dsl::Template do
+RSpec.describe Cure::Dsl::DslHandler do
   describe "#generate" do
     it "should return a valid extraction template from dsl" do
       doc = <<-TEMPLATE
@@ -42,23 +42,19 @@ RSpec.describe Cure::Dsl::Template do
       result = template.generate
 
       expect(result.builder.class).to be(Cure::Dsl::Builder)
+      expect(result.builder.candidates.size).to eq(1)
+      expect(result.builder.candidates[0].column).to eq("new_column")
+      expect(result.builder.candidates[0].named_range).to eq("section_1")
+      expect(result.builder.candidates[0].action.class).to eq(Cure::Builder::AddBuilder)
     end
 
     it "should return a valid transformations template from dsl" do
       doc = <<-TEMPLATE
         transform do
-          candidate column: "new_column", named_range: "section_1" do
-            strategy name: "full", options: {}
-            generator name: "variable", options: {
-              name: "new_field"
-            }
-          end
-
-          candidate column: "new_column", named_range: "section_1" do
-            strategy name: "full", options: {}
-            generator name: "variable", options: {
-              name: "new_field"
-            }
+          candidate(column: "new_column", named_range: "section_1") do
+            translation { replace("regex", regex_cg: "^vol-(.*)").with("variable", name: "new_field") }
+            translation { replace("split", "token": ":", "index": 4).with("placeholder", name: "key2") }
+            no_match_translation { replace("full").with("placeholder", name: "key2") }
           end
         
           placeholders({key: "value", key2: "value2"})
@@ -69,6 +65,8 @@ RSpec.describe Cure::Dsl::Template do
       result = template.generate
 
       expect(result.transformations.class).to be(Cure::Dsl::Transformations)
+      expect(result.transformations.candidates.size).to eq(1)
+
     end
   end
 end

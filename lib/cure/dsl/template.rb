@@ -2,7 +2,7 @@
 
 module Cure
   module Dsl
-    class Template
+    class DslHandler
       def initialize(dsl_source, identifier, line_number=1)
         @proc = Binding.get.eval(<<-SOURCE, identifier, line_number)
           Proc.new do
@@ -12,7 +12,7 @@ module Cure
       end
 
       def generate(instance_variables={})
-        dsl = Cure::Dsl::DslHandler.new
+        dsl = Cure::Dsl::Template.new
         instance_variables.each do |name, value|
           dsl.instance_variable_set("@#{name}", value)
         end
@@ -30,7 +30,7 @@ module Cure
       end
     end
 
-    class DslHandler
+    class Template
 
       # @return [Dsl::Extraction]
       attr_reader :extraction
@@ -128,7 +128,7 @@ module Cure
 
       class Candidate
 
-        attr_reader :column, :named_range
+        attr_reader :column, :named_range, :action
 
         def initialize(column, named_range)
           @column = column
@@ -139,12 +139,11 @@ module Cure
           true
         end
 
-        def method_missing(method_name, *_args)
-          unless class_exists?("Cure::Builder::#{method_name.to_s.capitalize}Builder")
-            raise "#{method_name} is not valid"
-          end
+        def method_missing(method_name, args)
+          klass_name = "Cure::Builder::#{method_name.to_s.capitalize}Builder"
+          raise "#{method_name} is not valid" unless class_exists?(klass_name)
 
-          yield if block_given?
+          @action = Kernel.const_get(klass_name).new(@named_range, @column, args[:options] || {})
         end
 
         def class_exists?(klass_name)
@@ -181,20 +180,44 @@ module Cure
         def initialize(column, named_range)
           @column = column
           @named_range = named_range
+
+          @transforms = []
+          @no_match_translation = nil
         end
 
-        def strategy(name:, options: {})
+        def translation(&block)
+          translation = Translation.new
+          @transforms << translation
+          translation.instance_exec(&block)
+        end
+
+        def no_match_translation(&block)
+          no_match_translation = Translation.new
+          @no_match_translation = no_match_translation
+          no_match_translation.instance_exec(&block)
+        end
+
+
+      end
+
+      class Translation
+
+        attr_reader :strategy, :generator
+
+        def replace(name, **options)
           klass_name = "Cure::Strategy::#{name.to_s.capitalize}Strategy"
           raise "#{name} is not valid" unless class_exists?(klass_name)
 
           @strategy = Kernel.const_get(klass_name).new(options)
+          self
         end
 
-        def generator(name:, options: {})
+        def with(name, **options)
           klass_name = "Cure::Generator::#{name.to_s.capitalize}Generator"
           raise "#{name} is not valid" unless class_exists?(klass_name)
 
           @generator = Kernel.const_get(klass_name).new(options)
+          self
         end
 
         def class_exists?(klass_name)
@@ -205,6 +228,8 @@ module Cure
         end
       end
     end
+
+    require "cure/export/base_processor"
 
     class Exporters
 

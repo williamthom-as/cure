@@ -47,9 +47,9 @@ module Cure
       validates :index, validator: :presence
 
       def initialize(options=nil)
-        @token = options["token"]
-        @index = options["index"]
-        valid?
+        @token = options[:token]
+        @index = options[:index]
+        # valid?
 
         super(options)
       end
