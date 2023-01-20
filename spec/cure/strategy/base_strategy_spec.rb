@@ -103,7 +103,7 @@ RSpec.describe Cure::Strategy::BaseStrategy do
     end
 
     it "should run" do
-      strat = Cure::Strategy::SplitStrategy.new({"token" => ":", "index" => 4})
+      strat = Cure::Strategy::SplitStrategy.new({token: ":", index: 4})
       result = strat.extract("arn:aws:apigateway:us-east-1::/restapis/abcdef/stages/dev",
                              nil,
                              Cure::Generator::NumberGenerator.new({"length" => 10}))

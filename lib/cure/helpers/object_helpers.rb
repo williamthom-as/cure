@@ -24,6 +24,13 @@ module Cure
         self.attributes = hash
         self
       end
+
+      def class_exists?(klass_name)
+        klass = Module.const_get(klass_name)
+        klass.is_a?(Class)
+      rescue NameError
+        false
+      end
     end
   end
 end

@@ -15,11 +15,11 @@ module Cure
 
       # Named range that column exists in
       # @return [String]
-      attr_accessor :named_range
+      attr_reader :named_range
 
       # Lookup column name for CSV.
       # @return [String]
-      attr_accessor :column
+      attr_reader :column
 
       # What sort of data needs to be generated.
       # @return [List<Translation>]
@@ -28,9 +28,12 @@ module Cure
       # @return [Translation]
       attr_reader :no_match_translation
 
-      def initialize
+      def initialize(column, named_range: Cure::Extraction.default_named_range)
+        @column = column
+        @named_range = named_range
+
         @translations = []
-        @named_range = Cure::Extraction.default_named_range
+        @no_match_translation = nil
       end
 
       # @param [String] source_value
@@ -54,14 +57,16 @@ module Cure
         value
       end
 
-      # @param [Hash] opts
-      def translations=(opts)
-        @translations = opts.map { |o| Translation.new.from_hash(o) }
+      def with_translation(&block)
+        translation = Translation.new
+        @translations << translation
+        translation.instance_exec(&block)
       end
 
-      # @param [Hash] opts
-      def no_match_translation=(opts)
-        @no_match_translation = Translation.new.from_hash(opts)
+      def if_no_match(&block)
+        no_match_translation = Translation.new
+        @no_match_translation = no_match_translation
+        no_match_translation.instance_exec(&block)
       end
     end
 
@@ -82,18 +87,27 @@ module Cure
         @strategy.extract(source_value, row_ctx, @generator)
       end
 
-      # @param [Hash] opts
-      def strategy=(opts)
-        clazz_name = "Cure::Strategy::#{opts["name"].to_s.capitalize}Strategy"
-        strategy = Kernel.const_get(clazz_name).new(opts["options"] || {})
+      def replace(name, **options)
+        klass_name = "Cure::Strategy::#{name.to_s.capitalize}Strategy"
+        raise "#{name} is not valid" unless class_exists?(klass_name)
 
-        @strategy = strategy
+        @strategy = Kernel.const_get(klass_name).new(options)
+        self
       end
 
-      # @param [Hash] opts
-      def generator=(opts)
-        clazz_name = "Cure::Generator::#{opts["name"].to_s.capitalize}Generator"
-        @generator = Kernel.const_get(clazz_name).new(opts["options"] || {})
+      def with(name, **options)
+        klass_name = "Cure::Generator::#{name.to_s.capitalize}Generator"
+        raise "#{name} is not valid" unless class_exists?(klass_name)
+
+        @generator = Kernel.const_get(klass_name).new(options)
+        self
+      end
+
+      def class_exists?(klass_name)
+        klass = Module.const_get(klass_name)
+        klass.is_a?(Class)
+      rescue NameError
+        false
       end
 
     end

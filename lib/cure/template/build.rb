@@ -8,6 +8,7 @@ module Cure
     # @param [Array<Cure::Builder::Candidate>] candidates
     attr_accessor :candidates
 
+    # @deprecated
     def initialize
       @candidates = []
     end
@@ -24,3 +25,4 @@ module Cure
     end
   end
 end
+

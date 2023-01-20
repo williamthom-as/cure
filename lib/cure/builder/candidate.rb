@@ -14,35 +14,34 @@ module Cure
 
       # Named range that column exists in
       # @return [String]
-      attr_accessor :named_range
+      attr_reader :named_range
 
       # Lookup column name for CSV.
       # @return [String]
-      attr_accessor :column
+      attr_reader :column
 
       # What sort of data needs to be generated.
       # @return [Cure::Builder::BaseBuilder]
       attr_reader :action
 
-      def initialize
-        @named_range = Cure::Extraction.default_named_range
+      def initialize(column, named_range)
+        @column = column
+        @named_range = named_range || Cure::Extraction.default_named_range
       end
 
       def perform
         @action.process
       end
 
-      # @param [Hash] opts
-      # @return [Cure::Builder::BaseBuilder]
-      def action=(opts)
-        clazz_name = "Cure::Builder::#{opts["type"].to_s.capitalize}Builder"
-        action = Kernel.const_get(clazz_name).new(
-          @named_range,
-          @column,
-          opts["options"] || "{}"
-        )
+      def respond_to_missing?(_method_name, _include_private=false)
+        true
+      end
 
-        @action = action
+      def method_missing(method_name, args)
+        klass_name = "Cure::Builder::#{method_name.to_s.capitalize}Builder"
+        raise "#{method_name} is not valid" unless class_exists?(klass_name)
+
+        @action = Kernel.const_get(klass_name).new(@named_range, @column, args[:options] || {})
       end
     end
   end

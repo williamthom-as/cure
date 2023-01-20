@@ -9,6 +9,7 @@ module Cure
     # TODO: make class Placeholder
     attr_accessor :placeholders
 
+    # @deprecated
     def initialize
       @candidates = []
       @placeholders = {}
