@@ -7,13 +7,19 @@ require "cure/database"
 RSpec.describe Cure::Coordinator do
   describe "#extract" do
     it "will extract required sections" do
-      source_file_loc = "spec/cure/test_files/test_csv_file.csv"
-      template_file_loc = "../../../spec/cure/test_files/test_template.json"
+      main = Cure::Main.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/test_csv_file.csv"))
+      main.with_config do
+        transform do
+          candidate column: "test_column" do
+            with_translation { replace("full").with("number", length: 12)}
+          end
+        end
 
-      Cure::Main.new
-                .with_csv_file(:pathname, Pathname.new(source_file_loc))
-                .with_template(:file, Pathname.new(template_file_loc))
-                .init
+        export do
+          csv named_range: "_default", file: ""
+        end
+      end
+      main.init
 
       coordinator = Cure::Coordinator.new
       coordinator.send(:extract)
@@ -40,13 +46,33 @@ RSpec.describe Cure::Coordinator do
 
   describe "#extract" do
     it "will extract required sections" do
-      source_file_loc = "spec/cure/test_files/sectioned_csv.csv"
-      template_file_loc = "../../../spec/cure/test_files/sectioned_template.json"
+      main = Cure::Main.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/sectioned_csv.csv"))
+      main.with_config do
+        extract do
+          named_range name: "section_1", at: "B2:G6"
+          named_range name: "section_2", at: "B9:H14"
+          named_range name: "section_3", at: "B18:G20", headers: "B2:G2"
+          variable name: "new_field", at: "A16"
+          variable name: "new_field_2", at: "B16"
+        end
 
-      Cure::Main.new
-                .with_csv_file(:pathname, Pathname.new(source_file_loc))
-                .with_template(:file, Pathname.new(template_file_loc))
-                .init
+        build do
+          candidate column: "new_column", named_range: "section_1" do
+            add options: {}
+          end
+        end
+
+        transform do
+          candidate column: "new_column", named_range: "section_1" do
+            with_translation { replace("full").with("variable", name: "new_field")}
+          end
+
+          candidate column: "new_column", named_range: "section_3" do
+            with_translation { replace("full").with("variable", name: "new_field")}
+          end
+        end
+      end
+      main.init
 
       coordinator = Cure::Coordinator.new
       coordinator.send(:extract)
@@ -114,13 +140,33 @@ RSpec.describe Cure::Coordinator do
   # rubocop:disable Metrics/BlockLength
   describe "#build" do
     it "will extract required sections" do
-      source_file_loc = "spec/cure/test_files/sectioned_csv.csv"
-      template_file_loc = "../../../spec/cure/test_files/sectioned_template.json"
+      main = Cure::Main.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/sectioned_csv.csv"))
+      main.with_config do
+        extract do
+          named_range name: "section_1", at: "B2:G6"
+          named_range name: "section_2", at: "B9:H14"
+          named_range name: "section_3", at: "B18:G20", headers: "B2:G2"
+          variable name: "new_field", at: "A16"
+          variable name: "new_field_2", at: "B16"
+        end
 
-      Cure::Main.new
-                .with_csv_file(:pathname, Pathname.new(source_file_loc))
-                .with_template(:file, Pathname.new(template_file_loc))
-                .init
+        build do
+          candidate column: "new_column", named_range: "section_1" do
+            add options: {}
+          end
+        end
+
+        transform do
+          candidate column: "new_column", named_range: "section_1" do
+            with_translation { replace("full").with("variable", name: "new_field")}
+          end
+
+          candidate column: "new_column", named_range: "section_3" do
+            with_translation { replace("full").with("variable", name: "new_field")}
+          end
+        end
+      end
+      main.init
 
       coordinator = Cure::Coordinator.new
       coordinator.send(:extract)
@@ -176,7 +222,7 @@ RSpec.describe Cure::Coordinator do
                               new_column: nil
                             })
 
-      # coordinator.send(:transform, wrapped_csv)
+      # coordinator.send(:transform)
       # trans_csv = result.content["section_1"]
       #
       # expect(trans_csv.rows[0]).to eq(%w[a1 a2 a3 a4 a5 a6 new_value])
@@ -187,19 +233,19 @@ RSpec.describe Cure::Coordinator do
   end
 
   # rubocop:disable Metrics/BlockLength
-  describe "#process" do
-    it "will extract required sections" do
-      source_file_loc = "spec/cure/test_files/sectioned_csv.csv"
-      template_file_loc = "../../../spec/cure/test_files/sectioned_template.json"
-
-      Cure::Main.new
-                .with_csv_file(:pathname, Pathname.new(source_file_loc))
-                .with_template(:file, Pathname.new(template_file_loc))
-                .init
-
-      coordinator = Cure::Coordinator.new
-      coordinator.process
-    end
-    # rubocop:enable Metrics/BlockLength
-  end
+  # describe "#process" do
+  #   it "will extract required sections" do
+  #     source_file_loc = "spec/cure/test_files/sectioned_csv.csv"
+  #     template_file_loc = "../../../spec/cure/test_files/sectioned_template.json"
+  #
+  #     Cure::Main.new
+  #               .with_csv_file(:pathname, Pathname.new(source_file_loc))
+  #               .with_template(:file, Pathname.new(template_file_loc))
+  #               .init
+  #
+  #     coordinator = Cure::Coordinator.new
+  #     coordinator.process
+  #   end
+  #   # rubocop:enable Metrics/BlockLength
+  # end
 end

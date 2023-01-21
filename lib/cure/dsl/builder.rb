@@ -13,7 +13,7 @@ module Cure
         @candidates = []
       end
 
-      def candidate(column:, named_range:, &block)
+      def candidate(column:, named_range: Cure::Extract::NamedRange.default_named_range, &block)
         candidate = Cure::Builder::Candidate.new(column, named_range)
         @candidates << candidate
         candidate.instance_exec(&block)

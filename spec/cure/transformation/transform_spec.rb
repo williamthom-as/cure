@@ -5,13 +5,20 @@ require "cure/transformation/candidate"
 
 RSpec.describe Cure::Transformation::Transform do
   before :all do
-    @source_file_loc = "../../../spec/cure/test_files/test_csv_file.csv"
-    template_file_loc = "../../../spec/cure/test_files/test_template.json"
+    main = Cure::Main.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/test_csv_file.csv"))
+    main.with_config do
+      transform do
+        candidate column: "test_column" do
+          with_translation { replace("full").with("number", length: 12)}
+        end
+      end
 
-    main = Cure::Main.new
-              .with_csv_file(:pathname, Pathname.new(@source_file_loc))
-              .with_template(:file, Pathname.new(template_file_loc))
-              .init
+      export do
+        csv named_range: "_default", file: ""
+      end
+    end
+    main.init
+
     @transform = Cure::Transformation::Transform.new(main.config.template.transformations.candidates)
   end
 

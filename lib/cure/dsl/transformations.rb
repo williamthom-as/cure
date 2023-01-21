@@ -16,7 +16,7 @@ module Cure
         @placeholders = []
       end
 
-      def candidate(column:, named_range:, &block)
+      def candidate(column:, named_range: "_default", &block)
         candidate = Candidate.new(column, named_range: named_range)
         candidate.instance_exec(&block)
 

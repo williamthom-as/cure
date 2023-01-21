@@ -54,35 +54,18 @@ module Cure
     end
 
     # @param [Symbol] type
-    # @param [Object] template_file
-    #
-    # TODO: Do a better interface in the future
-    def with_template(type, template_file) # rubocop:disable Metrics/AbcSize
-      if type == :template && template_file.is_a?(Hash)
-        @template = Template.from_hash(template_file)
-        return self
-      end
-
-      ext = File.extname(template_file.to_s).tr(".", "")
-      if ext.downcase == "json"
-        contents = JSON.parse(read_file(template_file.to_s))
-        @template = Template.from_hash(contents)
-        return self
-      end
-
-      if %w[yaml yml].include?(ext.downcase)
-        contents = YAML.load_file(template_file.to_s)
-        @template = Template.from_hash(contents)
-        return self
-      end
-
-      raise "No template parsing capability for #{ext} files"
-    end
-
-    # @param [Symbol] type
     # @param [Object] obj
     def with_csv_file(type, obj)
       @csv_file = Cure::Configuration::CsvFileProxy.load_file(type, obj)
+      self
+    end
+
+    def with_config(&block)
+      raise "No block given to config" unless block
+
+      dsl = Dsl::DslHandler.init(&block)
+      @template = dsl.generate
+
       self
     end
   end

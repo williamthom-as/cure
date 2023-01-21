@@ -5,7 +5,7 @@ module Cure
     class NamedRange
 
       def self.default_named_range
-        "_default"
+        new("_default", -1)
       end
 
       attr_reader :name, :section, :headers
@@ -16,7 +16,7 @@ module Cure
       # - Content bounds
       # - Header bounds
       # - Sheet bounds (headers AND content)
-      def initialize(name, section, headers)
+      def initialize(name, section, headers=nil)
         @name = name
         @section = Extract::CsvLookup.array_position_lookup(section)
         @headers = calculate_headers(headers)

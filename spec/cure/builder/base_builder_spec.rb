@@ -13,12 +13,17 @@ end
 RSpec.describe Cure::Builder::AddBuilder do
   before :all do
     @source_file_loc = "spec/cure/test_files/explode_csv.csv"
-    template_file_loc = "../../../spec/cure/test_files/explode_template.json"
 
-    Cure::Main.new
-              .with_csv_file(:pathname, Pathname.new(@source_file_loc))
-              .with_template(:file, Pathname.new(template_file_loc))
-              .init
+    main = Cure::Main.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
+    main.with_config do
+      build do
+        candidate column: "Tags" do
+          explode options: { keep_existing: false }
+        end
+      end
+    end
+
+    main.init
 
     @coordinator = Cure::Coordinator.new
   end
@@ -27,32 +32,10 @@ RSpec.describe Cure::Builder::AddBuilder do
     it "will extract required sections" do
       @coordinator.send(:extract)
 
-      opts = {
-        "build" => {
-          "candidates" => [
-            {
-              "column" => "new",
-              "action" => {
-                "name" => "add",
-                "options" => {
-                  "default_value" => "abc"
-                }
-              }
-            }
-          ]
-        }
-      }
-
-      builder = described_class.new(
-        "_default",
-        opts["build"]["candidates"][0]["column"],
-        opts["build"]["candidates"][0]["action"]["options"]
-      )
-
+      builder = described_class.new("_default", "new", {"default_value" => "abc"})
       builder.process
 
       results = []
-
       builder.with_database do |db_svc|
         db_svc.with_paged_result(:_default) do |row|
           results << row
@@ -68,12 +51,17 @@ end
 RSpec.describe Cure::Builder::RemoveBuilder do
   before :all do
     @source_file_loc = "spec/cure/test_files/explode_csv.csv"
-    template_file_loc = "../../../spec/cure/test_files/explode_template.json"
 
-    Cure::Main.new
-              .with_csv_file(:pathname, Pathname.new(@source_file_loc))
-              .with_template(:file, Pathname.new(template_file_loc))
-              .init
+    main = Cure::Main.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
+    main.with_config do
+      build do
+        candidate column: "Tags" do
+          explode options: { keep_existing: false }
+        end
+      end
+    end
+
+    main.init
 
     @coordinator = Cure::Coordinator.new
   end
@@ -82,30 +70,10 @@ RSpec.describe Cure::Builder::RemoveBuilder do
     it "will extract required sections" do
       @coordinator.send(:extract)
 
-      opts = {
-        "build" => {
-          "candidates" => [
-            {
-              "column" => "json",
-              "action" => {
-                "name" => "remove",
-                "options" => {}
-              }
-            }
-          ]
-        }
-      }
-
-      builder = described_class.new(
-        "_default",
-        opts["build"]["candidates"][0]["column"],
-        opts["build"]["candidates"][0]["action"]["options"]
-      )
-
+      builder = described_class.new("_default", "json", {})
       builder.process
 
       results = []
-
       builder.with_database do |db_svc|
         db_svc.with_paged_result(:_default) do |row|
           results << row
@@ -121,12 +89,17 @@ end
 RSpec.describe Cure::Builder::RenameBuilder do
   before :all do
     @source_file_loc = "spec/cure/test_files/explode_csv.csv"
-    template_file_loc = "../../../spec/cure/test_files/explode_template.json"
 
-    Cure::Main.new
-              .with_csv_file(:pathname, Pathname.new(@source_file_loc))
-              .with_template(:file, Pathname.new(template_file_loc))
-              .init
+    main = Cure::Main.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
+    main.with_config do
+      build do
+        candidate column: "Tags" do
+          explode options: { keep_existing: false }
+        end
+      end
+    end
+
+    main.init
 
     @coordinator = Cure::Coordinator.new
   end
@@ -135,28 +108,7 @@ RSpec.describe Cure::Builder::RenameBuilder do
     it "will extract required sections" do
       @coordinator.send(:extract)
 
-      opts = {
-        "build" => {
-          "candidates" => [
-            {
-              "column" => "col_index",
-              "action" => {
-                "name" => "rename",
-                "options" => {
-                  "new_name" => "new"
-                }
-              }
-            }
-          ]
-        }
-      }
-
-      builder = described_class.new(
-        "_default",
-        opts["build"]["candidates"][0]["column"],
-        opts["build"]["candidates"][0]["action"]["options"]
-      )
-
+      builder = described_class.new("_default", "col_index", {"new_name" => "new"})
       builder.process
 
       results = []
@@ -176,12 +128,17 @@ end
 RSpec.describe Cure::Builder::CopyBuilder do
   before :all do
     @source_file_loc = "spec/cure/test_files/explode_csv.csv"
-    template_file_loc = "../../../spec/cure/test_files/explode_template.json"
 
-    Cure::Main.new
-              .with_csv_file(:pathname, Pathname.new(@source_file_loc))
-              .with_template(:file, Pathname.new(template_file_loc))
-              .init
+    main = Cure::Main.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
+    main.with_config do
+      build do
+        candidate column: "Tags" do
+          explode options: { keep_existing: false }
+        end
+      end
+    end
+
+    main.init
 
     @coordinator = Cure::Coordinator.new
   end
@@ -190,32 +147,10 @@ RSpec.describe Cure::Builder::CopyBuilder do
     it "will extract required sections" do
       @coordinator.send(:extract)
 
-      opts = {
-        "build" => {
-          "candidates" => [
-            {
-              "column" => "col_index",
-              "action" => {
-                "name" => "copy",
-                "options" => {
-                  "to_column" => "abc"
-                }
-              }
-            }
-          ]
-        }
-      }
-
-      builder = described_class.new(
-        "_default",
-        opts["build"]["candidates"][0]["column"],
-        opts["build"]["candidates"][0]["action"]["options"]
-      )
-
+      builder = described_class.new("_default", "col_index", {"to_column" => "abc"})
       builder.process
 
       results = []
-
       builder.with_database do |db_svc|
         db_svc.with_paged_result(:_default) do |row|
           results << row

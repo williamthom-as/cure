@@ -64,23 +64,26 @@ module Cure
         puts properties
       end
 
-      def extract(&block)
+      def initialize
         @extraction = Extraction.new
+        @builder = Builder.new
+        @transformations = Transformations.new
+        @exporters = Exporters.new
+      end
+
+      def extract(&block)
         @extraction.instance_exec(&block)
       end
 
       def build(&block)
-        @builder = Builder.new
         @builder.instance_exec(&block)
       end
 
       def transform(&block)
-        @transformations = Transformations.new
         @transformations.instance_exec(&block)
       end
 
       def export(&block)
-        @exporters = Exporters.new
         @exporters.instance_exec(&block)
       end
     end

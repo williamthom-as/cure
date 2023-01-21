@@ -269,28 +269,3 @@ RSpec.describe Cure::Generator::VariableGenerator do
     end
   end
 end
-
-# RSpec.describe Cure::Generator::EvalGenerator do
-#   before :all do
-#     @generator = described_class.new(
-#       {
-#         "eval" => "from_column('column_1', row_ctx).upcase + ' ' + from_column('column_2', row_ctx).upcase"
-#       }
-#     )
-#
-#     conf = {
-#       "transformations" => {
-#         "candidates" => [],
-#         "placeholders" => {
-#           "$account_number" => "123456"
-#         }
-#       }
-#     }
-#
-#     template = Cure::Template.from_hash(conf)
-#
-#     mc = MockClass.new
-#     config = mc.create_config("abc", template)
-#     mc.register_config(config)
-#   end
-# end

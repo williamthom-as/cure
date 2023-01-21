@@ -64,7 +64,7 @@ module Cure
 
     def build
       log_info "Beginning the building process..."
-      candidates = config.template.build.candidates
+      candidates = config.template.builder.candidates
       candidates.each(&:perform)
 
       log_info "... building complete"

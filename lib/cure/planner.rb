@@ -70,7 +70,7 @@ module Cure
 
     def print_build_plan
       print_title "Build"
-      candidates = config.template.build.candidates
+      candidates = config.template.builder.candidates
 
       if candidates.size.zero?
         print_empty("Build")
