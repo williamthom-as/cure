@@ -244,20 +244,7 @@ RSpec.describe Cure::Generator::VariableGenerator do
   before :all do
     @generator = described_class.new({ "name" => "variable" })
 
-    conf = {
-      "transformations" => {
-        "candidates" => [],
-        "placeholders" => {
-          "$account_number" => "123456"
-        }
-      }
-    }
-
-    template = Cure::Template.from_hash(conf)
-
     mc = MockClass.new
-    config = mc.create_config("abc", template)
-    mc.register_config(config)
     mc.init_database
     mc.database_service.create_table(:variables, %w[name value])
     mc.database_service.insert_row(:variables, %w[1 variable test])

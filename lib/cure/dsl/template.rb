@@ -34,7 +34,6 @@ module Cure
         end
 
         dsl.instance_eval(&@proc)
-
         dsl
       end
     end

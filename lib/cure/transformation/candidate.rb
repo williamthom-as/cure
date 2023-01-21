@@ -79,6 +79,11 @@ module Cure
       # @return [Generator::BaseGenerator]
       attr_reader :generator
 
+      def initialize(strategy, generator)
+        @strategy = strategy
+        @generator = generator
+      end
+
       # @param [String] source_value
       # @return [String]
       def extract(source_value, row_ctx)

@@ -3,121 +3,62 @@
 require "cure/transformation/candidate"
 require "cure/generator/base_generator"
 require "cure/strategy/base_strategy"
+require "cure/dsl/transformations"
 
 RSpec.describe Cure::Transformation::Candidate do # rubocop:disable Metrics/BlockLength
-  config = %(
-    {
-      "column" : "bill/PayerAccountId",
-      "translations" : [{
-        "strategy" : {
-          "name": "full",
-          "options" : {}
-        },
-        "generator" : {
-          "name" : "number",
-          "options" : {
-            "length" : 12
-          }
-        },
-        "no_match_translation" : {
-          "strategy" : {
-            "name": "full",
-            "options" : {}
-          },
-          "generator" : {
-            "name" : "guid",
-            "options" : {
-              "length" : 24
-            }
-          }
-        }
-     }]
-    }
-  )
-
   describe "#new" do
     it "should load a candidate" do
-      candidate = Cure::Transformation::Candidate.new.from_json(config)
+      dsl_candidate = Cure::Dsl::Transformations.new
+      dsl_candidate.candidate(column: "bill/PayerAccountId") do
+        with_translation { replace("full").with("number", length: 12) }
+        with_translation { replace("full").with("guid", length: 24) }
+      end
+
+      candidate = dsl_candidate.candidates.first
       expect(candidate.translations.first.class).to eq(Cure::Transformation::Translation)
       expect(candidate.translations.first.strategy.class).to eq(Cure::Strategy::FullStrategy)
       expect(candidate.translations.first.generator.class).to eq(Cure::Generator::NumberGenerator)
     end
 
     it "it should look up in history if it exists" do
-      candidate = Cure::Transformation::Candidate.new.from_json(config)
+      dsl_candidate = Cure::Dsl::Transformations.new
+      dsl_candidate.candidate(column: "bill/PayerAccountId") do
+        with_translation { replace("full").with("number", length: 12) }
+        with_translation { replace("full").with("guid", length: 24) }
+      end
+
+      candidate = dsl_candidate.candidates.first
       val = candidate.perform("abc", nil)
       val_two = candidate.perform("abc", nil)
       expect(val).to eq(val_two)
     end
 
     it "strategy length should match the options" do
-      candidate = Cure::Transformation::Candidate.new.from_json(config)
+      dsl_candidate = Cure::Dsl::Transformations.new
+      dsl_candidate.candidate(column: "bill/PayerAccountId") do
+        with_translation { replace("full").with("number", length: 12) }
+        with_translation { replace("full").with("guid", length: 24) }
+      end
+
+      candidate = dsl_candidate.candidates.first
       val = candidate.perform("xxk", nil)
-      expect(val.to_s.length).to eq(candidate.translations.first.generator.options["length"].to_i)
+      expect(val.to_s.length).to eq(36)
     end
   end
 
-  regex_config = %(
-    {
-      "column" : "lineItem/ResourceId",
-      "no_match_translation" : {
-        "strategy" : {
-          "name": "full",
-          "options" : {}
-        },
-        "generator" : {
-          "name" : "guid",
-          "options" : {
-            "length" : 24
-          }
-        }
-      },
-      "translations" : [{
-        "strategy" : {
-          "name": "regex",
-          "options" : {
-            "regex_cg" : "^arn:aws:.*:(.*):.*$"
-          }
-        },
-        "generator" : {
-          "name" : "number",
-          "options" : {
-            "length" : 12
-          }
-        }
-     },{
-        "strategy" : {
-          "name": "regex",
-          "options" : {
-            "regex_cg" : "^.*:.*\/(.*)$"
-          }
-        },
-        "generator" : {
-          "name" : "guid",
-          "options" : {
-            "length" : 48
-          }
-        }
-     },{
-        "strategy" : {
-          "name": "regex",
-          "options" : {
-            "regex_cg" : "^i-(.*)"
-          }
-        },
-        "generator" : {
-          "name" : "number",
-          "options" : {
-            "length" : 12
-          }
-        }
-     }]
-    }
-  )
-
   describe "#extract" do
     it "it should look up in history if it exists" do
-      candidate = Cure::Transformation::Candidate.new.from_json(regex_config)
+      dsl_candidate = Cure::Dsl::Transformations.new
+      dsl_candidate.candidate(column: "lineItem/ResourceId") do
+        with_translation { replace("full").with("number", length: 12) }
+        with_translation { replace("regex", regex_cg: "^arn:aws:.*:(.*):.*$").with("number", length: 12) }
+        with_translation { replace("regex", regex_cg: "^.*:.*\/(.*)$").with("guid", length: 48) }
+        with_translation { replace("regex", regex_cg: "^i-(.*)").with("number", length: 12) }
+        no_match_translation { replace("full").with("guid", length: 24) }
+      end
+
+      candidate = dsl_candidate.candidates.first
+
       val = candidate.perform("arn:aws:kms:ap-southeast-2:111111111111:key/e8192ac9-1111-1111-1111-42f9b7e18937", nil)
       val_two = candidate.perform("arn:aws:kms:ap-southeast-2:111111111111:key/e8192ac9-1111-1111-1111-42f9b7e18937", nil)
       val_three = candidate.perform("i-11111111", nil)

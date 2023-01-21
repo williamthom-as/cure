@@ -44,14 +44,19 @@ module Cure
 
         def with_translation(&block)
           translation = Translation.new
-          @translations << translation
           translation.instance_exec(&block)
+
+          @translations << Cure::Transformation::Translation.new(translation.strategy, translation.generator)
         end
 
         def if_no_match(&block)
           no_match_translation = Translation.new
-          @no_match_translation = no_match_translation
           no_match_translation.instance_exec(&block)
+
+          @no_match_translation = Cure::Transformation::Translation.new(
+            no_match_translation.strategy,
+            no_match_translation.generator
+          )
         end
       end
 

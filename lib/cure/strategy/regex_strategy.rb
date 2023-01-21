@@ -47,7 +47,7 @@ module Cure
       validates :regex_cg
 
       def initialize(options=nil)
-        @regex_cg = options["regex_cg"]
+        @regex_cg = options[:regex_cg]
         super(options)
       end
     end
