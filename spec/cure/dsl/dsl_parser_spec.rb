@@ -13,7 +13,7 @@ RSpec.describe Cure::Dsl::DslHandler do
         end
       TEMPLATE
 
-      template = described_class.new(doc, "test_file")
+      template = described_class.init_from_content(doc, "test_file")
       result = template.generate
 
       expect(result.extraction.class).to be(Cure::Dsl::Extraction)
@@ -38,7 +38,7 @@ RSpec.describe Cure::Dsl::DslHandler do
         end
       TEMPLATE
 
-      template = described_class.new(doc, "test_file")
+      template = described_class.init_from_content(doc, "test_file")
       result = template.generate
 
       expect(result.builder.class).to be(Cure::Dsl::Builder)
@@ -57,11 +57,11 @@ RSpec.describe Cure::Dsl::DslHandler do
             if_no_match { replace("full").with("placeholder", name: "key2") }
           end
         
-          placeholders({key: "value", key2: "value2"})
+          place_holders({key: "value", key2: "value2"})
         end
       TEMPLATE
 
-      template = described_class.new(doc, "test_file")
+      template = described_class.init_from_content(doc, "test_file")
       result = template.generate
       candidate = result.transformations.candidates[0]
 
@@ -85,7 +85,7 @@ RSpec.describe Cure::Dsl::DslHandler do
         end
       TEMPLATE
 
-      template = described_class.new(doc, "test_file")
+      template = described_class.init_from_content(doc, "test_file")
       result = template.generate
 
       expect(result.exporters.class).to be(Cure::Dsl::Exporters)
@@ -95,6 +95,18 @@ RSpec.describe Cure::Dsl::DslHandler do
       expect(result.exporters.processors[2].class).to be(Cure::Export::CsvProcessor)
     end
 
+    it "should run from block" do
+      template = described_class.init do
+        extract do
+          named_range name: "section_1", at: "B2:G6"
+          named_range name: "section_2", at: "C2:H6"
+          variable name: "new_field", at: "A16"
+        end
+      end
+      result = template.generate
+
+      expect(result.extraction.class).to be(Cure::Dsl::Extraction)
+    end
   end
 end
 

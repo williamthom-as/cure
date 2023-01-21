@@ -8,12 +8,23 @@ require "cure/dsl/exporters"
 module Cure
   module Dsl
     class DslHandler
-      def initialize(dsl_source, identifier, line_number=1)
-        @proc = Binding.get.eval(<<-SOURCE, identifier, line_number)
+
+      def self.init(&block)
+        Dsl::DslHandler.new(block)
+      end
+
+      def self.init_from_content(dsl_source, identifier, line_number=1)
+        proc = Binding.get.eval(<<-SOURCE, identifier, line_number)
           Proc.new do
             #{dsl_source}
           end
         SOURCE
+
+        Dsl::DslHandler.new(proc)
+      end
+
+      def initialize(proc)
+        @proc = proc
       end
 
       def generate(instance_variables={})

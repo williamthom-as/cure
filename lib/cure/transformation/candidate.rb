@@ -57,16 +57,14 @@ module Cure
         value
       end
 
-      def with_translation(&block)
-        translation = Translation.new
-        @translations << translation
-        translation.instance_exec(&block)
+      def with_translations(translations)
+        @translations = translations
+        self
       end
 
-      def if_no_match(&block)
-        no_match_translation = Translation.new
+      def with_no_match_translation(no_match_translation)
         @no_match_translation = no_match_translation
-        no_match_translation.instance_exec(&block)
+        self
       end
     end
 
@@ -86,30 +84,6 @@ module Cure
       def extract(source_value, row_ctx)
         @strategy.extract(source_value, row_ctx, @generator)
       end
-
-      def replace(name, **options)
-        klass_name = "Cure::Strategy::#{name.to_s.capitalize}Strategy"
-        raise "#{name} is not valid" unless class_exists?(klass_name)
-
-        @strategy = Kernel.const_get(klass_name).new(options)
-        self
-      end
-
-      def with(name, **options)
-        klass_name = "Cure::Generator::#{name.to_s.capitalize}Generator"
-        raise "#{name} is not valid" unless class_exists?(klass_name)
-
-        @generator = Kernel.const_get(klass_name).new(options)
-        self
-      end
-
-      def class_exists?(klass_name)
-        klass = Module.const_get(klass_name)
-        klass.is_a?(Class)
-      rescue NameError
-        false
-      end
-
     end
   end
 end

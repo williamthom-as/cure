@@ -16,6 +16,8 @@ module Cure
   class << self
     attr_writer :logger
 
+    attr_reader :config
+
     def logger
       @logger ||= Logger.new($stdout).tap do |log|
         log.progname = name
@@ -23,6 +25,11 @@ module Cure
           "[#{severity}] #{msg}\n"
         end
       end
+    end
+
+    def configure(&block)
+      c = Dsl::DslHandler.init(&block)
+      c.generate
     end
   end
 end
