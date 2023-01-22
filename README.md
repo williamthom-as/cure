@@ -3,20 +3,26 @@
 ![run tests](https://github.com/williamthom-as/cure/actions/workflows/rspec.yml/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/cure.svg)](https://badge.fury.io/rb/cure)
 
-Cure is a simple tool to **extract/clean/transform/remove/redact/anonymize** and **replace** information in a spreadsheet.
-It operates in memory by default, and can be easily integrated into an existing work flow or controlled via CLI.
+Cure is a simple tool that attempts to be a swiss army knife for CSV processing.
+It aims to allow you to **extract/clean/transform/remove/redact/anonymize/replace** and manipulate the entire 
+spreadsheet (or multiple sections of). It operates in memory by default, and can be easily integrated into an 
+existing work flow or controlled via CLI.
 
 It has several key features:
+- A clean DSL to describe the operations that you want to do. This can be defined in code, or loaded from a file that
+could be version controlled.
 - Operate on your data to build what you need. 
-  - Files are taken through an `Extract -> Build -> Transform -> Export` pipeline.
+  - Files are taken through an `Extract -> Build -> Transform -> Export` pipeline.  Each of these steps is optional.
 - [Extract](docs/extract/main.md) parts of your file into named ranges to remove junk. 
-- [Build](docs/builder/main.md) columns.
+- [Build](docs/builder/main.md) (add, remove, rename, copy, explode) columns.
 - [Transform](docs/transform/main.md) values:
-  - Define either full or regex match groups replacements.
-  - Choose from many strategies to replace anonymous data - random number sequences, GUIDs, placeholders, multipliers amongst many others.
+  - Define either full, split, partials or regex match groups replacements.
+  - Choose from many strategies to replace data - random number sequences, GUIDs, placeholders, multipliers amongst many others.
   - **Existing generated values are stored and recalled** so once a replacement is defined, it is kept around for other columns to use.
     - For example, once a replacement **Account Number** is generated, any further use of that number sequence is other columns will be used, keeping data real(ish) and functional in a relational sense.
 - [Export](docs/export/main.md) into one (or many) files, in a selection of chosen formats (CSV at the moment, coming soon with JSON, Parquet).
+
+Please see the [Examples](docs/examples/examples.md) article in the examples directory for more information.
 
 If you need help crafting templates with a visual tool, you can checkout [Cure UI](https://github.com/williamthom-as/cure-ui) (still under development)
 
@@ -39,9 +45,10 @@ the required data prior to transforming the data. These include:
   - Expanding JSON fields into columns (ex. If row 1 has values [{"a":1, "b":2}], and row 2 has [{"c":3}], each
 row needs columns A,B,C, but row 1 doesn't know that until row 2.)
 
-If you have large datasets of streamable CSV data, there are more efficient and performant tools to use. If you would 
-still like to use Cure to process large files, you can elect to persist the datastore to disk, instead of in memory, 
-and have a small performance impact.
+If you have large datasets of streamable CSV data, there are more efficient and performant tools to use. There is a trade
+off made to allow for more aggressive transformations that requires heavier memory usage. If you would 
+still like to use Cure to process large files, you can elect to persist the datastore to disk, instead of in-memory, 
+which will have a small performance impact.
 
 ## Installation
 
@@ -59,8 +66,6 @@ Install it yourself as:
 ### CLI
 Cure requires a template and source CSV file to be provided.  The template file can be either JSON or YAML, and it must
 contain all the instructions you wish to perform.
-
-Please see the [Getting Started](docs/examples/examples.md) article in the examples directory for more information.
 
 You can run the CLI using the following command:
 
