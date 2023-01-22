@@ -57,7 +57,7 @@ module Cure
       end
 
       # @param [String] source_value
-      # @param [Transformation::RowCtx] row_ctx
+      # @param [Transformation::RowCtx,nil] row_ctx
       # @param [Generator::BaseGenerator] generator
       # @return [String]
       #
@@ -120,7 +120,7 @@ module Cure
       attr_accessor :replace_partial
 
       def initialize(options={})
-        @replace_partial = options["replace_partial"] || "false"
+        @replace_partial = options[:replace_partial] || "false"
         @options = options
 
         validate_params

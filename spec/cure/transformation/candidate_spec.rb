@@ -50,11 +50,10 @@ RSpec.describe Cure::Transformation::Candidate do # rubocop:disable Metrics/Bloc
     it "it should look up in history if it exists" do
       dsl_candidate = Cure::Dsl::Transformations.new
       dsl_candidate.candidate(column: "lineItem/ResourceId") do
-        with_translation { replace("full").with("number", length: 12) }
         with_translation { replace("regex", regex_cg: "^arn:aws:.*:(.*):.*$").with("number", length: 12) }
         with_translation { replace("regex", regex_cg: "^.*:.*\/(.*)$").with("guid", length: 48) }
         with_translation { replace("regex", regex_cg: "^i-(.*)").with("number", length: 12) }
-        no_match_translation { replace("full").with("guid", length: 24) }
+        if_no_match { replace("full").with("guid", length: 24) }
       end
 
       candidate = dsl_candidate.candidates.first

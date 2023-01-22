@@ -45,7 +45,7 @@ module Cure
       validates :match
 
       def initialize(options=nil)
-        @match = options["match"]
+        @match = options[:match]
         super(options)
       end
     end

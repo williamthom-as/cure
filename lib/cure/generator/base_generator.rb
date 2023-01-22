@@ -54,7 +54,7 @@ module Cure
       end
 
       def extract_property(property, default_val)
-        @options.fetch(property.to_sym, default_val)
+        @options.fetch(property.to_sym, @options.fetch(property, default_val))
       end
     end
   end

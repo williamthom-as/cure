@@ -6,36 +6,36 @@ require "cure/database"
 
 RSpec.describe Cure::Generator::NumberGenerator do
   before :all do
-    @number_generator = Cure::Generator::NumberGenerator.new({ "length" => 10 })
+    @number_generator = Cure::Generator::NumberGenerator.new({length: 10 })
   end
 
   describe "#new" do
     it "should load options" do
-      expect(@number_generator.options).to eq({ "length" => 10 })
+      expect(@number_generator.options).to eq({length: 10 })
     end
   end
 
   describe "#generate" do
     it "should load options" do
-      expect(@number_generator.generate(nil, nil).to_s.length).to eq(@number_generator.options["length"])
+      expect(@number_generator.generate(nil, nil).to_s.length).to eq(@number_generator.options[:length])
     end
   end
 end
 
 RSpec.describe Cure::Generator::HexGenerator do
   before :all do
-    @generator = Cure::Generator::HexGenerator.new({ "length" => 10 })
+    @generator = Cure::Generator::HexGenerator.new({length: 10 })
   end
 
   describe "#new" do
     it "should load options" do
-      expect(@generator.options).to eq({ "length" => 10 })
+      expect(@generator.options).to eq({length: 10 })
     end
   end
 
   describe "#generate" do
     it "should load options" do
-      expect(@generator.generate(nil, nil).to_s.length).to eq(@generator.options["length"])
+      expect(@generator.generate(nil, nil).to_s.length).to eq(@generator.options[:length])
     end
   end
 end
@@ -102,19 +102,15 @@ end
 
 RSpec.describe Cure::Generator::PlaceholderGenerator do
   before :all do
-    @generator = Cure::Generator::PlaceholderGenerator.new({ "name" => "$account_number" })
+    @generator = Cure::Generator::PlaceholderGenerator.new({name: "$account_number" })
 
-    conf = {
-      "transformations" => {
-        "candidates" => [],
-        "placeholders" => {
-          "$account_number" => "123456"
-        }
-      }
-    }
+    template = Cure::Dsl::DslHandler.init do
+      transform do
+        place_holders({"$account_number" => "123456"})
+      end
+    end
 
-    template = Cure::Template.from_hash(conf)
-
+    template = template.generate
     mc = MockClass.new
     config = mc.create_config("abc", template)
     mc.register_config(config)
@@ -122,7 +118,7 @@ RSpec.describe Cure::Generator::PlaceholderGenerator do
 
   describe "#new" do
     it "should load options" do
-      expect(@generator.options).to eq({ "name" => "$account_number" })
+      expect(@generator.options).to eq({name: "$account_number" })
     end
   end
 
