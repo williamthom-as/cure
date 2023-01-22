@@ -22,7 +22,7 @@ module Cure
         raise "#{method_name} is not valid" unless class_exists?(klass_name)
 
         @processors << Kernel.const_get(klass_name).new(
-          args[:named_range] || Cure::Extract::NamedRange.default_named_range,
+          args[:named_range] || "_default",
           args || {}
         )
       end

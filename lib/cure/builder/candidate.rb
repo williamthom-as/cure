@@ -26,7 +26,7 @@ module Cure
 
       def initialize(column, named_range)
         @column = column
-        @named_range = named_range || Cure::Extraction.default_named_range
+        @named_range = named_range || "_default"
       end
 
       def perform

@@ -40,7 +40,7 @@ module Cure
 
       def process
         with_database do |db_svc|
-          db_svc.add_column(@named_range.to_sym, @column.to_sym, default: @opts.fetch("default_value", nil))
+          db_svc.add_column(@named_range.to_sym, @column.to_sym, default: @opts.fetch(:default_value, nil))
         end
       end
 

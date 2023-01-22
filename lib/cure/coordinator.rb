@@ -87,7 +87,7 @@ module Cure
       raise "No block passed" unless block
 
       log_info "Beginning export process..."
-      processors = config.template.exporters.processors.select { |c| c.named_range == named_range.to_s }
+      processors = config.template.exporters.processors.select { |c| c.named_range.to_s == named_range.to_s }
       manager = Cure::Export::Manager.new(named_range, processors)
 
       manager.with_processors(&block)

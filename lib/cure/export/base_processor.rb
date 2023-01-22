@@ -45,9 +45,9 @@ module Cure
 
       def setup
         log_info "Exporting [#{@named_range}] to terminal."
-        @row_count = @opts.fetch("row_count", nil)
+        @row_count = @opts.fetch(:row_count, 10)
         @processed = 0
-        @table = Terminal::Table.new(title: @opts["title"] || "<No Title Set>")
+        @table = Terminal::Table.new(title: @opts[:title] || "<No Title Set>")
       end
 
       def cleanup

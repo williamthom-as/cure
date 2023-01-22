@@ -32,7 +32,7 @@ RSpec.describe Cure::Builder::AddBuilder do
     it "will extract required sections" do
       @coordinator.send(:extract)
 
-      builder = described_class.new("_default", "new", {"default_value" => "abc"})
+      builder = described_class.new("_default", "new", {default_value: "abc"})
       builder.process
 
       results = []

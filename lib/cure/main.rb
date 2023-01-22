@@ -68,6 +68,14 @@ module Cure
 
       self
     end
+
+    def with_config_file(file_location)
+      contents = read_file(file_location.to_s)
+
+      dsl = Dsl::DslHandler.init_from_content(contents, "cure")
+      @template = dsl.generate
+      self
+    end
   end
 end
 
