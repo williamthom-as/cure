@@ -78,18 +78,28 @@ require "cure"
 cure = Cure.init do
   csv file: "location", encoding: "utf-8"
 
+  # Optional, used to select a part of a frame or allocate variables from single cells
   extraction do
-    named_range name: "section_1", at: "B2:G6"
+    named_range name: "section_1", at: "B2:G6", headers: "B2:B6"
     variable name: "new_field", location: "A16"
   end
 
-  transformations do
+  # Optional, used to add/remove/copy/rename/explode columns from frames.
+  build do
+    candidate(column: "new_column", named_range: "section_1") { add }
+  end
+  
+  # Optional, used to transform values, each candidate can have multiple transforms.
+  # If no match is found, if_no_match will fire.
+  transform do
     candidate column: "new_column", named_range: "section_1" do
-      strategy name: "full", options: {}
-      generator name: "variable", options: { name: "new_field" }
+      with_translation { replace("regex", regex_cg: "^vol-(.*)").with("variable", name: "new_field") }
+      with_translation { replace("split", "token": ":", "index": 4).with("placeholder", name: "key2") }
+      if_no_match { replace("full").with("variable", name: "new_field") }
     end
   end
 
+  # Required, define exporters to export modified frames.
   exporters do
     terminal named_range: "section_1", title: "Exported", limit_rows: 5
     csv named_range: "section_1", file: "/tmp/cure/section_1.csv"
