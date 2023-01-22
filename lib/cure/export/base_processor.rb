@@ -44,6 +44,15 @@ module Cure
       end
 
       def setup
+        # Markdown mode
+        Terminal::Table::Style.defaults = {
+          border_top: false,
+          border_bottom: false,
+          border_x: "-",
+          border_y: "|",
+          border_i: "|"
+        }
+
         log_info "Exporting [#{@named_range}] to terminal."
         @row_count = @opts.fetch(:row_count, 10)
         @processed = 0

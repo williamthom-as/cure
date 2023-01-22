@@ -20,9 +20,9 @@ module Cure
       end
 
       def build_options
-        return [("a".."z"), ("A".."Z"), (0..9)] unless @options.key?("types")
+        return [("a".."z"), ("A".."Z"), (0..9)] unless @options.key?(:types)
 
-        type_array = @options["types"]
+        type_array = @options[:types]
 
         arr = []
         arr << ("a".."z") if type_array.include? "lowercase"

@@ -60,7 +60,7 @@ Install it yourself as:
 Cure requires a template and source CSV file to be provided.  The template file can be either JSON or YAML, and it must
 contain all the instructions you wish to perform.
 
-Please see the [Getting Started](docs/examples/getting_started.md) article in the examples directory for more information.
+Please see the [Getting Started](docs/examples/examples.md) article in the examples directory for more information.
 
 You can run the CLI using the following command:
 

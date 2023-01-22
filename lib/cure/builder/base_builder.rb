@@ -52,6 +52,7 @@ module Cure
     class RemoveBuilder < BaseBuilder
 
       def process
+
         with_database do |db_svc|
           db_svc.remove_column(@named_range.to_sym, @column.to_sym)
         end
