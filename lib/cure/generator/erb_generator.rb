@@ -11,7 +11,7 @@ module Cure
       # @param [Cure::Transformation::RowCtx] _source_value
       # @param [RowCtx] row_ctx
       def _generate(_source_value, row_ctx)
-        template = "<%= first_name.capitalize %> <%= last_name.capitalize %>"
+        template = @options.fetch(:template, nil)
         ERB.new(template).result_with_hash(row_ctx.rows)
       end
 

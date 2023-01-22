@@ -1,6 +1,69 @@
 ## Examples
 
-Below are some examples of how to use Cure to transform frames.
+Below are some examples of Cure being used to transform odd CSV formats, or unusual tasks.
+
+### Multi row grouping
+
+In the example below we want to:
+1. Group the rows on identifier
+2. Change gender to single letter, 
+3. Create a full name column that joins first_name and last_name, and capitalizes them.
+
+| id | identifier | first_name | last_name | age | gender |
+|----|------------|------------|-----------|-----|--------|
+| 1  | 1          | joe        | smith     | 20  |        |
+| 2  | 1          |            |           |     | male   |
+| 3  | 2          | lean       | davis     | 32  |        |
+| 4  | 2          |            |           |     | female |
+
+to
+
+| id | identifier | first_name | last_name | age | gender | full_name  |
+|----|------------|------------|-----------|-----|--------|------------|
+| 1  | 1          | joe        | smith     | 20  | M      | Joe Smith  |
+| 3  | 2          | lean       | davis     | 32  | F      | Lean Davis |
+
+using
+
+```ruby
+build do
+  candidate column: "full_name" do
+    add options: { default_value: "" }
+  end
+end
+
+transform do
+  candidate column: "gender" do
+    with_translation { replace("full").with("case",
+      statement: {
+        switch: [
+          {
+            case: "male",
+            return_value: "M"
+          }, {
+          case: "female",
+          return_value: "F"
+          }
+        ],
+        else: [
+          return_value: "<unknown gender>"
+        ]
+      })
+    }
+  end
+
+  candidate column: "full_name" do
+    with_translation { replace("full").with("erb", 
+      template: "<%= first_name.capitalize %> <%= last_name.capitalize %>")
+    }
+  end
+end
+
+export do
+  terminal title: "Exported", limit_rows: 5
+end
+
+```
 
 ### AWS Cost and Usage Report Anonymization
 
