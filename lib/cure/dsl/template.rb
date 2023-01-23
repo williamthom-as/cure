@@ -4,6 +4,7 @@ require "cure/dsl/extraction"
 require "cure/dsl/builder"
 require "cure/dsl/transformations"
 require "cure/dsl/exporters"
+require "cure/dsl/queries"
 
 module Cure
   module Dsl
@@ -59,6 +60,9 @@ module Cure
       # @return [Dsl::Exporters]
       attr_reader :exporters
 
+      # @return [Dsl::Queries]
+      attr_reader :queries
+
       def csv(properties={})
         puts properties
       end
@@ -68,10 +72,15 @@ module Cure
         @builder = Builder.new
         @transformations = Transformations.new
         @exporters = Exporters.new
+        @queries = Queries.new
       end
 
       def extract(&block)
         @extraction.instance_exec(&block)
+      end
+
+      def query(&block)
+        @queries.instance_exec(&block)
       end
 
       def build(&block)

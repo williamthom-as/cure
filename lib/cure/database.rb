@@ -115,7 +115,7 @@ module Cure
     def with_paged_result(tbl_name, chunk_size: 100, &block)
       raise "No block given" unless block
 
-      query = config.template.transformations.query
+      query = config.template.queries.find(tbl_name)
       if query
         @database[query.query].each do |row|
           block.yield row

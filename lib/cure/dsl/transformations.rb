@@ -9,12 +9,11 @@ module Cure
   module Dsl
     class Transformations
 
-      attr_reader :candidates, :placeholders, :query
+      attr_reader :candidates, :placeholders
 
       def initialize
         @candidates = []
         @placeholders = []
-        @query = nil
       end
 
       def candidate(column:, named_range: "_default", &block)
@@ -29,10 +28,6 @@ module Cure
 
       def place_holders(hash)
         @placeholders = hash
-      end
-
-      def from(query:, named_range: "_default")
-        @query = Query.new(named_range, query)
       end
 
       class Candidate
@@ -90,15 +85,6 @@ module Cure
           klass.is_a?(Class)
         rescue NameError
           false
-        end
-      end
-
-      class Query
-        attr_reader :named_range, :query
-
-        def initialize(named_range, query)
-          @named_range = named_range
-          @query = query
         end
       end
     end

@@ -4,19 +4,21 @@ build do
   end
 end
 
-transform do
-  from named_range: "_default", query: <<-SQL
-      SELECT 
-        id as id, 
-        identifier as identifier, 
-        group_concat(first_name, '') as first_name, 
-        group_concat(last_name, '') as last_name, 
-        group_concat(gender, '') as gender, 
-        group_concat(age, '') as age, 
-        full_name FROM _default 
-      GROUP BY identifier
-    SQL
+query do
+  with query: <<-SQL
+    SELECT 
+      id as id, 
+      identifier as identifier, 
+      group_concat(first_name, '') as first_name, 
+      group_concat(last_name, '') as last_name, 
+      group_concat(gender, '') as gender, 
+      group_concat(age, '') as age, 
+      full_name FROM _default 
+    GROUP BY identifier
+  SQL
+end
 
+transform do
   candidate column: "gender" do
     with_translation { replace("full").with("case",
       statement: {

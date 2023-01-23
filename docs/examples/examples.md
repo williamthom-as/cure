@@ -52,9 +52,9 @@ transform do
           {
             case: "male",
             return_value: "M"
-          }, {
-          case: "female",
-          return_value: "F"
+          },{
+            case: "female",
+            return_value: "F"
           }
         ],
         else: [
