@@ -13,6 +13,7 @@ RSpec.describe Cure::Strategy::BaseStrategy do
     @start_strategy = Cure::Strategy::StartWithStrategy.new({match: "my_val"})
     @end_strategy = Cure::Strategy::EndWithStrategy.new({match: "my_val"})
     @append_strategy = Cure::Strategy::AppendStrategy.new({match: "my_val"})
+    @contain_strategy = Cure::Strategy::ContainStrategy.new({match: "my_val"})
   end
 
   describe "#new" do
@@ -54,6 +55,9 @@ RSpec.describe Cure::Strategy::BaseStrategy do
 
       result_eight = @append_strategy.extract("test_my", nil, Cure::Generator::NumberGenerator.new({length: 10}))
       expect(result_eight.length).to eq(17)
+
+      result_eight = @contain_strategy.extract("hidden_my_val_contain", nil, Cure::Generator::NumberGenerator.new({length: 10}))
+      expect(result_eight.length).to eq(25)
     end
   end
 

@@ -252,3 +252,21 @@ RSpec.describe Cure::Generator::VariableGenerator do
     end
   end
 end
+
+RSpec.describe Cure::Generator::StaticGenerator do
+  before :all do
+    @generator = Cure::Generator::StaticGenerator.new({value: "my_val"})
+  end
+
+  describe "#new" do
+    it "should load options" do
+      expect(@generator.options).to eq({value: "my_val"})
+    end
+  end
+
+  describe "#generate" do
+    it "should load options" do
+      expect(@generator.generate(nil, nil).to_s).to eq("my_val")
+    end
+  end
+end
