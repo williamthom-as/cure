@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "cure/template/template"
 require "cure/transformation/candidate"
 require "cure/transformation/transform"
 require "cure/coordinator"

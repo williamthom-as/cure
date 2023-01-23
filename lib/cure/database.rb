@@ -4,7 +4,7 @@ require "sequel"
 require "sqlite3"
 require "singleton"
 
-# require "cure/config"
+require "cure/config"
 
 module Cure
   module Database
@@ -31,7 +31,7 @@ module Cure
   end
 
   class DatabaseService
-    # include Cure::Configuration
+    include Cure::Configuration
 
     # @return [Sequel::SQLite::Database]
     attr_reader :database
@@ -115,7 +115,14 @@ module Cure
     def with_paged_result(tbl_name, chunk_size: 100, &block)
       raise "No block given" unless block
 
-      @database[tbl_name.to_sym].order(:id).paged_each(rows_per_fetch: chunk_size, &block)
+      query = config.template.transformations.query
+      if query
+        @database[query.query].each do |row|
+          block.yield row
+        end
+      else
+        @database[tbl_name.to_sym].order(:id).paged_each(rows_per_fetch: chunk_size, &block)
+      end
     end
 
     def list_tables

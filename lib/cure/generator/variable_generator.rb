@@ -2,6 +2,7 @@
 
 require "cure/generator/base_generator"
 require "cure/config"
+require "cure/database"
 
 module Cure
   module Generator

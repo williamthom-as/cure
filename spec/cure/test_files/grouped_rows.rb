@@ -5,7 +5,7 @@ build do
 end
 
 transform do
-  query <<-SQL
+  from named_range: "_default", query: <<-SQL
       SELECT 
         id as id, 
         identifier as identifier, 

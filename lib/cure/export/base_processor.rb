@@ -34,11 +34,11 @@ module Cure
 
     class TerminalProcessor < BaseProcessor
 
-      attr_reader :table, :row_count, :processed
+      attr_reader :table, :limit_rows, :processed
 
       def process_row(row)
         @table.headings = row.keys if @processed.zero?
-        @table.add_row(row.values) if @row_count && @processed < @row_count
+        @table.add_row(row.values) if @limit_rows && @processed < @limit_rows
 
         @processed += 1
       end
@@ -54,7 +54,7 @@ module Cure
         }
 
         log_info "Exporting [#{@named_range}] to terminal."
-        @row_count = @opts.fetch(:row_count, 10)
+        @limit_rows = @opts.fetch(:limit_rows, 10)
         @processed = 0
         @table = Terminal::Table.new(title: @opts[:title] || "<No Title Set>")
       end
