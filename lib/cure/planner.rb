@@ -61,7 +61,7 @@ module Cure
       else
         log_info("[#{variables.length}] variables specified")
         variables.each do |v|
-          log_info "-- #{v["name"]} will extract #{v["type"]} from #{v["location"]}"
+          log_info "-- #{v.name} will extract from #{v.location}"
         end
       end
 

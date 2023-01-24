@@ -19,7 +19,6 @@ module Cure
       def row_bounds_range
         @row_bounds_range ||= (@location&.last..@location&.last)
       end
-
     end
   end
 end

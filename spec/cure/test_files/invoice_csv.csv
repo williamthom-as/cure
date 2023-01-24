@@ -1,0 +1,5 @@
+,,,,invoice date,2023-01-01
+,,,,,
+item_id,invoice_id,item,cost,,
+1,1,hotdog,1.5,,
+2,1,drink,1,,

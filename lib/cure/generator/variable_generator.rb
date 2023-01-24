@@ -15,7 +15,7 @@ module Cure
       # @param [RowCtx] _row_ctx
       def _generate(_source_value, _row_ctx)
         value = database_service.find_variable(property_name)
-        value || raise("Missing placeholder value")
+        value || raise("Missing placeholder value [#{property_name}]. Please check you are defining it correctly.")
       end
 
       def _describe
