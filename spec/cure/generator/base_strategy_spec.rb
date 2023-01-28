@@ -172,19 +172,19 @@ RSpec.describe Cure::Generator::CaseGenerator do
   describe "#generate" do
     it "match on case" do
       opts = {
-        "statement" => {
-          "switch" => [
+        statement: {
+          switch: [
             {
-              "case" => "dog",
-              "return_value" => "doggus"
+              case: "dog",
+              return_value: "doggus"
             }, {
-              "case" => "cat",
-              "return_value" => "cattus"
+              case: "cat",
+              return_value: "cattus"
             }
           ],
-          "else" => [
-            "return_value" => "unknown"
-          ]
+          else: {
+            return_value: "unknown"
+          }
         }
       }
 
@@ -194,18 +194,18 @@ RSpec.describe Cure::Generator::CaseGenerator do
 
     it "should return else property if no match" do
       opts = {
-        "statement" => {
-          "switch" => [
+        statement: {
+          switch: [
             {
-              "case" => "dog",
-              "return_value" => "doggus"
+              case: "dog",
+              return_value: "doggus"
             }, {
-              "case" => "cat",
-              "return_value" => "cattus"
+              case: "cat",
+              return_value: "cattus"
             }
           ],
-          "else" => {
-            "return_value" => "unknown"
+          else: {
+            return_value: "unknown"
           }
         }
       }
@@ -216,14 +216,14 @@ RSpec.describe Cure::Generator::CaseGenerator do
 
     it "should return nil if no else" do
       opts = {
-        "statement" => {
-          "switch" => [
+        statement: {
+          switch: [
             {
-              "case" => "dog",
-              "return_value" => "doggus"
+              case: "dog",
+              return_value: "doggus"
             }, {
-              "case" => "cat",
-              "return_value" => "cattus"
+              case: "cat",
+              return_value: "cattus"
             }
           ]
         }
