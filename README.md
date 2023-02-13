@@ -81,8 +81,6 @@ require "cure"
 # Inline initialisation
 
 cure = Cure.init do
-  csv file: "location", encoding: "utf-8"
-
   # Optional, used to select a part of a frame or allocate variables from single cells
   extraction do
     named_range name: "section_1", at: "B2:G6", headers: "B2:B6"
@@ -111,7 +109,7 @@ cure = Cure.init do
   end
 end
 
-cure.process
+cure.process(:path, "location_to_file.csv")
 ```
 
 ### Getting started *quickly*
