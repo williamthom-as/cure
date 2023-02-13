@@ -25,19 +25,6 @@ module Cure
       @validated = false
     end
 
-    def run_export(print_query_plan: true)
-      raise "Not initialized" unless @validated
-
-      query_plan if print_query_plan
-      @coordinator.process
-    end
-
-    def query_plan
-      raise "Not initialized" unless @validated
-
-      @planner.process
-    end
-
     # @return [Cure::Main]
     def init
       raise "CSV File is not initialized" unless @csv_file
@@ -50,6 +37,19 @@ module Cure
 
       @validated = true
       self
+    end
+
+    def run_export(print_query_plan: true)
+      raise "Not initialized" unless @validated
+
+      query_plan if print_query_plan
+      @coordinator.process
+    end
+
+    def query_plan
+      raise "Not initialized" unless @validated
+
+      @planner.process
     end
 
     # @param [Symbol] type

@@ -48,9 +48,6 @@ module Cure
 
     class Template
 
-      # @return [Cure::Configuration::CsvFileProxy]
-      attr_reader :csv_file
-
       # @return [Dsl::Extraction]
       attr_reader :extraction
 
@@ -65,10 +62,6 @@ module Cure
 
       # @return [Dsl::Queries]
       attr_reader :queries
-
-      def csv(type:, obj:)
-        @csv_file = Cure::Configuration::CsvFileProxy.load_file(type, obj)
-      end
 
       def initialize
         @extraction = Extraction.new
