@@ -26,9 +26,13 @@ module Cure
       end
     end
 
-    def configure(&block)
+    def init(&block)
       c = Dsl::DslHandler.init(&block)
       c.generate
+
+      main = Cure::Main.new
+
+
     end
   end
 end
