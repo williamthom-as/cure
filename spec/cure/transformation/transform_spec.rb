@@ -5,7 +5,7 @@ require "cure/transformation/candidate"
 
 RSpec.describe Cure::Transformation::Transform do
   before :all do
-    main = Cure::Main.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/test_csv_file.csv"))
+    main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/test_csv_file.csv"))
     main.with_config do
       transform do
         candidate column: "test_column" do
@@ -17,7 +17,7 @@ RSpec.describe Cure::Transformation::Transform do
         csv named_range: "_default", file: ""
       end
     end
-    main.init
+    main.setup
 
     @transform = Cure::Transformation::Transform.new(main.config.template.transformations.candidates)
   end

@@ -7,7 +7,7 @@ RSpec.describe Cure::Extract::VariableProcessor do
   before :all do
     @source_file_loc = "spec/cure/test_files/sectioned_csv.csv"
 
-    @main = Cure::Main.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/sectioned_csv.csv"))
+    @main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/sectioned_csv.csv"))
     @main.with_config do
       extract do
         named_range name: "section_1", at: "B2:G6"
@@ -33,7 +33,7 @@ RSpec.describe Cure::Extract::VariableProcessor do
         end
       end
     end
-    @main.init
+    @main.setup
   end
 
   describe "#process_row" do

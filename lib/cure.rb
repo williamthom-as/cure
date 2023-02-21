@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "cure/log"
-require "cure/main"
+require "cure/launcher"
 require "cure/config"
 require "cure/version"
 require "cure/helpers/file_helpers"
@@ -30,7 +30,7 @@ module Cure
       c = Dsl::DslHandler.init(&block)
       c.generate
 
-      main = Cure::Main.new
+      launcher = Cure::Launcher.new
 
 
     end

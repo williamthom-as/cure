@@ -7,7 +7,7 @@ require "cure/database"
 RSpec.describe Cure::Coordinator do
   describe "#extract" do
     it "will extract required sections" do
-      main = Cure::Main.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/test_csv_file.csv"))
+      main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/test_csv_file.csv"))
       main.with_config do
         transform do
           candidate column: "test_column" do
@@ -19,7 +19,7 @@ RSpec.describe Cure::Coordinator do
           csv named_range: "_default", file: ""
         end
       end
-      main.init
+      main.setup
 
       coordinator = Cure::Coordinator.new
       coordinator.send(:extract)
@@ -46,7 +46,7 @@ RSpec.describe Cure::Coordinator do
 
   describe "#extract" do
     it "will extract required sections" do
-      main = Cure::Main.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/sectioned_csv.csv"))
+      main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/sectioned_csv.csv"))
       main.with_config do
         extract do
           named_range name: "section_1", at: "B2:G6"
@@ -72,7 +72,7 @@ RSpec.describe Cure::Coordinator do
           end
         end
       end
-      main.init
+      main.setup
 
       coordinator = Cure::Coordinator.new
       coordinator.send(:extract)
@@ -140,7 +140,7 @@ RSpec.describe Cure::Coordinator do
   # rubocop:disable Metrics/BlockLength
   describe "#build" do
     it "will extract required sections" do
-      main = Cure::Main.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/sectioned_csv.csv"))
+      main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/sectioned_csv.csv"))
       main.with_config do
         extract do
           named_range name: "section_1", at: "B2:G6"
@@ -166,7 +166,7 @@ RSpec.describe Cure::Coordinator do
           end
         end
       end
-      main.init
+      main.setup
 
       coordinator = Cure::Coordinator.new
       coordinator.send(:extract)
@@ -238,10 +238,10 @@ RSpec.describe Cure::Coordinator do
   #     source_file_loc = "spec/cure/test_files/sectioned_csv.csv"
   #     template_file_loc = "../../../spec/cure/test_files/sectioned_template.json"
   #
-  #     Cure::Main.new
+  #     Cure::Launcher.new
   #               .with_csv_file(:pathname, Pathname.new(source_file_loc))
   #               .with_template(:file, Pathname.new(template_file_loc))
-  #               .init
+  #               .setup
   #
   #     coordinator = Cure::Coordinator.new
   #     coordinator.process

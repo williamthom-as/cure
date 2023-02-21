@@ -10,7 +10,7 @@ RSpec.describe Cure::Planner do
     it "will extract required sections" do
       @source_file_loc = "spec/cure/test_files/sectioned_csv.csv"
 
-      @main = Cure::Main.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/sectioned_csv.csv"))
+      @main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/sectioned_csv.csv"))
       @main.with_config do
         extract do
           named_range name: "section_1", at: "B2:G6"
@@ -37,7 +37,7 @@ RSpec.describe Cure::Planner do
         end
       end
 
-      @main.init
+      @main.setup
 
       planner = Cure::Planner.new
 

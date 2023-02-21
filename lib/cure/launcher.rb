@@ -11,7 +11,7 @@ require "json"
 require "yaml"
 
 module Cure
-  class Main
+  class Launcher
     include Database
     include Configuration
     include Helpers::FileHelpers
@@ -26,11 +26,11 @@ module Cure
     end
 
     # @return [Cure::Main]
-    def init(csv_file, template)
-      raise "CSV File is required" unless csv_file
-      raise "Template is required" unless template
+    def setup
+      raise "CSV File is required" unless @csv_file
+      raise "Template is required" unless @template
 
-      config = create_config(csv_file, template)
+      config = create_config(@csv_file, @template)
       register_config(config)
 
       init_database
@@ -59,21 +59,21 @@ module Cure
       self
     end
 
-    # def with_config(&block)
-    #   raise "No block given to config" unless block
-    #
-    #   dsl = Dsl::DslHandler.init(&block)
-    #   @template = dsl.generate
-    #
-    #   self
-    # end
-    #
-    # def with_config_file(file_location)
-    #   contents = read_file(file_location.to_s)
-    #
-    #   dsl = Dsl::DslHandler.init_from_content(contents, "cure")
-    #   @template = dsl.generate
-    #   self
-    # end
+    def with_config(&block)
+      raise "No block given to config" unless block
+
+      dsl = Dsl::DslHandler.init(&block)
+      @template = dsl.generate
+
+      self
+    end
+
+    def with_config_file(file_location)
+      contents = read_file(file_location.to_s)
+
+      dsl = Dsl::DslHandler.init_from_content(contents, "cure")
+      @template = dsl.generate
+      self
+    end
   end
 end

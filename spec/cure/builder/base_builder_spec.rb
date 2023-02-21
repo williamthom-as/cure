@@ -14,7 +14,7 @@ RSpec.describe Cure::Builder::AddBuilder do
   before :all do
     @source_file_loc = "spec/cure/test_files/explode_csv.csv"
 
-    main = Cure::Main.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
+    main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
     main.with_config do
       build do
         candidate column: "Tags" do
@@ -23,7 +23,7 @@ RSpec.describe Cure::Builder::AddBuilder do
       end
     end
 
-    main.init
+    main.setup
 
     @coordinator = Cure::Coordinator.new
   end
@@ -52,7 +52,7 @@ RSpec.describe Cure::Builder::RemoveBuilder do
   before :all do
     @source_file_loc = "spec/cure/test_files/explode_csv.csv"
 
-    main = Cure::Main.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
+    main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
     main.with_config do
       build do
         candidate column: "Tags" do
@@ -61,7 +61,7 @@ RSpec.describe Cure::Builder::RemoveBuilder do
       end
     end
 
-    main.init
+    main.setup
 
     @coordinator = Cure::Coordinator.new
   end
@@ -90,7 +90,7 @@ RSpec.describe Cure::Builder::RenameBuilder do
   before :all do
     @source_file_loc = "spec/cure/test_files/explode_csv.csv"
 
-    main = Cure::Main.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
+    main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
     main.with_config do
       build do
         candidate column: "Tags" do
@@ -99,7 +99,7 @@ RSpec.describe Cure::Builder::RenameBuilder do
       end
     end
 
-    main.init
+    main.setup
 
     @coordinator = Cure::Coordinator.new
   end
@@ -129,7 +129,7 @@ RSpec.describe Cure::Builder::CopyBuilder do
   before :all do
     @source_file_loc = "spec/cure/test_files/explode_csv.csv"
 
-    main = Cure::Main.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
+    main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
     main.with_config do
       build do
         candidate column: "Tags" do
@@ -138,7 +138,7 @@ RSpec.describe Cure::Builder::CopyBuilder do
       end
     end
 
-    main.init
+    main.setup
 
     @coordinator = Cure::Coordinator.new
   end
@@ -168,10 +168,10 @@ end
 #     @source_file_loc = "spec/cure/test_files/explode_csv.csv"
 #     template_file_loc = "../../../spec/cure/test_files/explode_template.json"
 #
-#     Cure::Main.new
+#     Cure::Launcher.new
 #               .with_csv_file(:pathname, Pathname.new(@source_file_loc))
 #               .with_template(:file, Pathname.new(template_file_loc))
-#               .init
+#               .setup
 #
 #     @coordinator = Cure::Coordinator.new
 #   end
