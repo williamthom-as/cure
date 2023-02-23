@@ -27,12 +27,13 @@ module Cure
     end
 
     def init(&block)
-      c = Dsl::DslHandler.init(&block)
-      c.generate
-
       launcher = Cure::Launcher.new
+      launcher.with_config(&block)
+    end
 
-
+    def init_from_file(file_path)
+      launcher = Cure::Launcher.new
+      launcher.with_config_file(file_path)
     end
   end
 end

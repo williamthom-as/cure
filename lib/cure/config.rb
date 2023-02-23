@@ -78,7 +78,7 @@ module Cure
             FileHandler.new(obj)
           when :file_contents
             FileContentsHandler.new(obj)
-          when :pathname
+          when :path, :pathname
             PathnameHandler.new(obj)
           else
             raise "Invalid file type handler [#{type}]"

@@ -25,6 +25,55 @@ module Cure
       @validated = false
     end
 
+    # @param [Symbol] type
+    # @param [Object] obj
+    # @param [TrueClass,FalseClass] print_query_plan
+    # @return [void]
+    def process(type, obj, print_query_plan: true)
+      @csv_file = Cure::Configuration::CsvFileProxy.load_file(type, obj)
+      run_export(print_query_plan: print_query_plan)
+    end
+
+    def run_export(print_query_plan: true)
+      setup
+
+      raise "Not initialized" unless @validated
+
+      query_plan if print_query_plan
+      @coordinator.process
+    end
+
+    # -- Builder opts start
+
+    # @param [Symbol] type
+    # @param [Object] obj
+    # @return [Cure::Main]
+    def with_csv_file(type, obj)
+      @csv_file = Cure::Configuration::CsvFileProxy.load_file(type, obj)
+      self
+    end
+
+    # @return [Cure::Main]
+    def with_config(&block)
+      raise "No block given to config" unless block
+
+      dsl = Dsl::DslHandler.init(&block)
+      @template = dsl.generate
+
+      self
+    end
+
+    # @return [Cure::Main]
+    def with_config_file(file_location)
+      contents = read_file(file_location.to_s)
+
+      dsl = Dsl::DslHandler.init_from_content(contents, "cure")
+      @template = dsl.generate
+      self
+    end
+
+    # -- Builder end
+
     # @return [Cure::Main]
     def setup
       raise "CSV File is required" unless @csv_file
@@ -39,41 +88,11 @@ module Cure
       self
     end
 
-    def run_export(print_query_plan: true)
-      raise "Not initialized" unless @validated
-
-      query_plan if print_query_plan
-      @coordinator.process
-    end
-
+    # @return [void]
     def query_plan
       raise "Not initialized" unless @validated
 
       @planner.process
-    end
-
-    # @param [Symbol] type
-    # @param [Object] obj
-    def with_csv_file(type, obj)
-      @csv_file = Cure::Configuration::CsvFileProxy.load_file(type, obj)
-      self
-    end
-
-    def with_config(&block)
-      raise "No block given to config" unless block
-
-      dsl = Dsl::DslHandler.init(&block)
-      @template = dsl.generate
-
-      self
-    end
-
-    def with_config_file(file_location)
-      contents = read_file(file_location.to_s)
-
-      dsl = Dsl::DslHandler.init_from_content(contents, "cure")
-      @template = dsl.generate
-      self
     end
   end
 end
