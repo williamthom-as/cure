@@ -18,7 +18,7 @@ module Cure
       end
 
       def method_missing(method_name, **args)
-        klass_name = "Cure::Export::#{method_name.to_s.capitalize}Processor"
+        klass_name = "Cure::Export::#{method_name.to_s.split("_").map(&:capitalize).join("")}Processor"
         raise "#{method_name} is not valid" unless class_exists?(klass_name)
 
         @processors << Kernel.const_get(klass_name).new(

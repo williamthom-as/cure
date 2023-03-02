@@ -79,8 +79,8 @@ module Cure
       def setup
         log_info "Exporting [#{@named_range}] to CSV..."
 
-        output_dir = @opts["directory"]
-        file_name = @opts["file_name"]
+        output_dir = @opts[:directory]
+        file_name = @opts[:file_name]
 
         log_info("Exporting file to [#{output_dir}/#{file_name}]")
         # file_name = "#{file_name}-#{Time.now.utc.strftime("%Y-%m-%dT%H:%M:%S%-z")}"
@@ -99,8 +99,79 @@ module Cure
 
       def cleanup
       ensure
+        log_info File.basename(@csv_file)
         @csv_file.close
       end
     end
+
+    class ChunkCsvProcessor < BaseProcessor
+      include Helpers::FileHelpers
+
+      attr_reader :current_csv_file,
+                  :file_name_prefix,
+                  :directory,
+                  :chunk_size,
+                  :include_headers,
+                  :row_count
+
+
+      def process_row(row)
+        chunked_file_handler do |csv_file|
+          if @processed.zero? || (@processed % @chunk_size).zero? || (@processed % @chunk_size).zero?
+            csv_file.write(row.keys.to_csv)
+          end
+
+          csv_file.write(row.values.to_csv)
+          @processed += 1
+        end
+      end
+
+      def setup
+        log_info "Exporting [#{@named_range}] to CSV..."
+
+        extract_opts
+
+        log_info("Exporting file to [#{@output_dir}/#{@file_name_prefix}]")
+
+        clean_dir(@output_dir)
+
+        dir = File.dirname("#{@output_dir}/#{@file_name_prefix}")
+        FileUtils.mkdir_p(dir) unless File.directory?(dir)
+
+        @processed = 0
+        @current_chunk = 0
+      end
+
+      def cleanup
+      ensure
+        @current_csv_file&.close
+      end
+
+      def extract_opts
+        @output_dir = @opts[:directory]
+        @file_name_prefix = @opts[:file_name_prefix]
+        @directory = @opts[:directory]
+        @chunk_size = @opts[:chunk_size]
+        @include_headers = @opts.fetch(:include_headers, true)
+      end
+
+      def chunked_file_handler(&block)
+        raise "No block" unless block
+
+        if @processed.zero? || (@processed % @chunk_size).zero?
+          @current_csv_file&.close
+
+          @current_chunk += 1
+          @current_csv_file = File.open(current_file_path, "w")
+        end
+
+        yield @current_csv_file
+      end
+
+      def current_file_path
+        "#{@output_dir}/#{@current_chunk}-#{@file_name_prefix}.csv"
+      end
+    end
+
   end
 end
