@@ -10,6 +10,8 @@ existing work flow or controlled via CLI.
 
 **Please note**: Cure is under active development, and will have frequent breaking changes. Use at your own risk!
 
+Check out here for some real world [examples](docs/examples/examples.md).
+
 ## Use Cases
 
 - Strip out and transform personal data from a CSV so that may be used for public demo.
