@@ -38,6 +38,11 @@ module Cure
           row[column] = new_value
         end
 
+        remove_system_columns(row)
+      end
+
+      def remove_system_columns(row)
+        row.delete(:_id)
         row
       end
     end

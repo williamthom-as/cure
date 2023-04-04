@@ -51,7 +51,7 @@ module Cure
       tbl_name = tbl_name.to_sym if tbl_name.class != Symbol
 
       @database.create_table tbl_name do
-        primary_key :id
+        primary_key :_id
         columns.each do |col_name|
           column col_name.to_sym, String
         end
@@ -121,7 +121,7 @@ module Cure
           block.yield row
         end
       else
-        @database[tbl_name.to_sym].order(:id).paged_each(rows_per_fetch: chunk_size, &block)
+        @database[tbl_name.to_sym].order(:_id).paged_each(rows_per_fetch: chunk_size, &block)
       end
     end
 
