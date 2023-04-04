@@ -20,6 +20,7 @@ module Cure
         @name = name
         @section = Extract::CsvLookup.array_position_lookup(section)
         @headers = calculate_headers(headers)
+        @mappings = nil
       end
 
       # @param [Integer] row_idx
@@ -59,6 +60,10 @@ module Cure
 
       def header_bounds
         @header_bounds ||= @headers[2..3]
+      end
+
+      def mappings(hash)
+        @mappings = hash
       end
 
       private

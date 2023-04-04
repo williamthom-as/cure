@@ -14,8 +14,10 @@ module Cure
         @variables = []
       end
 
-      def named_range(name:, at:, headers: nil)
-        @named_ranges << Cure::Extract::NamedRange.new(name, at, headers)
+      def named_range(name:, at:, headers: nil, &block)
+        candidate = Cure::Extract::NamedRange.new(name, at, headers)
+        @named_ranges << candidate
+        candidate.instance_exec(&block)
       end
 
       def variable(name:, at:)
