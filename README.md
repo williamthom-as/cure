@@ -68,7 +68,7 @@ cure = Cure.init do
   end
 
   # Required, define exporters to export modified frames.
-  exporters do
+  export do
     terminal named_range: "section_1", title: "Preview", limit_rows: 5
     csv named_range: "section_1", file: "/tmp/cure/section_1.csv"
   end

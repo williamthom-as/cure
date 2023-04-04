@@ -36,7 +36,7 @@ transformations do
   placeholders({key: "value", key2: "value2"})
 end
 
-exporters do
+export do
   terminal named_range: "section_1", title: "Exported", limit_rows: 5
   csv named_range: "section_1", file: "/tmp/cure/section_1.csv"
   csv named_range: "section_2", file: "/tmp/cure/section_2.csv"
