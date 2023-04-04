@@ -57,8 +57,8 @@ RSpec.describe Cure::Extract::VariableProcessor do
         results << row
       end
 
-      expect(results[0]).to eq({:id=>1, :name=>"new_field", :value=>"new_value"})
-      expect(results[1]).to eq({:id=>2, :name=>"new_field_2", :value=>"new_value_2"})
+      expect(results[0]).to eq({:_id=>1, :name=>"new_field", :value=>"new_value"})
+      expect(results[1]).to eq({:_id=>2, :name=>"new_field_2", :value=>"new_value_2"})
     end
   end
 end

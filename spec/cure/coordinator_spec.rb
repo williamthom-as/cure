@@ -38,9 +38,9 @@ RSpec.describe Cure::Coordinator do
       expect(coordinator.database_service.table_exists?("_default")).to eq(true)
 
       expect(rows.length).to be(3)
-      expect(rows[0]).to eq({:id=>1, :test_column=>"abc", :test_column2=>"def"})
-      expect(rows[1]).to eq({:id=>2, :test_column=>"abc", :test_column2=>"def"})
-      expect(rows[2]).to eq({:id=>3, :test_column=>"abc", :test_column2=>"def"})
+      expect(rows[0]).to eq({:_id=>1, :test_column=>"abc", :test_column2=>"def"})
+      expect(rows[1]).to eq({:_id=>2, :test_column=>"abc", :test_column2=>"def"})
+      expect(rows[2]).to eq({:_id=>3, :test_column=>"abc", :test_column2=>"def"})
     end
   end
 
@@ -105,7 +105,7 @@ RSpec.describe Cure::Coordinator do
         column_4: "a4",
         column_5: "a5",
         column_6: "a6",
-        id: 2
+        _id: 2
       })
       expect(rows[1]).to eq({
         column_1: "b1",
@@ -114,7 +114,7 @@ RSpec.describe Cure::Coordinator do
         column_4: "b4",
         column_5: "b5",
         column_6: "b6",
-        id: 3
+        _id: 3
       })
       expect(rows[2]).to eq({
         column_1: "c1",
@@ -123,7 +123,7 @@ RSpec.describe Cure::Coordinator do
         column_4: "c4",
         column_5: "c5",
         column_6: "c6",
-        id: 4
+        _id: 4
       })
       expect(rows[3]).to eq({
         column_1: "d1",
@@ -132,7 +132,7 @@ RSpec.describe Cure::Coordinator do
         column_4: "d4",
         column_5: "d5",
         column_6: "d6",
-        id: 5
+        _id: 5
       })
     end
   end
@@ -179,7 +179,7 @@ RSpec.describe Cure::Coordinator do
 
       expect(coordinator.database_service.table_exists?("_default")).to eq(false)
       expect(rows.length).to eq(4)
-      expect(rows[0].keys).to eq(%i(id column_1 column_2 column_3 column_4 column_5 column_6 new_column))
+      expect(rows[0].keys).to eq(%i(_id column_1 column_2 column_3 column_4 column_5 column_6 new_column))
 
       expect(rows[0]).to eq({
                               column_1: "a1",
@@ -188,7 +188,7 @@ RSpec.describe Cure::Coordinator do
                               column_4: "a4",
                               column_5: "a5",
                               column_6: "a6",
-                              id: 2,
+                              _id: 2,
                               new_column: nil
                             })
       expect(rows[1]).to eq({
@@ -198,7 +198,7 @@ RSpec.describe Cure::Coordinator do
                               column_4: "b4",
                               column_5: "b5",
                               column_6: "b6",
-                              id: 3,
+                              _id: 3,
                               new_column: nil
                             })
       expect(rows[2]).to eq({
@@ -208,7 +208,7 @@ RSpec.describe Cure::Coordinator do
                               column_4: "c4",
                               column_5: "c5",
                               column_6: "c6",
-                              id: 4,
+                              _id: 4,
                               new_column: nil
                             })
       expect(rows[3]).to eq({
@@ -218,7 +218,7 @@ RSpec.describe Cure::Coordinator do
                               column_4: "d4",
                               column_5: "d5",
                               column_6: "d6",
-                              id: 5,
+                              _id: 5,
                               new_column: nil
                             })
 

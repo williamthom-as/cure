@@ -42,8 +42,8 @@ RSpec.describe Cure::Builder::AddBuilder do
         end
       end
 
-      expect(results[0]).to eq({id: 1, col_index: "1", json: "{\"abc\": \"def\",\"def\": 123}", new: "abc"})
-      expect(results[1]).to eq({id: 2, col_index: "2", json: "{\"abc\": \"def\",\"ghi\": 123}", new: "abc"})
+      expect(results[0]).to eq({_id: 1, col_index: "1", json: "{\"abc\": \"def\",\"def\": 123}", new: "abc"})
+      expect(results[1]).to eq({_id: 2, col_index: "2", json: "{\"abc\": \"def\",\"ghi\": 123}", new: "abc"})
     end
   end
 end
@@ -80,8 +80,8 @@ RSpec.describe Cure::Builder::RemoveBuilder do
         end
       end
 
-      expect(results[0]).to eq({id: 1, col_index: "1"})
-      expect(results[1]).to eq({id: 2, col_index: "2"})
+      expect(results[0]).to eq({_id: 1, col_index: "1"})
+      expect(results[1]).to eq({_id: 2, col_index: "2"})
     end
   end
 end
@@ -119,8 +119,8 @@ RSpec.describe Cure::Builder::RenameBuilder do
         end
       end
 
-      expect(results[0]).to eq({id: 1, json: "{\"abc\": \"def\",\"def\": 123}", new: "1"})
-      expect(results[1]).to eq({id: 2, json: "{\"abc\": \"def\",\"ghi\": 123}", new: "2"})
+      expect(results[0]).to eq({_id: 1, json: "{\"abc\": \"def\",\"def\": 123}", new: "1"})
+      expect(results[1]).to eq({_id: 2, json: "{\"abc\": \"def\",\"ghi\": 123}", new: "2"})
     end
   end
 end
@@ -157,8 +157,8 @@ RSpec.describe Cure::Builder::CopyBuilder do
         end
       end
 
-      expect(results[0]).to eq({abc: "1", col_index: "1", id: 1, json: "{\"abc\": \"def\",\"def\": 123}"})
-      expect(results[1]).to eq({abc: "2", col_index: "2", id: 2, json: "{\"abc\": \"def\",\"ghi\": 123}"})
+      expect(results[0]).to eq({abc: "1", col_index: "1", _id: 1, json: "{\"abc\": \"def\",\"def\": 123}"})
+      expect(results[1]).to eq({abc: "2", col_index: "2", _id: 2, json: "{\"abc\": \"def\",\"ghi\": 123}"})
     end
   end
 end
