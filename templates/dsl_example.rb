@@ -1,6 +1,6 @@
 csv file: "location", encoding: "utf-8"
 
-extraction do
+extract do
   named_range name: "section_1", at: "B2:G6"
   named_range name: "section_2", at: "B18:G20", headers: "B2:G2"
 

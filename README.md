@@ -47,7 +47,7 @@ require "cure"
 
 cure = Cure.init do
   # Optional, used to select a part of a frame or allocate variables from single cells
-  extraction do
+  extract do
     named_range name: "section_1", at: "B2:G6", headers: "B2:B6"
     variable name: "new_field", location: "A16"
   end
