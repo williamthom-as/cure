@@ -28,9 +28,12 @@ module Cure
       # @return [Translation]
       attr_reader :no_match_translation
 
+      attr_reader :ignore_empty
+
       def initialize(column, named_range: Cure::Extraction.default_named_range)
         @column = column
         @named_range = named_range
+        @ignore_empty = false
 
         @translations = []
         @no_match_translation = nil
@@ -48,9 +51,9 @@ module Cure
           value = temp if temp
         end
 
-        if value == source_value
+        if value == source_value && @no_match_translation
           log_debug("No translation made for #{value} [#{source_value}]")
-          value = @no_match_translation&.extract(source_value, row_ctx)
+          value = @no_match_translation.extract(source_value, row_ctx)
           log_debug("Translated to #{value} from [#{source_value}]")
         end
 

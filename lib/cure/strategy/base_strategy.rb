@@ -66,7 +66,7 @@ module Cure
         extracted_value = _retrieve_value(source_value)
 
         existing = retrieve_history(extracted_value)
-        return _replace_value(source_value, existing) if existing
+        return _replace_value(source_value, existing) if existing && !@params.force_replace
 
         generated_value = generator.generate(source_value, row_ctx)&.to_s
         value = _replace_value(source_value, generated_value)
@@ -117,10 +117,11 @@ module Cure
       # Additional details needed to make substitution.
       # @return [Hash]
       attr_accessor :options
-      attr_accessor :replace_partial
+      attr_accessor :replace_partial, :force_replace
 
       def initialize(options={})
-        @replace_partial = options[:replace_partial] || "false"
+        @replace_partial = options[:replace_partial] || false
+        @force_replace = options[:force_replace] || false
         @options = options
 
         validate_params

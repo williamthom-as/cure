@@ -23,7 +23,7 @@ module Cure
       # @param [String] generated_value
       # @return [String]
       def _replace_value(source_value, generated_value)
-        return unless source_value.include? @params.match
+        return source_value unless source_value.include? @params.match
 
         source_value.gsub(@params.match, generated_value)
       end

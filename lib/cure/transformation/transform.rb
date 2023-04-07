@@ -32,7 +32,7 @@ module Cure
           next unless row.key?(column)
 
           existing_value = row[column]
-          next unless existing_value
+          next if existing_value.nil? && candidate.ignore_empty
 
           new_value = candidate.perform(existing_value, RowCtx.new(row)) # transform value
           row[column] = new_value
@@ -50,10 +50,10 @@ module Cure
     # This class looks useless, but it isn't. It exists purely to give a hook to add
     # more stuff to a strategy in the future without the method signature changing
     class RowCtx
-      attr_accessor :rows
+      attr_accessor :row
 
-      def initialize(rows)
-        @rows = rows
+      def initialize(row)
+        @row = row
       end
     end
   end
