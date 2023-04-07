@@ -163,6 +163,83 @@ RSpec.describe Cure::Builder::CopyBuilder do
   end
 end
 
+RSpec.describe Cure::Builder::WhitelistBuilder do
+  before :all do
+    @source_file_loc = "spec/cure/test_files/explode_csv.csv"
+
+    main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
+    main.with_config do
+      build do
+        candidate do
+          whitelist options: { columns: ["col_index"] }
+        end
+      end
+    end
+
+    main.setup
+
+    @coordinator = Cure::Coordinator.new
+  end
+
+  describe "#process" do
+    it "will extract required sections" do
+      @coordinator.send(:extract)
+
+      builder = described_class.new("_default", nil, {columns: ["col_index"]})
+      builder.process
+
+      results = []
+      builder.with_database do |db_svc|
+        db_svc.with_paged_result(:_default) do |row|
+          results << row
+        end
+      end
+
+      expect(results[0]).to eq({col_index: "1", _id: 1})
+      expect(results[1]).to eq({col_index: "2", _id: 2})
+    end
+  end
+end
+
+RSpec.describe Cure::Builder::BlacklistBuilder do
+  before :all do
+    @source_file_loc = "spec/cure/test_files/explode_csv.csv"
+
+    main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
+    main.with_config do
+      build do
+        candidate do
+          blacklist options: { columns: ["json"] }
+        end
+      end
+    end
+
+    main.setup
+
+    @coordinator = Cure::Coordinator.new
+  end
+
+  describe "#process" do
+    it "will extract required sections" do
+      @coordinator.send(:extract)
+
+      builder = described_class.new("_default", nil, {columns: ["json"]})
+      builder.process
+
+      results = []
+      builder.with_database do |db_svc|
+        db_svc.with_paged_result(:_default) do |row|
+          results << row
+        end
+      end
+
+      expect(results[0]).to eq({col_index: "1", _id: 1})
+      expect(results[1]).to eq({col_index: "2", _id: 2})
+    end
+  end
+end
+
+
 # RSpec.describe Cure::Builder::ExplodeBuilder do
 #   before :all do
 #     @source_file_loc = "spec/cure/test_files/explode_csv.csv"
