@@ -10,8 +10,6 @@ module Cure
 
       attr_reader :name, :section, :headers
 
-      attr_accessor :mappings
-
       # This is complex purely to support headers not being the 0th row.
       # A template can specify that the headers row be completely disconnected
       # from the content, thus we have three bounds:
@@ -22,7 +20,6 @@ module Cure
         @name = name
         @section = Extract::CsvLookup.array_position_lookup(section)
         @headers = calculate_headers(headers)
-        @mappings = nil
       end
 
       # @param [Integer] row_idx
@@ -70,22 +67,6 @@ module Cure
         return Extract::CsvLookup.array_position_lookup(headers) if headers
 
         [@section[0], @section[1], @section[2], @section[2]]
-      end
-    end
-
-    class Mappings
-
-      attr_writer :restriction, :mappings
-
-      def restrict(type:, columns:)
-        @restriction = {
-          type: type,
-          columns: columns
-        }
-      end
-
-      def map(hash)
-        @mappings = hash
       end
     end
   end

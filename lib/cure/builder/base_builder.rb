@@ -52,7 +52,6 @@ module Cure
     class RemoveBuilder < BaseBuilder
 
       def process
-
         with_database do |db_svc|
           db_svc.remove_column(@named_range.to_sym, @column.to_sym)
         end
@@ -157,5 +156,38 @@ module Cure
       end
     end
 
+    class BlacklistBuilder < BaseBuilder
+      def process
+        @opts[:columns].each do |column|
+          with_database do |db_svc|
+            db_svc.remove_column(@named_range.to_sym, column.to_sym)
+          end
+        end
+      end
+
+      def to_s
+        "White list builder"
+      end
+    end
+
+    class WhitelistBuilder < BaseBuilder
+      def process
+        with_database do |db_svc|
+          whitelist_columns = (@opts[:columns]).map { |x| x.to_sym }
+          all_columns = db_svc.list_columns(@named_range.to_sym)
+
+          # Remove cols that aren't defined in white list or sys columns
+          candidate_cols = all_columns - whitelist_columns - [:_id]
+
+          candidate_cols.each do |column|
+            db_svc.remove_column(@named_range.to_sym, column.to_sym)
+          end
+        end
+      end
+
+      def to_s
+        "White list builder"
+      end
+    end
   end
 end

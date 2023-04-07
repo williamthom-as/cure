@@ -91,6 +91,10 @@ module Cure
       @database.drop_column tbl_name, remove_column
     end
 
+    def list_columns(tbl_name)
+      @database[tbl_name.to_sym].columns
+    end
+
     def rename_column(tbl_name, old_column, new_column)
       tbl_name = tbl_name.to_sym if tbl_name.class != Symbol
       old_column = old_column.to_sym if old_column.class != Symbol

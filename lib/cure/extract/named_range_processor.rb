@@ -53,7 +53,7 @@ module Cure
         @candidate_nrs.each do |nr|
           next unless nr.row_in_bounds?(row_idx)
 
-          # Row is inbounds - we need to do two things, create the table, insert the row
+          # Row is inbounds - we need to do two things, filter the content, create the table, insert the row
           if nr.header_in_bounds?(row_idx)
             column_headers = csv_row[nr.section[0]..nr.section[1]]
 
@@ -149,5 +149,6 @@ module Cure
         create_table(:variables, %w[name value])
       end
     end
+
   end
 end

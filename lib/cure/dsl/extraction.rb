@@ -14,16 +14,8 @@ module Cure
         @variables = []
       end
 
-      def named_range(name:, at:, headers: nil, &block)
-        candidate = Cure::Extract::NamedRange.new(name, at, headers)
-        mappings = Cure::Extract::Mappings.new
-
-        if block_given?
-          mappings.instance_exec(&block)
-          candidate.mappings = mappings
-        end
-
-        @named_ranges << candidate
+      def named_range(name:, at:, headers: nil)
+        @named_ranges << Cure::Extract::NamedRange.new(name, at, headers)
       end
 
       def variable(name:, at:)
