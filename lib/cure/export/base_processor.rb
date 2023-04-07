@@ -144,7 +144,7 @@ module Cure
 
       def cleanup
       ensure
-        @current_csv_file&.close
+        @current_csv_file.close
       end
 
       def extract_opts
@@ -171,6 +171,20 @@ module Cure
       def current_file_path
         "#{@output_dir}/#{@current_chunk}-#{@file_name_prefix}.csv"
       end
+    end
+
+    class YieldRowProcessor < BaseProcessor
+      attr_reader :proc
+
+      def process_row(row)
+        @proc.call(row)
+      end
+
+      def setup
+        @proc = @opts.fetch(:proc)
+      end
+
+      def cleanup; end
     end
 
   end

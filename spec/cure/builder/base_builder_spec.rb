@@ -239,7 +239,6 @@ RSpec.describe Cure::Builder::BlacklistBuilder do
   end
 end
 
-
 # RSpec.describe Cure::Builder::ExplodeBuilder do
 #   before :all do
 #     @source_file_loc = "spec/cure/test_files/explode_csv.csv"
