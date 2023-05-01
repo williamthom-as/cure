@@ -17,7 +17,7 @@ Check out here for some real world [examples](docs/examples/examples.md).
 
 ## Use Cases
 
-- Anonymize and transform personal data in a CSV to prepare it for a public demo.
+- Anonymize and transform personal data in a CSV to prepare it for a public demo environments.
 - Extract specific parts of a CSV and discard the remaining data.
 - Perform complex transformations on values according to specific rules.
 - Unpack JSON values into individual columns per key.
@@ -26,12 +26,15 @@ Check out here for some real world [examples](docs/examples/examples.md).
 ## When not to use
 
 Cure processes CSV files as a whole. Some of its features require a complete parse of the file to extract the necessary 
-data before transforming it. These features include:
+data before transforming it. 
 
-Variable extraction (for example, extracting a value from A1 and adding it to each row).
-Non-zero indexed headers (for example, taking values from rows 4 to 10 and using row 2 as the source header row).
-Expanding JSON fields into columns (for example, if row 1 has values [{"a":1, "b":2}], and row 2 has [{"c":3}], each 
+These features include:
+
+- Variable extraction (for example, extracting a value from A1 and adding it to each row).
+- Non-zero indexed headers (for example, taking values from rows 4 to 10 and using row 2 as the source header row).
+- Expanding JSON fields into columns (for example, if row 1 has values [{"a":1, "b":2}], and row 2 has [{"c":3}], each 
 row needs columns A, B, C, but row 1 doesn't know that until row 2).
+
 If you have large datasets of streamable CSV data, there are more efficient and performant tools available. However, 
 Cure makes it possible to perform more aggressive transformations, which may require more memory usage. If you still 
 want to use Cure to process large files, you can choose to persist the datastore to disk instead of in memory, which 
