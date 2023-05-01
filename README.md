@@ -3,41 +3,44 @@
 ![run tests](https://github.com/williamthom-as/cure/actions/workflows/rspec.yml/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/cure.svg)](https://badge.fury.io/rb/cure)
 
-Cure is a simple tool that attempts to be a swiss army knife for CSV transformation.
-It aims to allow you to **extract/clean/transform/remove/anonymize/replace** and manipulate the entire 
-spreadsheet (or multiple sections of). It operates in memory by default, and can be easily integrated into an 
-existing work flow or controlled via CLI.
+Cure is a versatile tool designed to handle a wide range of CSV transformations. While it may take 
+some time to get familiar with its features, once you do, you'll find it capable of performing a wide range of tasks.
 
-**Please note**: Cure is under active development, and will have frequent breaking changes. Use at your own risk!
+Cure enables you to extract, clean, transform, remove, anonymize, replace, and manipulate data in entire spreadsheets
+or specific sections. It operates in memory by default and can be integrated into existing workflows or 
+controlled via the CLI.
+
+**Please note**: Cure is under active development, is poorly documented (at the moment) and will have frequent 
+breaking changes. Use at your own risk!
 
 Check out here for some real world [examples](docs/examples/examples.md).
 
 ## Use Cases
 
-- Strip out and transform personal data from a CSV so that may be used for public demo.
-- Extract specific parts of a CSV file and junk the rest.
-- Doing complex transformations on values under specific rules.
-- Explode JSON values into individual columns per key.
-- Sequential processing for large files, whilst maintaining variable history.
+- Anonymize and transform personal data in a CSV to prepare it for a public demo.
+- Extract specific parts of a CSV and discard the remaining data.
+- Perform complex transformations on values according to specific rules.
+- Unpack JSON values into individual columns per key.
+- Process large files sequentially while retaining variable history.
 
 ## When not to use
 
-Cure operates on a spreadsheet as a whole. There are features available that require a full parse of the file to extract
-the required data prior to transforming the data. These include:
-  - Extracting variables (ex. extract a value from A1 and add to each row).
-  - Non-zero indexed headers (ex. taking values from rows 4 -> 10, and using row 2 as the source header row).
-  - Expanding JSON fields into columns (ex. If row 1 has values [{"a":1, "b":2}], and row 2 has [{"c":3}], each
-row needs columns A,B,C, but row 1 doesn't know that until row 2.)
+Cure processes CSV files as a whole. Some of its features require a complete parse of the file to extract the necessary 
+data before transforming it. These features include:
 
-If you have large datasets of streamable CSV data, there are more efficient and performant tools to use. There is a trade
-off made to allow for more aggressive transformations that requires heavier memory usage. If you would 
-still like to use Cure to process large files, you can elect to persist the datastore to disk, instead of in-memory, 
-which will have a small performance impact.
+Variable extraction (for example, extracting a value from A1 and adding it to each row).
+Non-zero indexed headers (for example, taking values from rows 4 to 10 and using row 2 as the source header row).
+Expanding JSON fields into columns (for example, if row 1 has values [{"a":1, "b":2}], and row 2 has [{"c":3}], each 
+row needs columns A, B, C, but row 1 doesn't know that until row 2).
+If you have large datasets of streamable CSV data, there are more efficient and performant tools available. However, 
+Cure makes it possible to perform more aggressive transformations, which may require more memory usage. If you still 
+want to use Cure to process large files, you can choose to persist the datastore to disk instead of in memory, which 
+may have a slight impact on performance.
 
 ## Example
 
 ### In Code
-Cure can be used as part of your existing application. It is configured using a simple DSL that can either be inline,
+Cure can be used as part of your existing application. It is configured using a DSL that can either be inline,
 or as a file. Check out [here](docs/README.md) for more information, including examples.
 
 ```ruby

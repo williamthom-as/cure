@@ -23,7 +23,6 @@ RSpec.describe Cure::Dsl::DslHandler do
       expect(result.extraction.named_ranges[0].section).to eq([1, 6, 1, 5])
       expect(result.extraction.named_ranges[1].name).to eq("section_2")
       expect(result.extraction.named_ranges[1].section).to eq([2, 7, 1, 5])
-
       expect(result.extraction.variables.size).to eq(1)
       expect(result.extraction.variables[0].name).to eq("new_field")
       expect(result.extraction.variables[0].location).to eq([0, 15])
@@ -46,6 +45,30 @@ RSpec.describe Cure::Dsl::DslHandler do
       expect(result.builder.candidates[0].column).to eq("new_column")
       expect(result.builder.candidates[0].named_range).to eq("section_1")
       expect(result.builder.candidates[0].action.class).to eq(Cure::Builder::AddBuilder)
+    end
+
+    it "should return a valid query template from dsl" do
+      doc = <<-TEMPLATE
+        query do
+          with named_range: "section_1", query: <<-SQL
+            SELECT * FROM section_1
+          SQL
+
+          with named_range: "section_2", query: <<-SQL
+            SELECT * FROM section_2
+          SQL
+        end
+      TEMPLATE
+
+      template = described_class.init_from_content(doc, "test_file")
+      result = template.generate
+
+      expect(result.queries.class).to be(Cure::Dsl::Queries)
+      expect(result.queries.candidates.size).to eq(2)
+      expect(result.queries.candidates[0].named_range).to eq(:section_1)
+      expect(result.queries.candidates[0].query).to include("SELECT * FROM section_1")
+      expect(result.queries.find("section_1").named_range).to eq(:section_1)
+      expect(result.queries.find(:section_1).named_range).to eq(:section_1)
     end
 
     it "should return a valid transformations template from dsl" do
@@ -109,8 +132,3 @@ RSpec.describe Cure::Dsl::DslHandler do
     end
   end
 end
-
-# Cure.configure do
-#   csv file: "location", encoding: "utf-8"
-#   ...
-# end

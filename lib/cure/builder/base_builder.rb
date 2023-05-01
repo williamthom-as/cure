@@ -166,7 +166,7 @@ module Cure
       end
 
       def to_s
-        "White list builder"
+        "Blacklist builder"
       end
     end
 
@@ -186,7 +186,7 @@ module Cure
       end
 
       def to_s
-        "White list builder"
+        "Whitelist builder"
       end
     end
   end

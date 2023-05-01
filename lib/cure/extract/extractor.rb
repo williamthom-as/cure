@@ -45,7 +45,7 @@ module Cure
                   v_processor.process_row(row_count, row)
                   row_count += 1
 
-                  log_info "#{row_count} rows processed [#{Time.now}]" if (row_count % 10_000).zero?
+                  log_info "#{row_count} rows processed [#{Time.now}]" if (row_count % 1_000).zero?
                 end
               end
             end

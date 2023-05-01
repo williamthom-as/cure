@@ -28,10 +28,14 @@ module Cure
         row_bounds_range.cover?(row_idx)
       end
 
+      # @param [Integer] row_idx
+      # @return [TrueClass, FalseClass]
       def header_in_bounds?(row_idx)
         header_bounds_range.cover?(row_idx)
       end
 
+      # @param [Integer] row_idx
+      # @return [TrueClass, FalseClass]
       def content_in_bounds?(row_idx)
         content_bounds_range.cover?(row_idx)
       end
@@ -45,6 +49,7 @@ module Cure
         @row_bounds ||= content_bounds.concat(header_bounds).uniq.minmax
       end
 
+      # @return [Range]
       def content_bounds_range
         @content_bounds_range ||= (content_bounds[0]..content_bounds[1])
       end
@@ -53,6 +58,7 @@ module Cure
         @content_bounds ||= @section[2..3]
       end
 
+      # @return [Range]
       def header_bounds_range
         @header_bounds_range ||= (header_bounds&.first..header_bounds&.last)
       end

@@ -76,7 +76,7 @@ module Cure
         print_empty("Build")
       else
         candidates.each do |c|
-          log_info "-- #{c.column} from #{c.named_range} will be changed with #{c.action}"
+          log_info "-- #{c.column || "Multiple columns>"} from #{c.named_range} will be changed with #{c.action}"
         end
       end
 
@@ -116,11 +116,14 @@ module Cure
 
     private
 
+    # @param [String] title
     def print_title(title)
       log_info title.bold.underline
       print_spacer
     end
 
+    # @param [String] descriptor
+    # @param [String,nil] remedy
     def print_empty(descriptor, remedy=nil)
       log_info "No #{descriptor} specified.".italic
       log_info "[Remedy: #{remedy}]" unless remedy.nil?
