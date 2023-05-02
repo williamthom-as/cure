@@ -22,15 +22,27 @@ module Cure
       # # @return [Array<Cure::Validator::BaseRule>]
       attr_reader :rules
 
+      DEFAULT_OPTIONS = {
+        fail_on_error: false
+      }.freeze
+
       def initialize(column, named_range, options = {})
         @column = column
         @named_range = named_range || "_default"
-        @options = options
+        @options =  DEFAULT_OPTIONS.merge(options)
         @rules = []
       end
 
-      def perform
-        @action.process
+      def perform(value)
+        result = @rules.filter_map do |rule|
+          rule.process(value) ? nil : "#{rule.to_s} failed -> [#{@column}][#{value.to_s}]"
+        end
+
+        if @options[:fail_on_error] && result.size > 0
+          raise "Validation failed:\n#{result.join("\n")}"
+        end
+
+        result
       end
 
       def with_rule(method_name, options={})
