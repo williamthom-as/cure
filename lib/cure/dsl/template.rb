@@ -2,6 +2,7 @@
 
 require "cure/dsl/extraction"
 require "cure/dsl/builder"
+require "cure/dsl/validator"
 require "cure/dsl/transformations"
 require "cure/dsl/exporters"
 require "cure/dsl/queries"
@@ -54,6 +55,9 @@ module Cure
       # @return [Dsl::Builder]
       attr_reader :builder
 
+      # @return [Dsl::Validator]
+      attr_reader :validator
+
       # @return [Dsl::Transformations]
       attr_reader :transformations
 
@@ -66,6 +70,7 @@ module Cure
       def initialize
         @extraction = Extraction.new
         @builder = Builder.new
+        @validator = Validator.new
         @transformations = Transformations.new
         @exporters = Exporters.new
         @queries = Queries.new
@@ -81,6 +86,10 @@ module Cure
 
       def build(&block)
         @builder.instance_exec(&block)
+      end
+
+      def validate(&block)
+        @validator.instance_exec(&block)
       end
 
       def transform(&block)

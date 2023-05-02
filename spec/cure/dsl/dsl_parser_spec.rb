@@ -28,6 +28,29 @@ RSpec.describe Cure::Dsl::DslHandler do
       expect(result.extraction.variables[0].location).to eq([0, 15])
     end
 
+    it "should return a valid validation template from dsl" do
+      doc = <<-TEMPLATE
+        validate do
+          candidate column: "new_column", named_range: "section_1", options: { fail_on_error: false } do
+            with_rule :not_null
+            with_rule :length, { min: 0, max: 5 }
+            with_rule :custom, { proc: Proc.new { |x| x > 1 } }
+          end
+        end
+      TEMPLATE
+
+      template = described_class.init_from_content(doc, "test_file")
+      result = template.generate
+
+      expect(result.validator.class).to be(Cure::Dsl::Validator)
+      expect(result.validator.candidates.size).to eq(1)
+      expect(result.validator.candidates[0].column).to eq("new_column")
+      expect(result.validator.candidates[0].named_range).to eq("section_1")
+      expect(result.validator.candidates[0].rules[0].class).to eq(Cure::Validator::NotNullRule)
+      expect(result.validator.candidates[0].rules[1].class).to eq(Cure::Validator::LengthRule)
+      expect(result.validator.candidates[0].rules[2].class).to eq(Cure::Validator::CustomRule)
+    end
+
     it "should return a valid builder template from dsl" do
       doc = <<-TEMPLATE
         build do
