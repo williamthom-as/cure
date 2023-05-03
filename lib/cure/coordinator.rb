@@ -31,7 +31,6 @@ module Cure
           # 2. Manipulate SQLite columns
           build
           # 3. Validate columns
-          validate
 
           # 3. Transform each row
           database_service.list_tables.each do |table|
