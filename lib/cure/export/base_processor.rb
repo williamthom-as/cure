@@ -161,6 +161,7 @@ module Cure
           @current_csv_file&.close
 
           @current_chunk += 1
+          log_info "Writing file to #{current_file_path}"
           @current_csv_file = File.open(current_file_path, "w")
         end
 

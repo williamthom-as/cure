@@ -19,3 +19,13 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
+
+def extract_contents(file)
+  file_one_contents = []
+
+  CSV.foreach(file) do |row|
+    file_one_contents << row
+  end
+
+  file_one_contents
+end
