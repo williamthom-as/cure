@@ -187,8 +187,8 @@ module Cure
       # @return [TrueClass, FalseClass]
       def identifier_start?(char)
         char_ord = char.ord
-        (LOWER_A <= char_ord && char_ord <= LOWER_Z) ||
-          (UPPER_A <= char_ord && char_ord <= UPPER_Z) ||
+        (char_ord >= LOWER_A && char_ord <= LOWER_Z) ||
+          (char_ord >= UPPER_A && char_ord <= UPPER_Z) ||
           (char_ord == UNDERSCORE) ||
           (char_ord == DOLLAR)
       end
@@ -197,7 +197,7 @@ module Cure
       # @return [TrueClass, FalseClass]
       def number?(char)
         char_ord = char.ord
-        (NUM_ZERO <= char_ord && char_ord <= NUM_NINE)
+        (char_ord >= NUM_ZERO && char_ord <= NUM_NINE)
       end
 
       # @param [String, Integer] char

@@ -26,21 +26,19 @@ module Cure
         fail_on_error: false
       }.freeze
 
-      def initialize(column, named_range, options = {})
+      def initialize(column, named_range, options={})
         @column = column
         @named_range = named_range || "_default"
-        @options =  DEFAULT_OPTIONS.merge(options)
+        @options = DEFAULT_OPTIONS.merge(options)
         @rules = []
       end
 
       def perform(value)
         result = @rules.filter_map do |rule|
-          rule.process(value) ? nil : "#{rule.to_s} failed -> [#{@column}][#{value.to_s}]"
+          rule.process(value) ? nil : "#{rule} failed -> [#{@column}][#{value}]"
         end
 
-        if @options[:fail_on_error] && result.size > 0
-          raise "Validation failed:\n#{result.join("\n")}"
-        end
+        raise "Validation failed:\n#{result.join("\n")}" if @options[:fail_on_error] && !result.empty?
 
         result
       end

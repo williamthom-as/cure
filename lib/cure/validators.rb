@@ -12,7 +12,7 @@ module Cure
       # @param [Object] options
       def register_validator(caller, prop, options)
         @validators[caller] = [] unless @validators.has_key? caller
-        @validators[caller] << {prop: "@#{prop}".to_sym, options: options}
+        @validators[caller] << {prop: "@#{prop}".to_sym, options:}
       end
 
       # @return [TrueClass, FalseClass]

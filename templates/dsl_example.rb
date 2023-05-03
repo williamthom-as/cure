@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 csv file: "location", encoding: "utf-8"
 
 extract do

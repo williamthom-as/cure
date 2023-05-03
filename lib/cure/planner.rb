@@ -45,7 +45,7 @@ module Cure
       named_ranges = config.template.extraction.named_ranges
       variables = config.template.extraction.variables
 
-      if named_ranges.size.zero?
+      if named_ranges.empty?
         print_empty(named_ranges, "If you wanted to add a named range, please read docs/extraction.md")
       else
         log_info("[#{named_ranges.length}] named ranges specified")
@@ -56,7 +56,7 @@ module Cure
 
       print_spacer
 
-      if variables.size.zero?
+      if variables.empty?
         print_empty("variables")
       else
         log_info("[#{variables.length}] variables specified")
@@ -72,7 +72,7 @@ module Cure
       print_title "Build"
       candidates = config.template.builder.candidates
 
-      if candidates.size.zero?
+      if candidates.empty?
         print_empty("Build")
       else
         candidates.each do |c|
@@ -88,7 +88,7 @@ module Cure
       candidates = config.template.transformations.candidates
       placeholders = config.template.transformations.placeholders
 
-      if candidates.size.zero?
+      if candidates.empty?
         print_empty("Transforms")
       else
         candidates.each do |c|
@@ -102,7 +102,7 @@ module Cure
 
       print_spacer
 
-      if placeholders.nil? || placeholders.size.zero?
+      if placeholders.nil? || placeholders.empty?
         print_empty("Placeholders")
       else
         log_info "-- Variables"

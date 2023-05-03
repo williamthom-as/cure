@@ -149,6 +149,5 @@ module Cure
         create_table(:variables, %w[name value])
       end
     end
-
   end
 end

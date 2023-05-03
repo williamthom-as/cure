@@ -81,7 +81,7 @@ module Cure
       tbl_name = tbl_name.to_sym if tbl_name.class != Symbol
       new_column = new_column.to_sym if new_column.class != Symbol
 
-      @database.add_column(tbl_name, new_column, String, default: default)
+      @database.add_column(tbl_name, new_column, String, default:)
     end
 
     def remove_column(tbl_name, remove_column)
@@ -151,4 +151,3 @@ end
 # db.with_paged_result(:test) do |row|
 #   puts row
 # end
-

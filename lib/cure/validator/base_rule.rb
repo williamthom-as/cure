@@ -10,7 +10,6 @@ require "rcsv"
 
 module Cure
   module Validator
-
     class BaseRule
 
       def initialize(named_range, column, options)
@@ -56,7 +55,7 @@ module Cure
       end
 
       def max
-        @max || @options.fetch(:max, (99_999))
+        @max || @options.fetch(:max, 99_999)
       end
     end
 
@@ -72,7 +71,7 @@ module Cure
       end
 
       def custom_proc
-        @options.fetch(:proc, Proc.new { |_x| false })
+        @options.fetch(:proc, proc { |_x| false })
       end
     end
   end

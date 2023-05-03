@@ -114,7 +114,6 @@ module Cure
                   :include_headers,
                   :row_count
 
-
       def process_row(row)
         chunked_file_handler do |csv_file|
           if @processed.zero? || (@processed % @chunk_size).zero? || (@processed % @chunk_size).zero?
@@ -186,6 +185,5 @@ module Cure
 
       def cleanup; end
     end
-
   end
 end

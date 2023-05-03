@@ -91,7 +91,7 @@ module Cure
     class ExplodeBuilder < BaseBuilder
 
       # TODO: remove original column
-      def process
+      def process # rubocop:disable Metrics/AbcSize
         # content = wrapped_csv.find_named_range(@named_range)
         json_store, new_keys = extract_json_data(content)
 
@@ -173,7 +173,7 @@ module Cure
     class WhitelistBuilder < BaseBuilder
       def process
         with_database do |db_svc|
-          whitelist_columns = (@opts[:columns]).map { |x| x.to_sym }
+          whitelist_columns = (@opts[:columns]).map(&:to_sym)
           all_columns = db_svc.list_columns(@named_range.to_sym)
 
           # Remove cols that aren't defined in white list or sys columns

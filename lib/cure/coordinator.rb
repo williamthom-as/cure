@@ -33,7 +33,6 @@ module Cure
           # 3. Validate columns
           validate
 
-
           # 3. Transform each row
           database_service.list_tables.each do |table|
             with_transformer(table) do |transformer|

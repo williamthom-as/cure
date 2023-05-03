@@ -17,7 +17,7 @@ module Cure
       end
 
       def candidate(column:, named_range: "_default", &block)
-        candidate = Candidate.new(column, named_range: named_range)
+        candidate = Candidate.new(column, named_range:)
         candidate.instance_exec(&block)
 
         @candidates << Cure::Transformation::Candidate
@@ -90,4 +90,3 @@ module Cure
     end
   end
 end
-

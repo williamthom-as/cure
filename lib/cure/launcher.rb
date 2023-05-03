@@ -31,7 +31,7 @@ module Cure
     # @return [void]
     def process(type, obj, print_query_plan: true)
       @csv_file = Cure::Configuration::CsvFileProxy.load_file(type, obj)
-      run_export(print_query_plan: print_query_plan)
+      run_export(print_query_plan:)
     end
 
     def run_export(print_query_plan: true)
