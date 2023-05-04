@@ -12,7 +12,7 @@ module Cure
       # @param [RowCtx] row_ctx
       def _generate(_source_value, row_ctx)
         template = @options.fetch(:template, nil)
-        ERB.new(template).result_with_hash(row_ctx.rows)
+        ERB.new(template).result_with_hash(row_ctx.row)
       end
 
       def _describe; end

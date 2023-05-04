@@ -5,7 +5,12 @@ RSpec.describe Cure do
     expect(Cure::VERSION).not_to be nil
   end
 
-  it "does something useful" do
-    expect(true).to eq(true)
+  it "inits from file" do
+    expect {
+      Cure.init_from_file("spec/cure/test_files/grouped_rows.rb")
+          .with_csv_file(:pathname, Pathname.new("spec/cure/test_files/grouped_rows.csv"))
+          .setup
+          .run_export
+    }.to_not raise_error
   end
 end

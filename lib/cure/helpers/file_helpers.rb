@@ -21,9 +21,10 @@ module Cure
       end
 
       def read_file(file_location)
-        result = file_location.start_with?("/") ? file_location : File.join(File.dirname(__FILE__), file_location)
+        result = file_location.start_with?("/") ? file_location : Pathname.new(file_location)
+        # result = file_location.start_with?("/") ? file_location : File.join(File.dirname(__FILE__), file_location)
 
-        raise "No file found at [#{file_location}]" unless File.exist? result
+        raise "No file found at [#{file_location}]" unless File.exist? result.to_s
 
         File.read(result)
       end
@@ -31,7 +32,7 @@ module Cure
       def open_file(file_location)
         result = file_location.start_with?("/") ? file_location : File.join(File.dirname(__FILE__), file_location)
 
-        raise "No file found at [#{file_location}]" unless File.exist? result
+        raise "No file found at [#{file_location}]" unless File.exist? result.to_s
 
         File.open(result)
       end

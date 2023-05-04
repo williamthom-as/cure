@@ -15,8 +15,8 @@ end
 
 conf = {}
 
-OptionParser.new do |opts|
-  opts.banner = "Usage: cure_cli [options]"
+opts_parser = OptionParser.new do |opts|
+  opts.banner = "Usage: cure [options]"
 
   opts.on("-t", "--template_file=template_file", "Template definition file") do |t|
     conf[:template_file_location] = t
@@ -30,14 +30,19 @@ OptionParser.new do |opts|
     puts opts
     exit
   end
-end.parse!
+end
+
+opts_parser.parse!
+
+if conf.empty?
+  puts opts_parser
+  exit
+end
 
 log_info "Config loaded successfully, initialising environment ..."
-main = Cure::Launcher.new
-                     .with_csv_file(:pathname, Pathname.new(conf[:source_file_location]))
-                     .with_template(:file, Pathname.new(conf[:template_file_location]))
-                     .setup
-                     .run_export
+main = Cure.init_from_file(conf[:template_file_location])
+           .with_csv_file(:pathname, Pathname.new(conf[:source_file_location]))
+           .setup
 
 log_info "... set up complete. Beginning process"
 main.run_export

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cure (0.1.2)
+    cure (0.2.0)
       artii
       faker
       rcsv
@@ -14,14 +14,13 @@ GEM
   specs:
     artii (2.1.2)
     ast (2.4.2)
-    concurrent-ruby (1.1.10)
+    concurrent-ruby (1.2.2)
     diff-lcs (1.4.4)
     docile (1.4.0)
     faker (2.21.0)
       i18n (>= 1.8.11, < 2)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
-    mini_portile2 (2.8.2)
     parallel (1.21.0)
     parser (3.0.2.0)
       ast (~> 2.4.1)
@@ -65,8 +64,6 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
-    sqlite3 (1.6.1)
-      mini_portile2 (~> 2.8.0)
     sqlite3 (1.6.1-x86_64-linux)
     standard (1.4.0)
       rubocop (= 1.22.3)

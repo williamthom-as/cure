@@ -6,7 +6,6 @@ end
 query do
   with query: <<-SQL
     SELECT 
-      id as id, 
       identifier as identifier, 
       group_concat(first_name, '') as first_name, 
       group_concat(last_name, '') as last_name, 
@@ -47,10 +46,10 @@ transform do
     with_translation { replace("full").with(
       "proc",
       execute: proc do |source_val, row_ctx|
-        if row_ctx.rows[:last_name] == "smith"
+        if row_ctx.row[:last_name] == "smith"
           "smith"
         else
-          "#{source_val} -> #{row_ctx.rows[:last_name]}"
+          "#{source_val} -> #{row_ctx.row[:last_name]}"
         end
       end
     )}
