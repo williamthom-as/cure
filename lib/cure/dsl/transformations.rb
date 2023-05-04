@@ -16,12 +16,12 @@ module Cure
         @placeholders = []
       end
 
-      def candidate(column:, named_range: "_default", &block)
-        candidate = Candidate.new(column, named_range:)
+      def candidate(column:, named_range: "_default", options: {}, &block)
+        candidate = Candidate.new(column, named_range: named_range)
         candidate.instance_exec(&block)
 
         @candidates << Cure::Transformation::Candidate
-                       .new(candidate.column, named_range: candidate.named_range)
+                       .new(candidate.column, named_range: candidate.named_range, options: options)
                        .with_translations(candidate.translations)
                        .with_no_match_translation(candidate.no_match_translation)
       end

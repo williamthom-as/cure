@@ -7,7 +7,7 @@ require "cure/log"
 
 # This tests simple transforms and file export chunking to csv.
 RSpec.describe Cure::Coordinator do
-  context "Process entire AWS file" do
+  context "Process and chunk a simple csv file" do
     describe "#extract" do
       it "will extract required sections" do
         main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new("spec/cure/test_files/test_csv_file.csv"))

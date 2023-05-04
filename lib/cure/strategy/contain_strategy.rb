@@ -30,8 +30,8 @@ module Cure
       end
 
       def _describe
-        "Replacing matched value on '#{@params.value}') " \
-        "[Note: If the value does not include '#{@params.value}', no substitution is made.]"
+        "Replacing matched value on '#{@params.match}') " \
+        "[Note: If the value does not include '#{@params.match}', no substitution is made.]"
       end
     end
 

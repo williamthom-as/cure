@@ -147,6 +147,7 @@ module Cure
       end
 
       def extract_opts
+        # TODO: Add offset? pick a slice?
         @output_dir = @opts[:directory]
         @file_name_prefix = @opts[:file_name_prefix]
         @directory = @opts[:directory]

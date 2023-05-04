@@ -30,10 +30,10 @@ module Cure
 
       attr_reader :ignore_empty
 
-      def initialize(column, named_range: Cure::Extraction.default_named_range)
+      def initialize(column, named_range: Cure::Extraction.default_named_range, options: {})
         @column = column
         @named_range = named_range
-        @ignore_empty = false
+        @ignore_empty = options.fetch(:ignore_empty, false)
 
         @translations = []
         @no_match_translation = nil

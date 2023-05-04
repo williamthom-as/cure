@@ -1,0 +1,7 @@
+sku,code,item,vendor,cost_per_kilo,amount_in_kilo,total_cost,purchase_date,percentage_of_total
+78632478,FRUIT-NCC,apple,NOP123,1.5,2,3,2010-01-01,17.14%
+12319082,FRUIT-BEN,orange,QRS567,2.5,2,5,2010-01-01,28.57%
+90834222,FRUIT-CRN,pear,QRS567,0.5,3,1.5,2010-01-01,8.57%
+78632478,FRUIT-NCC,apple,NOP123,1.5,1,1.5,2010-01-01,8.57%
+78632478,FRUIT-NCC,apple,NOP123,1.5,1,1.5,2010-01-01,8.57%
+12319082,FRUIT-BEN,orange,QRS567,2.5,2,5,2010-01-01,28.57%
