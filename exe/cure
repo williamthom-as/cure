@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 # rubocop:disable Style/MixinUsage
-# rubocop:disable Style/MethodCalledOnDoEndBlock
 
 require "cure"
 require "optparse"
@@ -48,4 +47,3 @@ log_info "... set up complete. Beginning process"
 main.run_export
 
 # rubocop:enable Style/MixinUsage
-# rubocop:enable Style/MethodCalledOnDoEndBlock

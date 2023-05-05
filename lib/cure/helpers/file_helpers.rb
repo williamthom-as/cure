@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "fileutils"
+require "pathname"
 
 module Cure
   module Helpers
@@ -30,7 +31,7 @@ module Cure
       end
 
       def open_file(file_location)
-        result = file_location.start_with?("/") ? file_location : File.join(File.dirname(__FILE__), file_location)
+        result = file_location.start_with?("/") ? file_location : Pathname.new(file_location)
 
         raise "No file found at [#{file_location}]" unless File.exist? result.to_s
 
