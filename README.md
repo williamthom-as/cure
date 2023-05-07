@@ -102,7 +102,11 @@ contain all the instructions you wish to perform.
 
 You can run the CLI using the following command:
 
-    $ cure -t /file/path/to/template.json -s /file/path/to/source_file.csv
+    $ cure -t template.rb -s source_file.csv 
+
+You can view help with the following command:
+
+    $ cure -h
 
 ### Try it out
 
@@ -115,7 +119,7 @@ Please do not forget to mount any volumes which may have templates that you wish
 
 Once set up and connected to your container, run:
 
-    $ cure -t template.rb -s /source_file.csv 
+    $ cure -t template.rb -s source_file.csv 
 
 ## Development
 
