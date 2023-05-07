@@ -4,10 +4,12 @@ require "cure/log"
 require "cure/launcher"
 require "cure/config"
 require "cure/version"
+require "cure/dsl/template"
+require "cure/strategy/imports"
+require "cure/generator/imports"
+require "cure/transformation/transform"
 require "cure/helpers/file_helpers"
 
-require "cure/dsl/template"
-require "cure/transformation/transform"
 
 require "logger"
 

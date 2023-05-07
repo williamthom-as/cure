@@ -115,7 +115,7 @@ Please do not forget to mount any volumes which may have templates that you wish
 
 Once set up and connected to your container, run:
 
-    $ cure -t /file/path/to/template.json -s /file/path/to/source_file.csv -o /my/output/folder
+    $ cure -t template.rb -s /source_file.csv 
 
 ## Development
 

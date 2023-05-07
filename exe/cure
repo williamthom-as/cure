@@ -25,6 +25,15 @@ opts_parser = OptionParser.new do |opts|
     conf[:source_file_location] = s
   end
 
+  opts.on("-l", "--list_plugins=list_plugins", "List plugins") do
+    ObjectSpace.each_object(Class) do |klass|
+      log_info "Generator: #{klass.name}" if klass.ancestors.include?(Cure::Generator::BaseGenerator)
+      log_info "Strategy: #{klass.name}" if klass.ancestors.include?(Cure::Strategy::BaseStrategy)
+    end
+
+    exit
+  end
+
   opts.on("-h", "--help", "Prints this help") do
     puts opts
     exit
