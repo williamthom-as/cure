@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "logger"
 require "cure/log"
 require "cure/launcher"
 require "cure/config"
@@ -9,9 +10,6 @@ require "cure/strategy/imports"
 require "cure/generator/imports"
 require "cure/transformation/transform"
 require "cure/helpers/file_helpers"
-
-
-require "logger"
 
 module Cure
   class << self
