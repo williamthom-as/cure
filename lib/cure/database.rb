@@ -38,6 +38,18 @@ module Cure
 
     def initialize
       @database = init_database
+      setup_db
+    end
+
+    def setup_db
+      # Load this from config defined by user?
+      @database.execute <<-SQL
+        PRAGMA journal_mode = OFF;
+        PRAGMA synchronous = 0;
+        PRAGMA cache_size = 1000000;
+        PRAGMA locking_mode = EXCLUSIVE;
+        PRAGMA temp_store = MEMORY;",
+      SQL
     end
 
     # App Service calls
@@ -76,6 +88,13 @@ module Cure
     def insert_row(tbl_name, row)
       @database[tbl_name.to_sym].insert(row)
     end
+
+    # @param [Symbol,String] tbl_name
+    # @param [Array<String>] rows
+    def insert_batched_rows(tbl_name, rows)
+      @database[tbl_name.to_sym].import(@database[tbl_name.to_sym].columns, rows)
+    end
+
 
     def add_column(tbl_name, new_column, default: "")
       tbl_name = tbl_name.to_sym if tbl_name.class != Symbol

@@ -24,11 +24,13 @@ module Cure
         @database_service.create_table(tbl_name.to_sym, columns)
       end
 
-      def insert_record(tbl_name, row_idx, values)
-        values.unshift(row_idx) # Add id to front of array
+      def insert_record(tbl_name, values)
         @database_service.insert_row(tbl_name.to_sym, values)
       end
 
+      def insert_batched_rows(tbl_name, values)
+        @database_service.insert_batched_rows(tbl_name.to_sym, values)
+      end
     end
 
     class NamedRangeProcessor < BaseProcessor
@@ -46,7 +48,7 @@ module Cure
 
       # @param [Integer] row_idx
       # @param [Array] csv_row
-      def process_row(row_idx, csv_row) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity
+      def process_row(row_idx, csv_row) # rubocop:disable all
         # Return if row is not in any named range
         return unless row_bounds.cover?(row_idx)
 
@@ -63,8 +65,7 @@ module Cure
             @tables_created << nr.name
 
             @cache[nr.name].each do |val|
-              # This row idx will fail, cannot use same id
-              insert_record(nr.name, row_idx, val)
+              insert_record(nr.name, val)
             end
 
             @cache[nr.name] = []
@@ -74,14 +75,27 @@ module Cure
 
           next unless nr.content_in_bounds?(row_idx)
 
-          # If the table exists, add it to the database
-          if @tables_created.include? nr.name
-            insert_record(nr.name, row_idx, csv_row[nr.section[0]..nr.section[1]])
-            next
-          end
+          # 1. Cache records
+          @cache[nr.name] << csv_row[nr.section[0]..nr.section[1]].unshift(row_idx)
 
-          # If the table doesnt exist, cache it for now.
-          @cache[nr.name] << csv_row[nr.section[0]..nr.section[1]]
+          # 2. If cache is over n records and if the table exists,
+          # add it to the database.
+
+          if @tables_created.include?(nr.name)
+            if @cache[nr.name].size >= 10
+              insert_cache(nr.name)
+              next
+            end
+          else
+            # If the table doesnt exist, cache it for now.
+            @cache[nr.name] << csv_row[nr.section[0]..nr.section[1]].unshift(row_idx)
+          end
+        end
+      end
+
+      def after_process
+        @cache.each do |named_range, cache|
+          insert_cache(named_range) if cache.size.positive?
         end
       end
 
@@ -108,6 +122,10 @@ module Cure
         cache
       end
 
+      def insert_cache(named_range)
+        insert_batched_rows(named_range, @cache[named_range])
+        @cache[named_range] = []
+      end
     end
 
     class VariableProcessor < BaseProcessor
@@ -137,7 +155,7 @@ module Cure
         @candidate_variables.each do |cv|
           next unless cv.row_in_bounds?(row_idx)
 
-          insert_record(:variables, (@processed + 1), [cv.name, csv_row[cv.location.first]])
+          insert_record(:variables, [cv.name, csv_row[cv.location.first]].unshift(@processed + 1))
           @processed += 1
         end
       end

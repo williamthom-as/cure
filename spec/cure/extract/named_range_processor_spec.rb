@@ -53,6 +53,8 @@ RSpec.describe Cure::Extract::NamedRangeProcessor do
         idx += 1
       end
 
+      nr_processor.after_process
+
       results = []
       nr_processor.database_service.with_paged_result(:section_1) do |row|
         results << row

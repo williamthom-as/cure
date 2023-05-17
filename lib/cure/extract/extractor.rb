@@ -47,6 +47,8 @@ module Cure
 
                   log_info "#{row_count} rows processed [#{Time.now}]" if (row_count % 1_000).zero?
                 end
+
+                nr_processor.after_process
               end
             end
           end
