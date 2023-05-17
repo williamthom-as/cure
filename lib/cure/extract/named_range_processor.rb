@@ -40,6 +40,7 @@ module Cure
         @candidate_nrs = candidate_nrs
         @cache = init_cache
 
+        @tables_created = []
         super database_service
       end
 
@@ -59,6 +60,8 @@ module Cure
 
             # Create table, flush cache
             create_table(nr.name, column_headers)
+            @tables_created << nr.name
+
             @cache[nr.name].each do |val|
               # This row idx will fail, cannot use same id
               insert_record(nr.name, row_idx, val)
@@ -72,7 +75,7 @@ module Cure
           next unless nr.content_in_bounds?(row_idx)
 
           # If the table exists, add it to the database
-          if @database_service.table_exist? nr.name.to_sym
+          if @tables_created.include? nr.name
             insert_record(nr.name, row_idx, csv_row[nr.section[0]..nr.section[1]])
             next
           end
@@ -104,6 +107,7 @@ module Cure
 
         cache
       end
+
     end
 
     class VariableProcessor < BaseProcessor
