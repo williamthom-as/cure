@@ -40,7 +40,7 @@ module Cure
           print_memory_usage("rcsv_load") do
             file_proxy.with_file do |file|
               database_service.with_transaction do
-                CSV.foreach(file) do |row|
+                CSV.foreach(file, liberal_parsing: true) do |row|
                   nr_processor.process_row(row_count, row)
                   v_processor.process_row(row_count, row)
                   row_count += 1

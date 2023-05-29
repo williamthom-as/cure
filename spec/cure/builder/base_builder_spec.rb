@@ -94,7 +94,7 @@ RSpec.describe Cure::Builder::RenameBuilder do
     main.with_config do
       build do
         candidate column: "Tags" do
-          explode options: { keep_existing: false }
+          rename options: { new_name: "test" }
         end
       end
     end

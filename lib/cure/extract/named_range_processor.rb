@@ -21,7 +21,12 @@ module Cure
       protected
 
       def create_table(tbl_name, columns)
-        @database_service.create_table(tbl_name.to_sym, columns)
+        candidate_column_names = []
+        columns.each_with_index do |col, idx|
+          candidate_column_names << (col || "col_#{idx}")
+        end
+
+        @database_service.create_table(tbl_name.to_sym, candidate_column_names)
       end
 
       def insert_record(tbl_name, values)
