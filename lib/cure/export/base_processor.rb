@@ -14,10 +14,20 @@ module Cure
       def initialize(named_range, opts)
         @named_range = named_range
         @opts = opts
+        @limit_rows = opts.fetch(:limit_rows, nil)
+
+        @processed = 0
       end
 
       # @param [Hash]
-      def process_row(_row)
+      def process_row(row)
+        process(row) unless @limit_rows && @limit_rows <= @processed
+
+        @processed += 1
+      end
+
+      # @param [Hash]
+      def process(_row)
         raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
 
@@ -36,11 +46,9 @@ module Cure
 
       attr_reader :table, :limit_rows, :processed
 
-      def process_row(row)
+      def process(row)
         @table.headings = row.keys if @processed.zero?
-        @table.add_row(row.values) if @limit_rows && @processed < @limit_rows
-
-        @processed += 1
+        @table.add_row(row.values)
       end
 
       def setup
@@ -54,8 +62,6 @@ module Cure
         }
 
         log_info "Exporting [#{@named_range}] to terminal."
-        @limit_rows = @opts.fetch(:limit_rows, 10)
-        @processed = 0
         @table = Terminal::Table.new(title: @opts[:title] || "<No Title Set>")
       end
 
@@ -69,11 +75,9 @@ module Cure
 
       attr_reader :csv_file
 
-      def process_row(row)
+      def process(row)
         @csv_file.write(row.keys.to_csv) if @processed.zero?
         @csv_file.write(row.values.to_csv)
-
-        @processed += 1
       end
 
       def setup
@@ -114,14 +118,13 @@ module Cure
                   :include_headers,
                   :row_count
 
-      def process_row(row)
+      def process(row)
         chunked_file_handler do |csv_file|
           if @processed.zero? || (@processed % @chunk_size).zero? || (@processed % @chunk_size).zero?
             csv_file.write(row.keys.to_csv)
           end
 
           csv_file.write(row.values.to_csv)
-          @processed += 1
         end
       end
 

@@ -73,7 +73,7 @@ RSpec.describe Cure::Coordinator do
           end
 
           export do
-            terminal named_range: "travel_data", title: "Preview", limit_rows: 20
+            terminal named_range: "travel_data", title: "Preview", limit_rows: 5
             csv named_range: "travel_data", file_name: "travel_data", directory: "/tmp/cure"
           end
         end
