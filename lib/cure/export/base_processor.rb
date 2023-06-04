@@ -91,7 +91,7 @@ module Cure
 
         path = "#{output_dir}/#{file_name}"
 
-        clean_dir(output_dir)
+        # clean_dir(output_dir)
 
         dir = File.dirname(path)
         FileUtils.mkdir_p(dir) unless File.directory?(dir)
