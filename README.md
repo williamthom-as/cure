@@ -3,8 +3,8 @@
 ![run tests](https://github.com/williamthom-as/cure/actions/workflows/rspec.yml/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/cure.svg)](https://badge.fury.io/rb/cure)
 
-Cure is a versatile tool designed to handle a wide range of CSV transformations. While it may take 
-some time to get familiar with its features, once you do, you'll find it capable of performing a wide range of tasks.
+Cure is a versatile tool designed to handle a wide range of CSV transformations. It may take 
+time to get familiar with all the features, but once you do, it is capable of performing a wide range of tasks.
 
 Cure enables you to extract, clean, transform, remove, anonymize, replace, and manipulate data in entire spreadsheets
 or specific sections. It operates in memory by default and can be integrated into existing workflows or 
