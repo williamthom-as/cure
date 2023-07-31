@@ -11,14 +11,14 @@ module Cure
       def print_memory_usage(process_name="default")
         cmd = "ps -o rss= -p #{Process.pid}"
         before_mem = `#{cmd}`.to_i
-        before_gc = GC.stat(:total_allocated_objects)
+        # before_gc = GC.stat(:total_allocated_objects)
 
         yield
         after_mem = `#{cmd}`.to_i
-        after_gc = GC.stat(:total_allocated_objects)
+        # after_gc = GC.stat(:total_allocated_objects)
 
         log_info "Total Memory Usage [#{process_name}]: #{((after_mem - before_mem) / 1024.0).round(2)} MB"
-        log_info "Total GC Objects Freed [#{process_name}]: #{after_gc - before_gc}"
+        # log_info "Total GC Objects Freed [#{process_name}]: #{after_gc - before_gc}"
       end
 
       def print_time_spent(process_name="default", &block)

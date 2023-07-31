@@ -134,11 +134,32 @@ RSpec.describe Cure::Dsl::DslHandler do
       template = described_class.init_from_content(doc, "test_file")
       result = template.generate
 
-      expect(result.exporters.class).to be(Cure::Dsl::Exporters)
-      expect(result.exporters.processors.size).to be(3)
-      expect(result.exporters.processors[0].class).to be(Cure::Export::TerminalProcessor)
-      expect(result.exporters.processors[1].class).to be(Cure::Export::CsvProcessor)
-      expect(result.exporters.processors[2].class).to be(Cure::Export::CsvProcessor)
+      expect(result.exporters.class).to eq(Cure::Dsl::Exporters)
+      expect(result.exporters.processors.size).to eq(3)
+      expect(result.exporters.processors[0].class).to eq(Cure::Export::TerminalProcessor)
+      expect(result.exporters.processors[1].class).to eq(Cure::Export::CsvProcessor)
+      expect(result.exporters.processors[2].class).to eq(Cure::Export::CsvProcessor)
+    end
+
+    it "should return a valid exporter template from dsl" do
+      doc = <<-TEMPLATE
+        metadata do
+          name "OpenPL Dataset"
+          version "1"
+          comments "A useless comment"
+          additional data: {
+            a: "b"
+          }
+        end
+      TEMPLATE
+
+      template = described_class.init_from_content(doc, "test_file")
+      result = template.generate
+
+      expect(result.meta_data.class).to eq(Cure::Dsl::Metadata)
+      expect(result.meta_data._name).to eq("OpenPL Dataset")
+      expect(result.meta_data._version).to eq("1")
+      expect(result.meta_data._additional).to eq({a: "b"})
     end
 
     it "should run from block" do

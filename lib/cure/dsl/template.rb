@@ -6,13 +6,14 @@ require "cure/dsl/validator"
 require "cure/dsl/transformations"
 require "cure/dsl/exporters"
 require "cure/dsl/queries"
+require "cure/dsl/metadata"
 
 module Cure
   module Dsl
     class DslHandler
 
       def self.init(&block)
-        Dsl::DslHandler.new(block)
+        DslHandler.new(block)
       end
 
       def self.init_from_content(dsl_source, identifier, line_number=1)
@@ -22,7 +23,7 @@ module Cure
           end
         SOURCE
 
-        Dsl::DslHandler.new(proc)
+        DslHandler.new(proc)
       end
 
       def initialize(proc)
@@ -30,7 +31,7 @@ module Cure
       end
 
       def generate(instance_variables={})
-        dsl = Cure::Dsl::Template.new
+        dsl = Template.new
         instance_variables.each do |name, value|
           dsl.instance_variable_set("@#{name}", value)
         end
@@ -67,6 +68,9 @@ module Cure
       # @return [Dsl::Queries]
       attr_reader :queries
 
+      # @return [Dsl::Metadata]
+      attr_reader :meta_data
+
       def initialize
         @extraction = Extraction.new
         @builder = Builder.new
@@ -74,6 +78,7 @@ module Cure
         @transformations = Transformations.new
         @exporters = Exporters.new
         @queries = Queries.new
+        @meta_data = Metadata.new
       end
 
       def extract(&block)
@@ -94,6 +99,10 @@ module Cure
 
       def transform(&block)
         @transformations.instance_exec(&block)
+      end
+
+      def metadata(&block)
+        @meta_data.instance_exec(&block)
       end
 
       def export(&block)
