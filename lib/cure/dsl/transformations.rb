@@ -20,7 +20,7 @@ module Cure
         candidate = Candidate.new(column, named_range: named_range)
         candidate.instance_exec(&block)
 
-        @candidates << Cure::Transformation::Candidate
+        @candidates << Transformation::Candidate
                        .new(candidate.column, named_range: candidate.named_range, options: options)
                        .with_translations(candidate.translations)
                        .with_no_match_translation(candidate.no_match_translation)
@@ -46,14 +46,14 @@ module Cure
           translation = Translation.new
           translation.instance_exec(&block)
 
-          @translations << Cure::Transformation::Translation.new(translation.strategy, translation.generator)
+          @translations << Transformation::Translation.new(translation.strategy, translation.generator)
         end
 
         def if_no_match(&block)
           no_match_translation = Translation.new
           no_match_translation.instance_exec(&block)
 
-          @no_match_translation = Cure::Transformation::Translation.new(
+          @no_match_translation = Transformation::Translation.new(
             no_match_translation.strategy,
             no_match_translation.generator
           )

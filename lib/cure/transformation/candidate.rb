@@ -39,7 +39,7 @@ module Cure
         @no_match_translation = nil
       end
 
-      # @param [String] source_value
+      # @param [String, Nil] source_value
       # @param [RowCtx] row_ctx
       # @return [String]
       # Transforms the existing value
