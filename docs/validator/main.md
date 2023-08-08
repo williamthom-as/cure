@@ -31,8 +31,9 @@ Original input:
 ```
 +------------+
 | new_column | 
++------------+
 | test       | <- Is valid
-| test value | <- Is invalid (length)
+| test value | <- Is invalid (too long)
 |            | <- Is invalid (null)
 +------------+
 ```

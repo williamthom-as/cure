@@ -16,18 +16,23 @@ may be as trivial as adding or removing a column, or *exploding* a JSON object (
 
 See below an example configuration block:
 
-```yaml
- build:
-   candidates:
-     - column: "column_name"
-       named_range: "default"
-       action:
-        ...
+```ruby
+build do
+  # White/Blacklist - do not need to provide column into candidate
+  candidate do
+    blacklist options: { columns: %w[col_a col_b] }
+    whitelist options: { columns: %w[col_c col_d] }
+  end
+
+  # Simple addition of new column
+  candidate(column: "full_name") { add options: { default_value: "ABC" } }
+  # Simple renaming of existing column
+  candidate(column: "Tags") { rename options: { new_name: "test" } }
+end
 ```
 
 - `column`: represents the column name, mandatory.
 - `named_range`: specifies the named range holding the column, if no named range has been set you can leave it blank.
-- `action`: represents the action that will be taken on the data, select from the list below for more information.
 
 ### Components
 
