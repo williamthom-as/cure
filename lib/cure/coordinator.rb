@@ -58,7 +58,12 @@ module Cure
       log_info "Beginning the extraction process..."
 
       extractor = Extract::Extractor.new({})
-      extractor.parse_csv(config.source_file)
+
+      file_count = 0
+      config.with_source_file do |file|
+        extractor.parse_csv(file, file_number: file_count)
+        file_count += 1
+      end
 
       log_info "...extraction complete"
     end

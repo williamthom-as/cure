@@ -29,7 +29,7 @@ module Cure
       print_spacer
       log_info "Cure Execution Plan".bold.underline
       log_info ""
-      log_info "Source file location: #{config.source_file.description}"
+      log_info "Source file location: #{config.source_files.map(&:description).join(",")}"
       log_info "Template file descriptor below"
 
       print_spacer
