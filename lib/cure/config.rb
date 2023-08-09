@@ -17,8 +17,8 @@ module Cure
     # @param [Cure::Configuration::CsvFileProxy] source_file
     # @param [Cure::Template] template
     # @return [Config]
-    def create_config(source_file, template)
-      Config.new(source_file, template)
+    def create_config(source_files, template)
+      Config.new(source_files, template)
     end
 
     # @param [Config] request_config
@@ -33,21 +33,27 @@ module Cure
     # and junk can be jammed in there?
     class Config
 
-      # @return [Cure::Configuration::CsvFileProxy]
-      attr_accessor :source_file
+      # @return Array<Cure::Configuration::CsvFileProxy>
+      attr_accessor :source_files
 
       # @return [Cure::Template]
       attr_accessor :template
 
-      # @param [Cure::Configuration::CsvFileProxy] source_file
+      # @param [Cure::Configuration::CsvFileProxy] source_files
       # @param [Cure::Template] template
-      def initialize(source_file, template)
-        @source_file = source_file
+      def initialize(source_files, template)
+        @source_files = source_files
         @template = template
       end
 
       def placeholders
         @template.transformations.placeholders || {}
+      end
+
+      def with_source_file(&block)
+        @source_files.each_with_index do |file, _idx|
+          file.with_file(&block)
+        end
       end
     end
 

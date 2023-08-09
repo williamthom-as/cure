@@ -173,6 +173,8 @@ module Cure
       private
 
       def init_db
+        return if @database_service.table_exist?(:variables)
+
         create_table(:variables, %w[name value])
       end
     end

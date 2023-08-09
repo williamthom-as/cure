@@ -14,7 +14,7 @@ RSpec.describe Cure::Launcher do
       main.setup
 
       config = main.config
-      expect(config.source_file.class).to eq(Cure::Configuration::CsvFileProxy)
+      expect(config.source_files[0].class).to eq(Cure::Configuration::CsvFileProxy)
       expect(config.template.class).to eq(Cure::Dsl::Template)
     end
   end

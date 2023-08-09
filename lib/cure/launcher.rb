@@ -19,10 +19,11 @@ module Cure
     # @return [Cure::Coordinator]
     attr_accessor :coordinator
 
-    def initialize
-      @coordinator = Coordinator.new
-      @planner = Planner.new
+    def initialize(coordinator: Coordinator.new, planner: Planner.new)
+      @coordinator = coordinator
+      @planner = planner
       @validated = false
+      @csv_files = []
     end
 
     # @param [Symbol] type
@@ -30,7 +31,7 @@ module Cure
     # @param [TrueClass,FalseClass] print_query_plan
     # @return [void]
     def process(type, obj, print_query_plan: true)
-      @csv_file = Cure::Configuration::CsvFileProxy.load_file(type, obj)
+      @csv_files << Cure::Configuration::CsvFileProxy.load_file(type, obj)
       run_export(print_query_plan: print_query_plan)
     end
 
@@ -49,7 +50,7 @@ module Cure
     # @param [Object] obj
     # @return [Cure::Main]
     def with_csv_file(type, obj)
-      @csv_file = Cure::Configuration::CsvFileProxy.load_file(type, obj)
+      @csv_files << Cure::Configuration::CsvFileProxy.load_file(type, obj)
       self
     end
 
@@ -76,10 +77,10 @@ module Cure
 
     # @return [Cure::Main]
     def setup
-      raise "CSV File is required" unless @csv_file
+      raise "CSV File(s) are required" if @csv_files.empty?
       raise "Template is required" unless @template
 
-      config = create_config(@csv_file, @template)
+      config = create_config(@csv_files, @template)
       register_config(config)
 
       init_database

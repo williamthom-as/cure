@@ -28,7 +28,7 @@ module Cure
       # @param [Array] candidate_nrs
       # @return [Array]
       def required_named_ranges(candidate_nrs)
-        @named_ranges = [Cure::Extract::NamedRange.default_named_range] if @named_ranges.empty?
+        # @named_ranges = [Cure::Extract::NamedRange.default_named_range(suffix: default_suffix)] if @named_ranges.empty?
         return @named_ranges if candidate_nrs.empty?
 
         @named_ranges.select { |nr| candidate_nrs.include?(nr.name) }

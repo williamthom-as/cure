@@ -30,28 +30,21 @@ module Cure
         @opts = opts
       end
 
-      # @param [Cure::Configuration::CsvFileProxy] file_proxy
-      def parse_csv(file_proxy)
-        nr_processor = named_range_processor
+      def parse_csv(file, file_number: 0)
+        nr_processor = named_range_processor(file_number: file_number)
         v_processor = variable_processor
         row_count = 0
 
-        print_time_spent("rcsv_load") do
-          print_memory_usage("rcsv_load") do
-            file_proxy.with_file do |file|
-              database_service.with_transaction do
-                CSV.foreach(file, liberal_parsing: true) do |row|
-                  nr_processor.process_row(row_count, row)
-                  v_processor.process_row(row_count, row)
-                  row_count += 1
+        database_service.with_transaction do
+          CSV.foreach(file, liberal_parsing: true) do |row|
+            nr_processor.process_row(row_count, row)
+            v_processor.process_row(row_count, row)
+            row_count += 1
 
-                  log_info "#{row_count} rows processed [#{Time.now}]" if (row_count % 1_000).zero?
-                end
-
-                nr_processor.after_process
-              end
-            end
+            log_info "#{row_count} rows processed [#{Time.now}]" if (row_count % 1_000).zero?
           end
+
+          nr_processor.after_process
         end
 
         log_info "[#{row_count}] total rows parsed from CSV"
@@ -60,9 +53,18 @@ module Cure
       private
 
       # @return [Cure::Extract::NamedRangeProcessor]
-      def named_range_processor
+      def named_range_processor(file_number: 0)
         candidates = config.template.transformations.candidates
-        candidate_nrs = config.template.extraction.required_named_ranges(candidates.map(&:named_range).uniq)
+        candidate_nrs = config.template.extraction.required_named_ranges(
+          candidates.map(&:named_range).uniq
+        )
+
+        if candidate_nrs.empty?
+          candidate_nrs = [
+            Cure::Extract::NamedRange.default_named_range(suffix: file_number)
+          ]
+        end
+
         Extract::NamedRangeProcessor.new(database_service, candidate_nrs)
       end
 

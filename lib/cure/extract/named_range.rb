@@ -4,8 +4,11 @@ module Cure
   module Extract
     class NamedRange
 
-      def self.default_named_range
-        new("_default", -1)
+      def self.default_named_range(suffix: 0)
+        name = "_default"
+        name = "_default_#{suffix}" if suffix.positive?
+
+        new(name, -1)
       end
 
       attr_reader :name, :section, :headers
