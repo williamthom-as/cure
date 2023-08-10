@@ -26,12 +26,15 @@ module Cure
       @csv_files = []
     end
 
+    # This will only support single file CSV processing, and is deprecated now
+    #
     # @param [Symbol] type
     # @param [Object] obj
     # @param [TrueClass,FalseClass] print_query_plan
     # @return [void]
+    # @deprecated
     def process(type, obj, print_query_plan: true)
-      @csv_files << Cure::Configuration::CsvFileProxy.load_file(type, obj)
+      @csv_files << Cure::Configuration::CsvFileProxy.load_file(type, obj, "_default")
       run_export(print_query_plan: print_query_plan)
     end
 
@@ -49,8 +52,12 @@ module Cure
     # @param [Symbol] type
     # @param [Object] obj
     # @return [Cure::Main]
-    def with_csv_file(type, obj)
-      @csv_files << Cure::Configuration::CsvFileProxy.load_file(type, obj)
+    def with_csv_file(type, obj, ref_name: nil)
+      if ref_name.nil?
+        ref_name = @csv_files.length.zero? ? "_default" : "_default_#{@csv_files.length}"
+      end
+
+      @csv_files << Cure::Configuration::CsvFileProxy.load_file(type, obj, ref_name)
       self
     end
 
@@ -61,6 +68,8 @@ module Cure
       dsl = Dsl::DslHandler.init(&block)
       @template = dsl.generate
 
+      load_csv_from_config
+
       self
     end
 
@@ -70,6 +79,9 @@ module Cure
 
       dsl = Dsl::DslHandler.init_from_content(contents, "cure")
       @template = dsl.generate
+
+      load_csv_from_config
+
       self
     end
 
@@ -94,6 +106,16 @@ module Cure
       raise "Not initialized" unless @validated
 
       @planner.process
+    end
+
+    private
+
+    def load_csv_from_config
+      return unless @template.source_files.has_candidates?
+
+      @template.source_files.candidates.each do |source|
+        with_csv_file(source.type, source.value, ref_name: source.ref_name)
+      end
     end
   end
 end

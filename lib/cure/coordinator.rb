@@ -60,8 +60,8 @@ module Cure
       extractor = Extract::Extractor.new({})
 
       file_count = 0
-      config.with_source_file do |file|
-        extractor.parse_csv(file, file_number: file_count)
+      config.with_source_file do |file, ref_name|
+        extractor.parse_csv(file, ref_name: ref_name)
         file_count += 1
       end
 

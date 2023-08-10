@@ -14,12 +14,12 @@ module Cure
         @variables = []
       end
 
-      def named_range(name:, at:, headers: nil)
-        @named_ranges << Cure::Extract::NamedRange.new(name, at, headers)
+      def named_range(name:, at:, headers: nil, ref_name: nil)
+        @named_ranges << Cure::Extract::NamedRange.new(name, at, headers: headers, ref_name: ref_name)
       end
 
-      def variable(name:, at:)
-        @variables << Cure::Extract::Variable.new(name, at)
+      def variable(name:, at:, ref_name: nil)
+        @variables << Cure::Extract::Variable.new(name, at, ref_name: ref_name)
       end
 
       # We only need to get the named ranges where the candidates have specified
@@ -27,11 +27,20 @@ module Cure
       #
       # @param [Array] candidate_nrs
       # @return [Array]
-      def required_named_ranges(candidate_nrs)
-        # @named_ranges = [Cure::Extract::NamedRange.default_named_range(suffix: default_suffix)] if @named_ranges.empty?
-        return @named_ranges if candidate_nrs.empty?
+      def required_named_ranges(candidate_nrs, ref_name: "_default")
+        # This now needs to take support multiple files. We don't want named ranges
+        # for different files
+        return @named_ranges if candidate_nrs.empty? && ref_name == "default"
 
-        @named_ranges.select { |nr| candidate_nrs.include?(nr.name) }
+        @named_ranges.select { |nr| candidate_nrs.include?(nr.name) || nr.ref_name == ref_name }
+      end
+
+      def required_variables(ref_name: "_default")
+        # This now needs to take support multiple files. We don't want named ranges
+        # for different files
+        return @variables if ref_name == "_default"
+
+        @variables.select { |v| v.ref_name == ref_name }
       end
     end
   end

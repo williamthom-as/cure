@@ -6,9 +6,9 @@
 Cure is a versatile tool designed to handle a wide range of CSV transformations. It may take 
 time to get familiar with all the features, but once you do, it is capable of performing a wide range of tasks.
 
-Cure enables you to extract, clean, transform, remove, anonymize, replace, and manipulate data in entire spreadsheets
-or specific sections. It operates in memory by default and can be integrated into existing workflows or 
-controlled via the CLI.
+Cure enables you to validate, extract, merge, clean, transform, remove, anonymize, replace, and manipulate data in 
+entire spreadsheets (or multiple) or specific sections. It operates in memory by default and can be integrated into 
+existing workflows or controlled via the CLI.
 
 **Please note**: Cure is under active development, is poorly documented (at the moment) and will have frequent 
 breaking changes. Use at your own risk!
@@ -22,6 +22,7 @@ Check out here for some real world [examples](docs/examples/examples.md).
 - Perform complex transformations on values according to specific rules.
 - Unpack JSON values into individual columns per key.
 - Process large files sequentially while retaining variable history.
+- Merge two or more CSV files together.
 
 ## When not to use
 
@@ -87,7 +88,7 @@ cure.process(:path, "location_to_file.csv")
 
 ### Requirements
 
-  - Ruby 2.6 or above
+  - Ruby 3.0 or above
   - SQLite3
 
 Install it yourself as:
