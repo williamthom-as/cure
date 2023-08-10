@@ -69,7 +69,6 @@ RSpec.describe Cure::Coordinator do
             csv file_name: "aws", directory: "/tmp/cure"
           end
         end
-
         main.setup
 
         coordinator = Cure::Coordinator.new

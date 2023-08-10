@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-csv file: "location", encoding: "utf-8"
+sources do
+  csv :pathname, Pathname.new("spec/cure/e2e/input/simple_names.csv"), "names"
+  csv :pathname, Pathname.new("spec/cure/e2e/input/simple_ages.csv"), "ages"
+end
 
 extract do
   named_range name: "section_1", at: "B2:G6"

@@ -30,9 +30,9 @@ module Cure
         @opts = opts
       end
 
-      def parse_csv(file, file_number: 0)
-        nr_processor = named_range_processor(file_number: file_number)
-        v_processor = variable_processor
+      def parse_csv(file, ref_name:)
+        nr_processor = named_range_processor(ref_name: ref_name)
+        v_processor = variable_processor(ref_name: ref_name)
         row_count = 0
 
         database_service.with_transaction do
@@ -53,15 +53,16 @@ module Cure
       private
 
       # @return [Cure::Extract::NamedRangeProcessor]
-      def named_range_processor(file_number: 0)
+      def named_range_processor(ref_name:)
         candidates = config.template.transformations.candidates
         candidate_nrs = config.template.extraction.required_named_ranges(
-          candidates.map(&:named_range).uniq
+          candidates.map(&:named_range).uniq,
+          ref_name: ref_name
         )
 
         if candidate_nrs.empty?
           candidate_nrs = [
-            Cure::Extract::NamedRange.default_named_range(suffix: file_number)
+            Cure::Extract::NamedRange.default_named_range(name: ref_name)
           ]
         end
 
@@ -69,8 +70,8 @@ module Cure
       end
 
       # @return [Cure::Extract::VariableProcessor]
-      def variable_processor
-        variables = config.template.extraction.variables
+      def variable_processor(ref_name:)
+        variables = config.template.extraction.required_variables(ref_name: ref_name)
         Extract::VariableProcessor.new(database_service, variables || [])
       end
     end

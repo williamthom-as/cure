@@ -91,7 +91,7 @@ RSpec.describe Cure::Coordinator do
       expect(variables.map { |x| x[:value] }).to eq(%w[new_value new_value_2])
 
       expect(coordinator.database_service.table_exists?("section_1")).to eq(true)
-      expect(coordinator.database_service.table_exists?("section_2")).to eq(false)
+      expect(coordinator.database_service.table_exists?("section_2")).to eq(true)
       expect(coordinator.database_service.table_exists?("section_3")).to eq(true)
 
       expect(coordinator.database_service.database[:section_1].count).to eq(4)

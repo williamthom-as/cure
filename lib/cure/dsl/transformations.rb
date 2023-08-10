@@ -32,11 +32,12 @@ module Cure
 
       class Candidate
 
-        attr_reader :column, :named_range, :translations, :no_match_translation
+        attr_reader :column, :named_range, :ref, :translations, :no_match_translation
 
-        def initialize(column, named_range:)
+        def initialize(column, named_range:, ref: "_default")
           @column = column
           @named_range = named_range
+          @ref = ref
 
           @translations = []
           @no_match_translation = nil

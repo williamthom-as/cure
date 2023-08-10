@@ -3,12 +3,13 @@
 module Cure
   module Extract
     class Variable
-      attr_reader :name, :location
+      attr_reader :name, :location, :ref_name
 
-      def initialize(name, location)
+      def initialize(name, location, ref_name: "_default")
         @name = name
         @location = [Extract::CsvLookup.position_for_letter(location),
                      Extract::CsvLookup.position_for_digit(location)]
+        @ref_name = ref_name
       end
 
       def row_in_bounds?(row_idx)

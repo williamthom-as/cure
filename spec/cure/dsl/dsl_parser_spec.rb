@@ -162,6 +162,21 @@ RSpec.describe Cure::Dsl::DslHandler do
       expect(result.meta_data._additional).to eq({a: "b"})
     end
 
+    it "should return valid source files from dsl" do
+      doc = <<-TEMPLATE
+        sources do
+          csv :pathname, Pathname.new("spec/cure/e2e/input/simple_names.csv"), ref_name: "names"
+          csv :pathname, Pathname.new("spec/cure/e2e/input/simple_ages.csv"), ref_name: "ages"
+        end
+      TEMPLATE
+
+      template = described_class.init_from_content(doc, "test_file")
+      result = template.generate
+
+      expect(result.source_files.class).to eq(Cure::Dsl::SourceFiles)
+      expect(result.source_files.candidates.size).to eq(2)
+    end
+
     it "should run from block" do
       template = described_class.init do
         extract do

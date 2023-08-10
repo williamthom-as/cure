@@ -4,14 +4,13 @@ module Cure
   module Extract
     class NamedRange
 
-      def self.default_named_range(suffix: 0)
-        name = "_default"
-        name = "_default_#{suffix}" if suffix.positive?
+      def self.default_named_range(name: nil)
+        name ||= "_default"
 
         new(name, -1)
       end
 
-      attr_reader :name, :section, :headers
+      attr_reader :name, :section, :headers, :ref_name
 
       # This is complex purely to support headers not being the 0th row.
       # A template can specify that the headers row be completely disconnected
@@ -19,10 +18,11 @@ module Cure
       # - Content bounds
       # - Header bounds
       # - Sheet bounds (headers AND content)
-      def initialize(name, section, headers=nil)
+      def initialize(name, section, headers: nil, ref_name: nil)
         @name = name
         @section = Extract::CsvLookup.array_position_lookup(section)
         @headers = calculate_headers(headers)
+        @ref_name = ref_name || "_default"
       end
 
       # @param [Integer] row_idx

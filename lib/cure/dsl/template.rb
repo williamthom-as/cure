@@ -7,6 +7,7 @@ require "cure/dsl/transformations"
 require "cure/dsl/exporters"
 require "cure/dsl/queries"
 require "cure/dsl/metadata"
+require "cure/dsl/source_files"
 
 module Cure
   module Dsl
@@ -71,7 +72,11 @@ module Cure
       # @return [Dsl::Metadata]
       attr_reader :meta_data
 
+      # @return [Dsl::SourceFiles]
+      attr_reader :source_files
+
       def initialize
+        @source_files = SourceFiles.new
         @extraction = Extraction.new
         @builder = Builder.new
         @validator = Validator.new
@@ -79,6 +84,12 @@ module Cure
         @exporters = Exporters.new
         @queries = Queries.new
         @meta_data = Metadata.new
+      end
+
+      private
+
+      def sources(&block)
+        @source_files.instance_exec(&block)
       end
 
       def extract(&block)

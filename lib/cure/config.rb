@@ -77,15 +77,15 @@ module Cure
       attr_reader :csv_handler
 
       # @return [CsvFileProxy]
-      def self.load_file(type, obj)
+      def self.load_file(type, obj, ref_name)
         handler =
           case type
           when :file
-            FileHandler.new(obj)
+            FileHandler.new(obj, ref_name)
           when :file_contents
-            FileContentsHandler.new(obj)
+            FileContentsHandler.new(obj, ref_name)
           when :path, :pathname
-            PathnameHandler.new(obj)
+            PathnameHandler.new(obj, ref_name)
           else
             raise "Invalid file type handler [#{type}]"
           end
@@ -108,10 +108,11 @@ module Cure
     end
 
     class DefaultFileHandler
-      attr_reader :type
+      attr_reader :type, :ref_name
 
-      def initialize(type)
+      def initialize(type, ref_name)
         @type = type
+        @ref_name = ref_name
       end
 
       def with_file(&_block)
@@ -127,13 +128,13 @@ module Cure
       attr_accessor :pathname
 
       # @param [Pathname] pathname
-      def initialize(pathname)
-        super(:pathname)
+      def initialize(pathname, ref_name)
+        super(:pathname, ref_name)
         @pathname = pathname
       end
 
       def with_file(&_block)
-        yield @pathname
+        yield @pathname, @ref_name
       end
 
       def description
@@ -146,13 +147,13 @@ module Cure
       attr_accessor :file
 
       # @param [File] file
-      def initialize(file)
-        super(:file)
+      def initialize(file, ref_name)
+        super(:file, ref_name)
         @file = file
       end
 
       def with_file(&_block)
-        yield @file
+        yield @file, @ref_name
 
         @file&.close
       end
@@ -167,13 +168,13 @@ module Cure
       attr_accessor :file_contents
 
       # @param [String] file_contents
-      def initialize(file_contents)
-        super(:file_contents)
+      def initialize(file_contents, ref_name)
+        super(:file_contents, ref_name)
         @file_contents = file_contents
       end
 
       def with_file(&_block)
-        yield @file_contents
+        yield @file_contents, @ref_name
 
         @file_contents&.close
       end
