@@ -54,11 +54,7 @@ module Cure
 
       # @return [Cure::Extract::NamedRangeProcessor]
       def named_range_processor(ref_name:)
-        candidates = config.template.transformations.candidates
-        candidate_nrs = config.template.extraction.required_named_ranges(
-          candidates.map(&:named_range).uniq,
-          ref_name: ref_name
-        )
+        candidate_nrs = config.template.extraction.required_named_ranges(ref_name: ref_name)
 
         if candidate_nrs.empty?
           candidate_nrs = [

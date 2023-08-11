@@ -59,11 +59,11 @@ module Cure
 
     # @param [Symbol,String] tbl_name
     # @param [Array] columns
-    def create_table(tbl_name, columns)
+    def create_table(tbl_name, columns, auto_increment: true)
       tbl_name = tbl_name.to_sym if tbl_name.class != Symbol
 
       @database.create_table tbl_name do
-        primary_key :_id
+        primary_key :_id, auto_increment: auto_increment
         columns.each do |col_name|
           column col_name.to_sym, String
         end

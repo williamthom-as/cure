@@ -24,21 +24,38 @@ RSpec.describe Cure::Coordinator do
             named_range name: "names", at: "C3:E5", ref_name: NAMES_SHEET
             named_range name: "ages", at: "C3:E5", ref_name: AGES_SHEET
 
-            # variable name: "names_total", at: "E1", ref_name: NAMES_SHEET
-            # variable name: "ages_total", at: "E1", ref_name: AGES_SHEET
+            variable name: "names_total", at: "E1", ref_name: NAMES_SHEET
+            variable name: "ages_total", at: "E1", ref_name: AGES_SHEET
+          end
+
+          build do
+            candidate(column: "names_total", named_range: "names") { add options: { default_value: "-" } }
+            candidate(column: "ages_total", named_range: "names") { add options: { default_value: "-" } }
           end
 
           query do
             with named_range: "names", query: <<-SQL
               SELECT 
-                names.id, 
+                names.id,
                 first_name,
                 last_name,
                 color,
-                age
+                age,
+                names_total,
+                ages_total
               FROM names
               INNER JOIN ages on names.id = ages.id
             SQL
+          end
+
+          transform do
+            candidate named_range: "names", column: "names_total" do
+              with_translation { replace("full", force_replace: true).with("variable", name: "names_total") }
+            end
+
+            candidate named_range: "names", column: "ages_total" do
+              with_translation { replace("full", force_replace: true).with("variable", name: "ages_total") }
+            end
           end
 
           export do
