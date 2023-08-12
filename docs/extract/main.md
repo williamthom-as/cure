@@ -1,4 +1,4 @@
-**Extract** > Build > Transform > Export
+Source > **Extract** > Validate > Build > Query > Transform > Export
 
 Extract
 =======
@@ -27,18 +27,24 @@ See below an example configuration block:
 
 ### Example
 
-```yaml
-extraction:
-  named_ranges:
-    - name: main
-      section: B2:D4
-    - name: secondary
-      section: A2:D3 
-  variables:
-    - name: my_string
-      type: single_field
-      location: E5
+```ruby
+extract do
+  named_range name: "main", at: "B2:D4", headers: "B2:B4", ref_name: "_default"
+  named_range name: "secondary", at: "A2:D3", ref_name: "_default"
+  named_range name: "full", at: -1, ref_name: "_default"
+  
+  variable name: "my_string", at: "E5", ref_name: "_default"
+end
 ```
+
+- `name`: represents what you want to call the named range, mandatory.
+- `at`: specifies the named range location in the sheet. -1 will collect the entire sheet.
+- `headers`: specifies the named range location of the headers. Leave off unless they are not on the top row.
+- `ref_name`: specifies the file to use to extract the named range. If you are only processing a single file you 
+do not need to supply (default ref_name is "_default").
+
+If you do not supply any named range, a default named range is given "_default" which encompasses the entire sheet.
+You do not need to supply this in other parts of the template as if they are not set, they will default to "_default".
 
 Original input:
 ```
@@ -66,6 +72,16 @@ changes to:
 | a2 | b2 | c2 | d2 |
 | a3 | b3 | c3 | d3 |
 +----+----+----+----+
+
++----+----+----+----+----+
+| full                   |
++----+----+----+----+----+
+| a1 | b1 | c1 | d1 | e1 |
+| a2 | b2 | c2 | d2 | e2 |
+| a3 | b3 | c3 | d3 | e3 |
+| a4 | b4 | c4 | d4 | e4 |
+| a5 | b5 | c5 | d5 | e5 |
++----+----+----+----+----+
 
 variables 
   - my_string => "e5" 

@@ -1,3 +1,11 @@
+metadata do
+  # ...
+end
+
+sources do
+  # ...
+end
+
 extract do
   # ...
 end

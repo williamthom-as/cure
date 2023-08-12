@@ -1,6 +1,6 @@
-**Validator** > Build > Validate
+Source > Extract > **Validate** > Build > Query > Transform > Export
 
-Validator
+Validate
 =======
 
 ### About

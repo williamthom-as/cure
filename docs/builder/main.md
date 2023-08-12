@@ -1,4 +1,4 @@
-Extract > **Build** > Transform > Export 
+Source > Extract > Validate > **Build** > Query > Transform > Export
 
 Build
 =======
