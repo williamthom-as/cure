@@ -3,8 +3,8 @@
 ![run tests](https://github.com/williamthom-as/cure/actions/workflows/rspec.yml/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/cure.svg)](https://badge.fury.io/rb/cure)
 
-Cure is a versatile tool designed to handle a wide range of CSV transformations. It may take 
-time to get familiar with all the features, but once you do, it is capable of performing a wide range of tasks.
+Cure is a versatile tool designed to handle a wide range of CSV operations. It may take time to get familiar with 
+all the features, but once you do, it is capable of performing a wide range of tasks.
 
 Cure enables you to validate, extract, merge, clean, transform, remove, anonymize, replace, and manipulate data in 
 entire spreadsheets (or multiple) or specific sections. It operates in memory by default and can be integrated into 
@@ -17,12 +17,178 @@ Check out here for some real world [examples](docs/examples/examples.md).
 
 ## Use Cases
 
-- Anonymize and transform personal data in a CSV to prepare it for a public demo environments.
+Cure can be used for simple tasks like:
+- Change one 10,000 line CSV file into 10 1,000 line files.
+- Split one CSV file into multiple files based on a filter (ex. M/F data in a single file into one M file and one F file).
 - Extract specific parts of a CSV and discard the remaining data.
+- Validate a CSV has the expected data against a spec.
+- Fix spelling mistakes.
+
+.. and more complex ones like:
+- Anonymize and transform personal data in a CSV to prepare it for a public demo environments.
 - Perform complex transformations on values according to specific rules.
 - Unpack JSON values into individual columns per key.
 - Process large files sequentially while retaining variable history.
-- Merge two or more CSV files together.
+- Merge two or more CSV files (or parts thereof) together.
+
+### In Code
+Cure can be used as part of your existing application. It is configured using a DSL that can either be inline,
+or as a file. Check out [docs](docs/README.md) for more information.
+
+## Examples
+
+### Chunk CSV files
+
+This is a simple example that takes a sheet and exports it into multiple sheets of 10,000 rows max.
+
+```ruby
+require "cure"
+
+handler = Cure.init do
+  export do
+    chunk_csv file_name_prefix: "my_sheet", directory: "/tmp/cure", chunk_size: 10_000
+  end
+end
+
+handler.process(:path, "path/to/my_sheet.csv")
+```
+
+### Filter single file into multiple
+
+This example takes in a sheet of male and female data and exports it into two files based on gender.
+
+```ruby
+require "cure"
+
+handler = Cure.init do
+  extract do
+    named_range name: "male", at: -1
+    named_range name: "female", at: -1
+  end
+
+  query do
+    with named_range: "female", query: <<-SQL
+      SELECT
+        *
+      FROM female
+      WHERE
+        Sex = 'F' AND strftime('%Y', Date) > '2014'
+      ORDER BY Date DESC
+    SQL
+
+    with named_range: "male", query: <<-SQL
+      SELECT
+        *
+      FROM male
+      WHERE
+        Sex = 'M' AND strftime('%Y', Date) > '2014'
+      ORDER BY Date DESC
+    SQL
+  end
+
+  export do
+    csv file_name: "male", directory: "/tmp/cure", named_range: "male"
+    csv file_name: "female", directory: "/tmp/cure", named_range: "female"
+  end
+end
+
+handler.process(:path, "path/to/my_sheet.csv")
+```
+
+
+### Validate data
+
+This example validates that a sheet has valid columns. It will throw an error if it isn't valid.
+
+```ruby
+require "cure"
+
+handler = Cure.init do
+  validate do
+    candidate column: "rating", options: { fail_on_error: true } do
+      with_rule :not_null
+      with_rule :length, { min: 0, max: 5 }
+    end
+
+    candidate column: "phone_number", options: { fail_on_error: true } do
+      with_rule :custom, { proc: proc { |val| val =~ /^04\d{8}$/ } }
+    end
+  end
+end
+
+handler.process(:path, "path/to/my_sheet.csv")
+```
+
+### Transform data
+
+This example anonymizes private data found in a cloud invoice. Note that when the existing account number is found
+in any column, it is replaced with the same value, maintaining referential integrity whilst being anonymized.
+
+You can see the [before](spec/cure/e2e/input/aws_billing_input.csv) and [after](spec/cure/e2e/output/aws_billing_output.csv) CSVs 
+made from this template by clicking on the links.
+
+```ruby
+require "cure"
+
+handler = Cure.init do
+  build do
+    candidate do
+      whitelist options: {
+        columns: %w[
+          bill/BillingEntity
+          bill/PayerAccountId
+          bill/BillingPeriodStartDate
+          bill/BillingPeriodEndDate
+          lineItem/UsageAccountId
+          lineItem/LineItemType
+          lineItem/UsageStartDate
+          lineItem/UsageEndDate
+          lineItem/UsageType
+          lineItem/ResourceId
+          lineItem/ProductCode
+          lineItem/UsageAmount
+          lineItem/CurrencyCode
+        ]
+      }
+    end
+  end
+
+  rot13_proc = proc { |source, _ctx|
+    source.gsub(/[^a-zA-Z0-9]/, '').tr('A-Za-z', 'N-ZA-Mn-za-m')
+  }
+
+  transform do
+    candidate column: "bill/PayerAccountId" do
+      with_translation { replace("full").with("placeholder", name: :account_number) }
+    end
+
+    candidate column: "lineItem/UsageAccountId" do
+      with_translation { replace("full").with("number", length: 10) }
+    end
+
+    candidate column: "lineItem/ResourceId", options: {ignore_empty: true} do
+      # If there is a match (i-[my-group]), replace just the match group with a hex string of 10 length
+      with_translation { replace("regex", regex_cg: "^i-(.*)").with("proc", execute: rot13_proc) }
+
+      # If the string contains the account number, replace with the account_number placeholder.
+      with_translation { replace("contain", match: "1234567890").with("placeholder", name: :account_number) }
+
+      # If no match is found, replace the whole match with a prefix hidden_ along with a random 10 char hex string
+      if_no_match { replace("full").with("proc", execute: rot13_proc) }
+    end
+
+    # Hardcoded values that we may wish to reference
+    place_holders({account_number: 987_654_321})
+  end
+
+  export do
+    terminal title: "Preview", limit_rows: 20
+    csv file_name: "aws", directory: "/tmp/cure"
+  end
+end
+
+handler.process(:path, "path/to/my_sheet.csv")
+```
 
 ## When not to use
 
@@ -41,48 +207,12 @@ Cure makes it possible to perform more aggressive transformations, which may req
 want to use Cure to process large files, you can choose to persist the datastore to disk instead of in memory, which 
 may have a slight impact on performance.
 
-## Example
+## How it works
 
-### In Code
-Cure can be used as part of your existing application. It is configured using a DSL that can either be inline,
-or as a file. Check out [here](docs/README.md) for more information, including examples.
-
-```ruby
-require "cure"
-
-# Inline initialisation
-
-cure = Cure.init do
-  # Optional, used to select a part of a frame or allocate variables from single cells
-  extract do
-    named_range name: "section_1", at: "B2:G6", headers: "B2:B6"
-    variable name: "new_field", location: "A16"
-  end
-
-  # Optional, used to add/remove/copy/rename/explode columns from frames.
-  build do
-    candidate(column: "new_column", named_range: "section_1") { add }
-  end
-  
-  # Optional, used to transform values, each candidate can have multiple transforms.
-  # If no match is found, if_no_match will fire.
-  transform do
-    candidate column: "new_column", named_range: "section_1" do
-      with_translation { replace("regex", regex_cg: "^vol-(.*)").with("variable", name: "new_field") }
-      with_translation { replace("split", "token": ":", "index": 4).with("placeholder", name: "key2") }
-      if_no_match { replace("full").with("variable", name: "new_field") }
-    end
-  end
-
-  # Required, define exporters to export modified frames.
-  export do
-    terminal named_range: "section_1", title: "Preview", limit_rows: 5
-    csv named_range: "section_1", file: "/tmp/cure/section_1.csv"
-  end
-end
-
-cure.process(:path, "location_to_file.csv")
-```
+Cure operates by extracting complete CSV files or specific portions of them into user defined named ranges (one or more 
+cells of tabular data), which are subsequently inserted into SQLite tables. This allows for the ability to join or 
+manipulate rows with SQL, *if you need it*. With data segmented into separate named ranges, multiple transforms and 
+exports can be performed in a single pass.
 
 ## Installation
 
