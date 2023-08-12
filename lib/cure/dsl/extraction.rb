@@ -22,17 +22,14 @@ module Cure
         @variables << Cure::Extract::Variable.new(name, at, ref_name: ref_name)
       end
 
-      # We only need to get the named ranges where the candidates have specified
-      # interest in them.
-      #
-      # @param [Array] candidate_nrs
+      # @param [String] ref_name
       # @return [Array]
-      def required_named_ranges(candidate_nrs, ref_name: "_default")
+      def required_named_ranges(ref_name: "_default")
         # This now needs to take support multiple files. We don't want named ranges
         # for different files
-        return @named_ranges if candidate_nrs.empty? && ref_name == "default"
+        return @named_ranges if ref_name == "default"
 
-        @named_ranges.select { |nr| candidate_nrs.include?(nr.name) || nr.ref_name == ref_name }
+        @named_ranges.select { |nr| nr.ref_name == ref_name }
       end
 
       def required_variables(ref_name: "_default")

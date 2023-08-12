@@ -160,7 +160,7 @@ module Cure
         @candidate_variables.each do |cv|
           next unless cv.row_in_bounds?(row_idx)
 
-          insert_record(:variables, [cv.name, csv_row[cv.location.first]].unshift(@processed + 1))
+          insert_record(:variables, [nil, cv.name, csv_row[cv.location.first]])
           @processed += 1
         end
       end
