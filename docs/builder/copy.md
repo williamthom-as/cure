@@ -12,33 +12,24 @@ Copy a column from the spreadsheet, useful if you want to transform or manipulat
 
 ### Full Configuration
 
-```yaml
-build:
-  candidates:
-    - column: "col_b"
-      named_range: "default"
-      action:
-        type: "copy"
-        options:
-          copy_column: "col_b_copy"
+```ruby
+build do
+  candidate(column: "col_b", named_range: "_default") { copy options: { to_column: "col_b_copy" } }
+end
 ```
-- 
-- `column`: represents the column name that data will be copied from, mandatory.
+- `column`: represents the column name, mandatory.
 - `named_range`: specifies the named range holding the column, if no named range has been set you can leave it blank.
-- `action`: represents the action that will be taken on the data.
-  - `type`: specifies the type of action, in this instance is remove.
   - `options`:
-    - `copy_column`: column will be renamed to this value if set, otherwise will default to <column>_copy.
+    - `to_column`: column will be renamed to this value if set, otherwise will default to <column>_copy.
     
 ### Example
 
-```yaml
-build:
-  candidates:
-    - column: "col_a" 
-      action:
-        type: "copy"
+```ruby
+build do
+  candidate(column: "col_a") { copy options: { to_column: "col_a_copy" } }
+end
 ```
+
 Original input:
 ```
 +-------+

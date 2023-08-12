@@ -40,4 +40,4 @@ There are four different types of operations you can perform in this step;
 - [add](add.md)
 - [remove](remove.md)
 - [copy](copy.md)
-- [explode](explode.md)
+- [black_white_list](black_white_list.md)

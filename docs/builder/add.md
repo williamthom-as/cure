@@ -14,32 +14,22 @@ date, but you want to add that to each row.
 
 ### Full Configuration
 
-```yaml
-build:
-  candidates:
-    - column: "column_name"
-      named_range: "default"
-      action:
-        type: "add"
-        options:
-         value: "n/a" 
+```ruby
+build do
+  candidate(column: "new_column", named_range: "mysheet") { add options: { default_value: "-" } }
+end
 ```
-- 
 - `column`: represents the column name, mandatory.
 - `named_range`: specifies the named range holding the column, if no named range has been set you can leave it blank.
-- `action`: represents the action that will be taken on the data
-  - `type`: specifies the type of action, in this instance is add 
   - `options`:
     - `value`: not mandatory, if provided will add to the initial row value. 
 
 ### Example
 
-```yaml
-build:
-  candidates:
-    - column: "col_b" 
-      action:
-        type: "add"
+```ruby
+build do
+  candidate(column: "col_b") { add }
+end
 ```
 
 Original input: 

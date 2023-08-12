@@ -12,29 +12,22 @@ Removes a column from the spreadsheet, useful if you want to remove entire colum
 
 ### Full Configuration
 
-```yaml
-build:
-  candidates:
-    - column: "column_name"
-      named_range: "default"
-      action:
-        type: "remove"
+```ruby
+build do
+  candidate(column: "remove_this", named_range: "mysheet") { remove }
+end
 ```
-- 
 - `column`: represents the column name, mandatory.
 - `named_range`: specifies the named range holding the column, if no named range has been set you can leave it blank.
-- `action`: represents the action that will be taken on the data.
-  - `type`: specifies the type of action, in this instance is remove.
 
 ### Example
 
-```yaml
-build:
-  candidates:
-    - column: "col_b" 
-      action:
-        type: "remove"
+```ruby
+build do
+  candidate(column: "col_b") { remove }
+end
 ```
+
 Original input:
 ```
 +-------+-------+
