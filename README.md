@@ -3,37 +3,78 @@
 ![run tests](https://github.com/williamthom-as/cure/actions/workflows/rspec.yml/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/cure.svg)](https://badge.fury.io/rb/cure)
 
-Cure is a versatile tool designed to handle a wide range of CSV operations. It may take time to get familiar with 
-all the features, but once you do, it is capable of performing a wide range of tasks.
+Cure is a versatile tool designed to handle a wide range of tasks for importing or manipulating CSV data. 
+It may take time to get familiar with all the features, but once you do, it is capable of performing a wide 
+range of tasks.
 
-Cure enables you to validate, extract, merge, clean, transform, remove, anonymize, replace, and manipulate data in 
-entire spreadsheets (or multiple) or specific sections. It operates in memory by default and can be integrated into 
-existing workflows or controlled via the CLI.
+Cure can be used as an end-to-end CSV importing tool, or for when you just want to validate, extract, merge, 
+clean, transform, remove, anonymize, replace, or manipulate tabular data. It operates in memory by default and 
+can be integrated into existing workflows or controlled via the CLI.
 
 **Please note**: Cure is under active development, is poorly documented (at the moment) and will have frequent 
 breaking changes. Use at your own risk!
 
-Check out here for some real world [examples](docs/examples/examples.md).
+Check out here for some real world [examples](docs/examples/examples.md), or view the [documentation](docs/README.md).
 
 ## Use Cases
 
+Other CSV utils or importers often make assumptions that CSV data is nicely formatted tabular data. However, in the
+real world you may get files don't follow a standard [header,row 1,row 2,row n] format. With Cure, you can load
+specific parts of a file, or join multiple files together and treat them as one. See *Multi Row Grouping* in
+[examples](docs/examples/examples.md) for more.
+
 Cure can be used for simple tasks like:
-- Change one 10,000 line CSV file into 10 1,000 line files.
+- Import data from a spreadsheet into a database.
 - Split one CSV file into multiple files based on a filter (ex. M/F data in a single file into one M file and one F file).
+- Change one 10,000 line CSV file into 10 1,000 line files.
 - Extract specific parts of a CSV and discard the remaining data.
 - Validate a CSV has the expected data against a spec.
-- Fix spelling mistakes.
+- Fix data mistakes.
 
-.. and more complex ones like:
+... and more complex ones like:
 - Anonymize and transform personal data in a CSV to prepare it for a public demo environments.
 - Perform complex transformations on values according to specific rules.
 - Unpack JSON values into individual columns per key.
 - Process large files sequentially while retaining variable history.
 - Merge two or more CSV files (or parts thereof) together.
 
+### Performance
+
+Cure can read and export 
+
 ### In Code
 Cure can be used as part of your existing application. It is configured using a DSL that can either be inline,
 or as a file. Check out [docs](docs/README.md) for more information.
+
+## When not to use
+
+Cure processes CSV files as a whole. Some of its features require a complete parse of the file to extract the necessary
+data before transforming it.
+
+These features include:
+
+- Variable extraction (for example, extracting a value from A1 and adding it to each row).
+- Non-zero indexed headers (for example, taking values from rows 4 to 10 and using row 2 as the source header row).
+- Expanding JSON fields into columns (for example, if row 1 has values [{"a":1, "b":2}], and row 2 has [{"c":3}], each
+  row needs columns A, B, C, but row 1 doesn't know that until row 2).
+
+If you have large datasets of streamable CSV data, there are more efficient and performant tools available. However,
+Cure makes it possible to perform more aggressive transformations, which may require more memory usage. If you still
+want to use Cure to process large files, you can choose to persist the datastore to disk instead of in memory, which
+may have a slight impact on performance.
+
+## How it works
+
+The library provides designated hooks for each distinct phase in the data processing pipeline
+
+`Extract -> Validate -> Build -> Query -> Transform -> Export`
+
+You can choose to opt in to as many or as few stages as needed, no steps are mandatory.
+
+Cure operates by extracting complete CSV files or specific portions of them into user defined named ranges (one or more
+cells of tabular data), which are subsequently inserted into SQLite tables. This allows for the ability to join or
+manipulate rows with SQL, *if you need it*. With data segmented into separate named ranges, multiple transforms and
+exports can be performed in a single pass.
 
 ## Examples
 
@@ -94,7 +135,6 @@ end
 
 handler.process(:path, "path/to/my_sheet.csv")
 ```
-
 
 ### Validate data
 
@@ -190,36 +230,12 @@ end
 handler.process(:path, "path/to/my_sheet.csv")
 ```
 
-## When not to use
-
-Cure processes CSV files as a whole. Some of its features require a complete parse of the file to extract the necessary 
-data before transforming it. 
-
-These features include:
-
-- Variable extraction (for example, extracting a value from A1 and adding it to each row).
-- Non-zero indexed headers (for example, taking values from rows 4 to 10 and using row 2 as the source header row).
-- Expanding JSON fields into columns (for example, if row 1 has values [{"a":1, "b":2}], and row 2 has [{"c":3}], each 
-row needs columns A, B, C, but row 1 doesn't know that until row 2).
-
-If you have large datasets of streamable CSV data, there are more efficient and performant tools available. However, 
-Cure makes it possible to perform more aggressive transformations, which may require more memory usage. If you still 
-want to use Cure to process large files, you can choose to persist the datastore to disk instead of in memory, which 
-may have a slight impact on performance.
-
-## How it works
-
-Cure operates by extracting complete CSV files or specific portions of them into user defined named ranges (one or more 
-cells of tabular data), which are subsequently inserted into SQLite tables. This allows for the ability to join or 
-manipulate rows with SQL, *if you need it*. With data segmented into separate named ranges, multiple transforms and 
-exports can be performed in a single pass.
-
 ## Installation
 
 ### Requirements
 
-  - Ruby 3.0 or above
-  - SQLite3
+- Ruby 3.0 or above
+- SQLite3
 
 Install it yourself as:
 
