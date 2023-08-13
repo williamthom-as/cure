@@ -38,10 +38,6 @@ Cure can be used for simple tasks like:
 - Process large files sequentially while retaining variable history.
 - Merge two or more CSV files (or parts thereof) together.
 
-### Performance
-
-Cure can read and export 
-
 ### In Code
 Cure can be used as part of your existing application. It is configured using a DSL that can either be inline,
 or as a file. Check out [docs](docs/README.md) for more information.
