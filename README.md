@@ -20,8 +20,8 @@ Check out here for some real world [examples](docs/examples/examples.md), or vie
 
 Other CSV utils or importers often make assumptions that CSV data is nicely formatted tabular data. However, in the
 real world you may get files don't follow a standard [header,row 1,row 2,row n] format. With Cure, you can load
-specific parts of a file, or join multiple files together and treat them as one. See *Multi Row Grouping* in
-[examples](docs/examples/examples.md) for more.
+specific parts of a file, or join multiple files together and treat them as one. See this
+[blog post](http://www.williamthom.as/csv/ruby/2023/04/06/transforming-csvs-with-cure.html) for a detailed example.
 
 Cure can be used for simple tasks like:
 - Import data from a spreadsheet into a database.
