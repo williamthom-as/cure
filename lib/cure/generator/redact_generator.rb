@@ -10,7 +10,7 @@ module Cure
       # @param [object] source_value
       # @param [RowCtx] _row_ctx
       def _generate(source_value, _row_ctx)
-        1.upto(length(source_value&.length || 5)).map { "X" }.join("")
+        1.upto(length(source_value&.length || 5)).map { @options.fetch(:character, "x") }.join("")
       end
 
       def _describe
