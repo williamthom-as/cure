@@ -12,6 +12,9 @@ RSpec.describe Cure::Generator::NumberGenerator do
   describe "#new" do
     it "should load options" do
       expect(@number_generator.options).to eq({length: 10 })
+      expect(@number_generator.describe).to eq(
+        "Will create a random list of numbers matching the length of the source string."
+      )
     end
   end
 
@@ -30,6 +33,9 @@ RSpec.describe Cure::Generator::HexGenerator do
   describe "#new" do
     it "should load options" do
       expect(@generator.options).to eq({length: 10 })
+      expect(@generator.send(:_describe)).to eq(
+        "Will create a random list of hex values matching the length of the source string."
+      )
     end
   end
 
@@ -48,13 +54,16 @@ RSpec.describe Cure::Generator::RedactGenerator do
   describe "#new" do
     it "should load options" do
       expect(@generator.options).to eq({})
+      expect(@generator.send(:_describe)).to eq(
+        "Will replace the length of the source string with X."
+      )
     end
   end
 
   describe "#generate" do
     it "should load options" do
-      expect(@generator.generate("my_value", nil)).to eq("XXXXXXXX")
-      expect(@generator.generate("my_value_2", nil)).to eq("XXXXXXXXXX")
+      expect(@generator.generate("my_value", nil)).to eq("xxxxxxxx")
+      expect(@generator.generate("my_value_2", nil)).to eq("xxxxxxxxxx")
     end
   end
 end
@@ -67,6 +76,9 @@ RSpec.describe Cure::Generator::GuidGenerator do
   describe "#new" do
     it "should load options" do
       expect(@generator.options).to eq({})
+      expect(@generator.send(:_describe)).to eq(
+        "Will create a random GUID."
+      )
     end
   end
 
@@ -85,6 +97,7 @@ RSpec.describe Cure::Generator::BaseGenerator do
   describe "#new" do
     it "should load options" do
       expect(@generator.options).to eq({})
+      expect { @generator.describe }.to raise_error(NotImplementedError)
     end
   end
 
@@ -119,6 +132,9 @@ RSpec.describe Cure::Generator::PlaceholderGenerator do
   describe "#new" do
     it "should load options" do
       expect(@generator.options).to eq({name: "$account_number" })
+      expect(@generator.describe).to eq(
+        "Will look up placeholders using '$account_number'. [Set as '123456']"
+      )
     end
   end
 
@@ -130,20 +146,20 @@ RSpec.describe Cure::Generator::PlaceholderGenerator do
 end
 
 RSpec.describe Cure::Generator::CharacterGenerator do
-  before :all do
-  end
-
   describe "#generate" do
     it "should be 5 if no length provided" do
       generator = Cure::Generator::CharacterGenerator.new({
-                                                            "types" => %w[uppercase lowercase]
+                                                            types: %w[uppercase lowercase]
                                                           })
       expect(generator.generate(nil, nil).length).to eq(5)
+      expect(generator.describe).to eq(
+        "Will create a random list of [\"uppercase\", \"lowercase\"] with as many characters as the source string."
+      )
     end
 
     it "should be source length if provided" do
       generator = Cure::Generator::CharacterGenerator.new({
-                                                            "types" => %w[uppercase lowercase]
+                                                            types: %w[uppercase lowercase]
                                                           })
       expect(generator.generate("abcdefghij", nil).length).to eq(10)
     end
@@ -163,6 +179,9 @@ RSpec.describe Cure::Generator::FakerGenerator do
                                                         "method" => "email"
                                                       })
       expect(generator.generate(nil, nil).include?("@")).to be_truthy
+      expect(generator.describe).to eq(
+        "Will create a Faker value from [Internet::email]"
+      )
     end
   end
 end
@@ -190,6 +209,9 @@ RSpec.describe Cure::Generator::CaseGenerator do
 
       generator = Cure::Generator::CaseGenerator.new(opts)
       expect(generator.generate("dog", nil)).to eq("doggus")
+      expect(generator.describe).to eq(
+        "Will match source value against a value included in {:switch=>[{:case=>\"dog\", :return_value=>\"doggus\"}, {:case=>\"cat\", :return_value=>\"cattus\"}], :else=>{:return_value=>\"unknown\"}}"
+      )
     end
 
     it "should return else property if no match" do
@@ -249,6 +271,9 @@ RSpec.describe Cure::Generator::VariableGenerator do
   describe "#generate" do
     it "should raise if called on base class" do
       expect(@generator.generate(nil, nil)).to eq("test")
+      expect(@generator.describe).to eq(
+        "Will look up the variables defined using 'variable'."
+      )
     end
   end
 end
@@ -261,12 +286,33 @@ RSpec.describe Cure::Generator::StaticGenerator do
   describe "#new" do
     it "should load options" do
       expect(@generator.options).to eq({value: "my_val"})
+      expect(@generator.describe).to eq(
+        "Will return the defined value [my_val]"
+      )
     end
   end
 
   describe "#generate" do
     it "should load options" do
       expect(@generator.generate(nil, nil).to_s).to eq("my_val")
+    end
+  end
+end
+
+RSpec.describe Cure::Generator::EvalGenerator do
+  before :all do
+    @generator = Cure::Generator::EvalGenerator.new({eval: "1 + 1"})
+  end
+
+  describe "#new" do
+    it "should load options" do
+      expect(@generator.options).to eq({eval: "1 + 1"})
+    end
+  end
+
+  describe "#generate" do
+    it "should load options" do
+      expect(@generator.generate(nil, nil)).to eq(2)
     end
   end
 end

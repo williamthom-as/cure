@@ -33,7 +33,7 @@ module Cure
       end
 
       def _describe
-        "Will create a random list of #{@options["types"]} " \
+        "Will create a random list of #{@options[:types]} " \
         "with as many characters as the source string."
       end
     end

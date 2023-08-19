@@ -9,11 +9,12 @@ RSpec.describe Cure::Strategy::BaseStrategy do
     @base_strategy = Cure::Strategy::BaseStrategy.new({})
     @full_strategy = Cure::Strategy::FullStrategy.new({})
     @regex_strategy = Cure::Strategy::RegexStrategy.new({regex_cg: "^arn:aws:.*:(.*):.*$"})
-    @match_strategy = Cure::Strategy::MatchStrategy.new({match: "my_val"})
-    @start_strategy = Cure::Strategy::StartWithStrategy.new({match: "my_val"})
-    @end_strategy = Cure::Strategy::EndWithStrategy.new({match: "my_val"})
-    @append_strategy = Cure::Strategy::AppendStrategy.new({match: "my_val"})
-    @contain_strategy = Cure::Strategy::ContainStrategy.new({match: "my_val"})
+    @match_strategy = Cure::Strategy::MatchStrategy.new({match: "match"})
+    @start_strategy = Cure::Strategy::StartWithStrategy.new({match: "start"})
+    @end_strategy = Cure::Strategy::EndWithStrategy.new({match: "end"})
+    @append_strategy = Cure::Strategy::AppendStrategy.new({match: "append"})
+    @prepend_strategy = Cure::Strategy::PrependStrategy.new({match: "prepend"})
+    @contain_strategy = Cure::Strategy::ContainStrategy.new({match: "contain"})
   end
 
   describe "#new" do
@@ -38,26 +39,29 @@ RSpec.describe Cure::Strategy::BaseStrategy do
       result_two = @full_strategy.extract("111111111111", nil, Cure::Generator::NumberGenerator.new({length: 10}))
       expect(result_two.include?(@regex_strategy.history&.values&.first)).to be_truthy
 
-      result_three = @match_strategy.extract("my_val", nil, Cure::Generator::NumberGenerator.new({length: 10}))
-      expect(result_three).to_not eq("my_val")
+      result_three = @match_strategy.extract("match", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
+      expect(result_three).to eq("replace")
 
-      result_four = @start_strategy.extract("my_val_test", nil, Cure::Generator::NumberGenerator.new({length: 10}))
-      expect(result_four).to_not eq("my_val")
+      result_four = @start_strategy.extract("start_with", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
+      expect(result_four).to eq("replace")
 
-      result_five = @start_strategy.extract("test_my_val_test", nil, Cure::Generator::NumberGenerator.new({length: 10}))
+      result_five = @start_strategy.extract("no_match", nil, Cure::Generator::NumberGenerator.new({length: 10}))
       expect(result_five).to eq(nil)
 
-      result_six = @end_strategy.extract("test_my_val", nil, Cure::Generator::NumberGenerator.new({length: 10}))
-      expect(result_six).to_not eq("my_val")
+      result_six = @end_strategy.extract("with_end", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
+      expect(result_six).to eq("replace")
 
-      result_seven = @end_strategy.extract("test_my_val_test", nil, Cure::Generator::NumberGenerator.new({length: 10}))
+      result_seven = @end_strategy.extract("no_match", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
       expect(result_seven).to eq(nil)
 
-      result_eight = @append_strategy.extract("test_my", nil, Cure::Generator::NumberGenerator.new({length: 10}))
-      expect(result_eight.length).to eq(17)
+      result_eight = @append_strategy.extract("after-this", nil, Cure::Generator::StaticGenerator.new({value: "-after"}))
+      expect(result_eight).to eq("after-this-after")
 
-      result_eight = @contain_strategy.extract("hidden_my_val_contain", nil, Cure::Generator::NumberGenerator.new({length: 10}))
-      expect(result_eight.length).to eq(25)
+      result_nine = @contain_strategy.extract("hidden-contain-this", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
+      expect(result_nine).to eq("hidden-replace-this")
+
+      result_ten = @prepend_strategy.extract("before-this", nil, Cure::Generator::StaticGenerator.new({value: "front-"}))
+      expect(result_ten).to eq("front-before-this")
     end
   end
 
@@ -115,7 +119,7 @@ RSpec.describe Cure::Strategy::BaseStrategy do
       result_two = strat.extract("arn:aws:apigateway:us-east-1:abcdef:/restapis/abcdef/stages/dev",
                                  nil,
                                  Cure::Generator::RedactGenerator.new({length: 3}))
-      expect(result_two).to eq("arn:aws:apigateway:us-east-1:XXX:/restapis/abcdef/stages/dev")
+      expect(result_two).to eq("arn:aws:apigateway:us-east-1:xxx:/restapis/abcdef/stages/dev")
     end
   end
 end

@@ -100,19 +100,5 @@ module Cure
 
       log_info "...export complete"
     end
-
-    # @deprecated - I think?
-    def export(transformed_result)
-      log_info "Beginning export process..."
-      sections = config.template.exporter.sections
-
-      sections.each do |section|
-        section.perform(transformed_result)
-      end
-
-      log_info "... export complete."
-
-      transformed_result
-    end
   end
 end

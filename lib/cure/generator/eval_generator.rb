@@ -28,15 +28,6 @@ module Cure
         $SAFE = 0
       end
 
-      # @param [String] col_name
-      # @param [Transformation::RowCtx] row_ctx
-      def from_column(col_name, row_ctx)
-        col_idx = row_ctx.column_headers.fetch(col_name, nil)
-        raise "Missing column for #{col_name}" unless col_idx
-
-        row_ctx.rows[col_idx]
-      end
-
       def _describe; end
     end
   end
