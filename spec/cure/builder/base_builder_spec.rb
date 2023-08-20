@@ -17,8 +17,8 @@ RSpec.describe Cure::Builder::AddBuilder do
     main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
     main.with_config do
       build do
-        candidate column: "Tags" do
-          explode options: { keep_existing: false }
+        candidate column: "new" do
+          add options: { default_value: "-" }
         end
       end
     end
@@ -55,8 +55,8 @@ RSpec.describe Cure::Builder::RemoveBuilder do
     main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
     main.with_config do
       build do
-        candidate column: "Tags" do
-          explode options: { keep_existing: false }
+        candidate column: "json" do
+          remove options: { keep_existing: false }
         end
       end
     end
@@ -132,8 +132,8 @@ RSpec.describe Cure::Builder::CopyBuilder do
     main = Cure::Launcher.new.with_csv_file(:pathname, Pathname.new(@source_file_loc))
     main.with_config do
       build do
-        candidate column: "Tags" do
-          explode options: { keep_existing: false }
+        candidate column: "col_index" do
+          copy options: { options: { to_column: "abc" } }
         end
       end
     end

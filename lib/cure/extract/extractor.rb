@@ -8,8 +8,6 @@ require "cure/helpers/file_helpers"
 require "cure/helpers/perf_helpers"
 require "cure/extract/named_range_processor"
 
-require "cure/extract/wrapped_csv"
-
 require "csv"
 require "objspace"
 

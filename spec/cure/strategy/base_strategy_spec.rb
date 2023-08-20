@@ -17,6 +17,21 @@ RSpec.describe Cure::Strategy::BaseStrategy do
     @contain_strategy = Cure::Strategy::ContainStrategy.new({match: "contain"})
   end
 
+  describe "#describe" do
+    it "should describe the base strategy" do
+      expect(@full_strategy.describe).to eq("Full replacement of source value with generated value.")
+      expect(@regex_strategy.describe).to eq(
+        "Matching on '^arn:aws:.*:(.*):.*$'. [Note: If the regex does not match, or has no capture group, no substitution is made.]"
+      )
+      expect(@match_strategy.describe).to eq("Match replacement will look for the presence of 'match', and replace that value. [Note: If the value does not include 'match', no substitution is made.]")
+      expect(@start_strategy.describe).to eq("Start with replacement will look for 'start'. It will do a full replacement. [Note: If the value does not include 'start', no substitution is made.]")
+      expect(@end_strategy.describe).to eq("End with replacement will look for 'end'. It will do a full replacement. [Note: If the value does not include 'end', no substitution is made.]")
+      expect(@append_strategy.describe).to eq("Append generated value to the end of source value")
+      expect(@prepend_strategy.describe).to eq("Prepend generated value to the end of source value")
+      expect(@contain_strategy.describe).to eq("Replacing matched value on 'contain') [Note: If the value does not include 'contain', no substitution is made.]")
+    end
+  end
+
   describe "#new" do
     it "should load options" do
       opts = {regex_cg: "^arn:aws:.*:(.*):.*$"}
