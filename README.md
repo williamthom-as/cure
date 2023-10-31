@@ -34,19 +34,13 @@ end
 
 handler.run
 
-# Before (customer_data.csv):
-#
-# | id | email                  |
-# |----|------------------------|
-# | 1  | john.smith@gmail.com   |
-# | 2  | lean.davis@outlook.com |
+# Before (customer_data.csv):               After (cust_transformed.csv):
+#                                           
+# | id | email                  |           | id | email                  |     
+# |----|------------------------|    =>     |----|------------------------|     
+# | 1  | john.smith@gmail.com   |           | 1  | xxxxxxxxxx@xxxxx.com   |     
+# | 2  | lean.davis@outlook.com |           | 2  | xxxxxxxxxx@xxxxxxx.com |     
 
-# Output (cust_transformed.csv):
-#
-# | id | email                  |
-# |----|------------------------|
-# | 1  | xxxxxxxxxx@xxxxx.com   |
-# | 2  | xxxxxxxxxx@xxxxxxx.com |
 ```
 
 Click this link to view the [documentation](docs/README.md), see a real world [example](http://www.williamthom.as/csv/ruby/2023/04/06/transforming-csvs-with-cure.html), 
