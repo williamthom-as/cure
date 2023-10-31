@@ -32,6 +32,8 @@ module Cure
         @named_ranges.select { |nr| nr.ref_name == ref_name }
       end
 
+      # @param [String] ref_name
+      # @return [Array]
       def required_variables(ref_name: "_default")
         # This now needs to take support multiple files. We don't want named ranges
         # for different files

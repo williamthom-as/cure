@@ -3,6 +3,7 @@
 require "cure"
 require "json"
 require "singleton"
+require "tempfile"
 
 module Cure
   module Configuration
@@ -14,7 +15,7 @@ module Cure
       conf
     end
 
-    # @param [Cure::Configuration::CsvFileProxy] source_file
+    # @param [Array<Cure::Configuration::CsvFileProxy>] source_files
     # @param [Cure::Template] template
     # @return [Config]
     def create_config(source_files, template)
@@ -39,7 +40,7 @@ module Cure
       # @return [Cure::Template]
       attr_accessor :template
 
-      # @param [Cure::Configuration::CsvFileProxy] source_files
+      # @param [Array<Cure::Configuration::CsvFileProxy>] source_files
       # @param [Cure::Template] template
       def initialize(source_files, template)
         @source_files = source_files
@@ -87,7 +88,7 @@ module Cure
           when :path, :pathname
             PathnameHandler.new(obj, ref_name)
           else
-            raise "Invalid file type handler [#{type}]"
+            raise "Invalid file type handler [#{type}]. Supported: [:file, :file_contents, :path, :pathname]"
           end
 
         new(handler)
@@ -155,6 +156,7 @@ module Cure
       def with_file(&_block)
         yield @file, @ref_name
 
+      ensure
         @file&.close
       end
 
@@ -174,9 +176,14 @@ module Cure
       end
 
       def with_file(&_block)
-        yield @file_contents, @ref_name
+        tmp_file = Tempfile.new('cure-temp')
+        tmp_file.write(@file_contents)
+        tmp_file.open
 
-        @file_contents&.close
+        yield tmp_file, @ref_name
+
+      ensure
+        tmp_file.unlink
       end
 
       def description

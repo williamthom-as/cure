@@ -182,45 +182,45 @@ RSpec.describe Cure::Coordinator do
       expect(rows[0].keys).to eq(%i(_id column_1 column_2 column_3 column_4 column_5 column_6 new_column))
 
       expect(rows[0]).to eq({
-                              column_1: "a1",
-                              column_2: "a2",
-                              column_3: "a3",
-                              column_4: "a4",
-                              column_5: "a5",
-                              column_6: "a6",
-                              _id: 2,
-                              new_column: nil
-                            })
+        column_1: "a1",
+        column_2: "a2",
+        column_3: "a3",
+        column_4: "a4",
+        column_5: "a5",
+        column_6: "a6",
+        _id: 2,
+        new_column: nil
+      })
       expect(rows[1]).to eq({
-                              column_1: "b1",
-                              column_2: "b2",
-                              column_3: "b3",
-                              column_4: "b4",
-                              column_5: "b5",
-                              column_6: "b6",
-                              _id: 3,
-                              new_column: nil
-                            })
+        column_1: "b1",
+        column_2: "b2",
+        column_3: "b3",
+        column_4: "b4",
+        column_5: "b5",
+        column_6: "b6",
+        _id: 3,
+        new_column: nil
+      })
       expect(rows[2]).to eq({
-                              column_1: "c1",
-                              column_2: "c2",
-                              column_3: "c3",
-                              column_4: "c4",
-                              column_5: "c5",
-                              column_6: "c6",
-                              _id: 4,
-                              new_column: nil
-                            })
+        column_1: "c1",
+        column_2: "c2",
+        column_3: "c3",
+        column_4: "c4",
+        column_5: "c5",
+        column_6: "c6",
+        _id: 4,
+        new_column: nil
+      })
       expect(rows[3]).to eq({
-                              column_1: "d1",
-                              column_2: "d2",
-                              column_3: "d3",
-                              column_4: "d4",
-                              column_5: "d5",
-                              column_6: "d6",
-                              _id: 5,
-                              new_column: nil
-                            })
+        column_1: "d1",
+        column_2: "d2",
+        column_3: "d3",
+        column_4: "d4",
+        column_5: "d5",
+        column_6: "d6",
+        _id: 5,
+        new_column: nil
+      })
 
       # coordinator.send(:transform)
       # trans_csv = result.content["section_1"]

@@ -3,9 +3,9 @@
 require "cure/builder/base_builder"
 
 RSpec.describe Cure::Builder::BaseBuilder do
-  describe "#process" do
+  describe "#call" do
     it "will raise if called on base" do
-      expect { Cure::Builder::BaseBuilder.new("_default", "x", {}).process }.to raise_error
+      expect { Cure::Builder::BaseBuilder.new("_default", "x", {}).call }.to raise_error
     end
   end
 end
@@ -28,12 +28,12 @@ RSpec.describe Cure::Builder::AddBuilder do
     @coordinator = Cure::Coordinator.new
   end
 
-  describe "#process" do
+  describe "#call" do
     it "will extract required sections" do
       @coordinator.send(:extract)
 
       builder = described_class.new("_default", "new", {default_value: "abc"})
-      builder.process
+      builder.call
 
       results = []
       builder.with_database do |db_svc|
@@ -66,12 +66,12 @@ RSpec.describe Cure::Builder::RemoveBuilder do
     @coordinator = Cure::Coordinator.new
   end
 
-  describe "#process" do
+  describe "#call" do
     it "will extract required sections" do
       @coordinator.send(:extract)
 
       builder = described_class.new("_default", "json", {})
-      builder.process
+      builder.call
 
       results = []
       builder.with_database do |db_svc|
@@ -104,12 +104,12 @@ RSpec.describe Cure::Builder::RenameBuilder do
     @coordinator = Cure::Coordinator.new
   end
 
-  describe "#process" do
+  describe "#call" do
     it "will extract required sections" do
       @coordinator.send(:extract)
 
       builder = described_class.new("_default", "col_index", {"new_name" => "new"})
-      builder.process
+      builder.call
 
       results = []
 
@@ -143,12 +143,12 @@ RSpec.describe Cure::Builder::CopyBuilder do
     @coordinator = Cure::Coordinator.new
   end
 
-  describe "#process" do
+  describe "#call" do
     it "will extract required sections" do
       @coordinator.send(:extract)
 
       builder = described_class.new("_default", "col_index", {"to_column" => "abc"})
-      builder.process
+      builder.call
 
       results = []
       builder.with_database do |db_svc|
@@ -181,12 +181,12 @@ RSpec.describe Cure::Builder::WhitelistBuilder do
     @coordinator = Cure::Coordinator.new
   end
 
-  describe "#process" do
+  describe "#call" do
     it "will extract required sections" do
       @coordinator.send(:extract)
 
       builder = described_class.new("_default", nil, {columns: ["col_index"]})
-      builder.process
+      builder.call
 
       results = []
       builder.with_database do |db_svc|
@@ -219,12 +219,12 @@ RSpec.describe Cure::Builder::BlacklistBuilder do
     @coordinator = Cure::Coordinator.new
   end
 
-  describe "#process" do
+  describe "#call" do
     it "will extract required sections" do
       @coordinator.send(:extract)
 
       builder = described_class.new("_default", nil, {columns: ["json"]})
-      builder.process
+      builder.call
 
       results = []
       builder.with_database do |db_svc|
@@ -238,53 +238,3 @@ RSpec.describe Cure::Builder::BlacklistBuilder do
     end
   end
 end
-
-# RSpec.describe Cure::Builder::ExplodeBuilder do
-#   before :all do
-#     @source_file_loc = "spec/cure/test_files/explode_csv.csv"
-#     template_file_loc = "../../../spec/cure/test_files/explode_template.json"
-#
-#     Cure::Launcher.new
-#               .with_csv_file(:pathname, Pathname.new(@source_file_loc))
-#               .with_template(:file, Pathname.new(template_file_loc))
-#               .setup
-#
-#     @coordinator = Cure::Coordinator.new
-#   end
-#
-#   describe "#process" do
-#     it "will extract required sections" do
-#       @coordinator.send(:extract)
-#
-#       opts = {
-#         "build" => {
-#           "candidates" => [
-#             {
-#               "column" => "json",
-#               "action" => {
-#                 "name" => "explode",
-#                 "options" => {
-#                   "keep_existing" => false
-#                 }
-#               }
-#             }
-#           ]
-#         }
-#       }
-#
-#       exploder = Cure::Builder::ExplodeBuilder.new(
-#         "_default",
-#         opts["build"]["candidates"][0]["column"],
-#         opts["build"]["candidates"][0]["action"]["options"]
-#       )
-#
-#       result = exploder.process
-#
-#       expect(exploder.safe_parse_json("dfsdfd")).to eq({})
-#
-#       expect(result.content["_default"].column_headers.keys).to eq(%w[col_index json abc def ghi])
-#       expect(result.content["_default"].rows[0]).to eq(["1", "{\"abc\": \"def\",\"def\": 123}", "def", 123, ""])
-#       expect(result.content["_default"].rows[1]).to eq(["2", "{\"abc\": \"def\",\"ghi\": 123}", "def", "", 123])
-#     end
-#   end
-# end

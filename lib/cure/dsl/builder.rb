@@ -13,6 +13,9 @@ module Cure
         @candidates = []
       end
 
+      # @param [String,nil] column
+      # @param [String] named_range
+      # @param [Proc] block
       def candidate(column: nil, named_range: "_default", &block)
         candidate = Cure::Builder::Candidate.new(column, named_range)
         @candidates << candidate
