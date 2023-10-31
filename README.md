@@ -34,7 +34,7 @@ end
 
 handler.run
 
-# Before (customer_data.csv):               After (cust_transformed.csv):
+# Input (customer_data.csv):                Output (cust_transformed.csv):
 #                                           
 # | id | email                  |           | id | email                  |     
 # |----|------------------------|    =>     |----|------------------------|     
