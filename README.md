@@ -29,10 +29,24 @@ handler = Cure.init do
     end
   end
 
-  export { csv file_name: "customers", directory: "/tmp/cure" }
+  export { csv file_name: "cust_transformed", directory: "/tmp/cure" }
 end
 
 handler.run
+
+# Before (customer_data.csv):
+#
+# | id | email                  |
+# |----|------------------------|
+# | 1  | john.smith@gmail.com   |
+# | 2  | lean.davis@outlook.com |
+
+# Output (cust_transformed.csv):
+#
+# | id | email                  |
+# |----|------------------------|
+# | 1  | xxxxxxxxxx@xxxxx.com   |
+# | 2  | xxxxxxxxxx@xxxxxxx.com |
 ```
 
 Click this link to view the [documentation](docs/README.md), see a real world [example](http://www.williamthom.as/csv/ruby/2023/04/06/transforming-csvs-with-cure.html), 
