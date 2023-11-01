@@ -116,7 +116,7 @@ module Cure
 
       # @return [String (frozen)]
       def to_s
-        "Blacklist builder"
+        "Blacklist Builder"
       end
     end
 
@@ -139,7 +139,7 @@ module Cure
 
       # @return [String (frozen)]
       def to_s
-        "Whitelist builder"
+        "Whitelist Builder"
       end
     end
   end

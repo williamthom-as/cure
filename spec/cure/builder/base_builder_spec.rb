@@ -5,7 +5,13 @@ require "cure/builder/base_builder"
 RSpec.describe Cure::Builder::BaseBuilder do
   describe "#call" do
     it "will raise if called on base" do
-      expect { Cure::Builder::BaseBuilder.new("_default", "x", {}).call }.to raise_error
+      builder = Cure::Builder::BaseBuilder.new("_default", "x", {})
+      expect(builder.to_s).to eq("Base Builder")
+
+      expect { builder.call }.to raise_error(
+        NotImplementedError,
+        "Cure::Builder::BaseBuilder has not implemented method 'call'"
+      )
     end
   end
 end
@@ -42,6 +48,7 @@ RSpec.describe Cure::Builder::AddBuilder do
         end
       end
 
+      expect(builder.to_s).to eq("Add Builder")
       expect(results[0]).to eq({_id: 1, col_index: "1", json: "{\"abc\": \"def\",\"def\": 123}", new: "abc"})
       expect(results[1]).to eq({_id: 2, col_index: "2", json: "{\"abc\": \"def\",\"ghi\": 123}", new: "abc"})
     end
@@ -80,6 +87,7 @@ RSpec.describe Cure::Builder::RemoveBuilder do
         end
       end
 
+      expect(builder.to_s).to eq("Remove Builder")
       expect(results[0]).to eq({_id: 1, col_index: "1"})
       expect(results[1]).to eq({_id: 2, col_index: "2"})
     end
@@ -119,6 +127,7 @@ RSpec.describe Cure::Builder::RenameBuilder do
         end
       end
 
+      expect(builder.to_s).to eq("Rename Builder")
       expect(results[0]).to eq({_id: 1, json: "{\"abc\": \"def\",\"def\": 123}", new: "1"})
       expect(results[1]).to eq({_id: 2, json: "{\"abc\": \"def\",\"ghi\": 123}", new: "2"})
     end
@@ -157,6 +166,7 @@ RSpec.describe Cure::Builder::CopyBuilder do
         end
       end
 
+      expect(builder.to_s).to eq("Copy Builder")
       expect(results[0]).to eq({abc: "1", col_index: "1", _id: 1, json: "{\"abc\": \"def\",\"def\": 123}"})
       expect(results[1]).to eq({abc: "2", col_index: "2", _id: 2, json: "{\"abc\": \"def\",\"ghi\": 123}"})
     end
@@ -195,6 +205,7 @@ RSpec.describe Cure::Builder::WhitelistBuilder do
         end
       end
 
+      expect(builder.to_s).to eq("Whitelist Builder")
       expect(results[0]).to eq({col_index: "1", _id: 1})
       expect(results[1]).to eq({col_index: "2", _id: 2})
     end
@@ -233,6 +244,7 @@ RSpec.describe Cure::Builder::BlacklistBuilder do
         end
       end
 
+      expect(builder.to_s).to eq("Blacklist Builder")
       expect(results[0]).to eq({col_index: "1", _id: 1})
       expect(results[1]).to eq({col_index: "2", _id: 2})
     end
