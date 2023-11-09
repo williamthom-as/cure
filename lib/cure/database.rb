@@ -48,7 +48,7 @@ module Cure
         PRAGMA synchronous = 0;
         PRAGMA cache_size = 1000000;
         PRAGMA locking_mode = EXCLUSIVE;
-        PRAGMA temp_store = MEMORY;",
+        PRAGMA temp_store = MEMORY;
       SQL
     end
 
@@ -95,12 +95,11 @@ module Cure
       @database[tbl_name.to_sym].import(@database[tbl_name.to_sym].columns, rows)
     end
 
-
     def add_column(tbl_name, new_column, default: "")
       tbl_name = tbl_name.to_sym if tbl_name.class != Symbol
       new_column = new_column.to_sym if new_column.class != Symbol
 
-      @database.add_column(tbl_name, new_column, String, default:)
+      @database.add_column(tbl_name, new_column, String, default: default)
     end
 
     def remove_column(tbl_name, remove_column)
@@ -163,10 +162,3 @@ module Cure
     end
   end
 end
-
-# db = Cure::DatabaseService.new
-# db.create_table(:test, %w[name age])
-# db.insert_row(:test, {name: "abc"})
-# db.with_paged_result(:test) do |row|
-#   puts row
-# end
