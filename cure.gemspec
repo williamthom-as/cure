@@ -26,10 +26,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "simplecov"
-  spec.add_dependency "artii"
-  spec.add_dependency "faker"
-  spec.add_dependency "rcsv"
-  spec.add_dependency "sequel"
-  spec.add_dependency "sqlite3"
-  spec.add_dependency "terminal-table"
+  spec.add_dependency "artii", "~> 2.1.2"
+  spec.add_dependency "faker", "~> 3.2.2"
+  spec.add_dependency "rcsv", "~> 0.3.1"
+  spec.add_dependency "sequel", "~> 5.74.0"
+  spec.add_dependency "sqlite3", "~> 1.6.8"
+  spec.add_dependency "terminal-table", "~> 3.0.2"
 end
