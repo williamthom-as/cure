@@ -7,6 +7,7 @@ require "cure/extract/csv_lookup"
 require "cure/helpers/file_helpers"
 require "cure/helpers/perf_helpers"
 require "cure/extract/named_range_processor"
+require "cure/extract/variable_processor"
 
 require "csv"
 require "objspace"
@@ -56,17 +57,17 @@ module Cure
 
         if candidate_nrs.empty?
           candidate_nrs = [
-            Cure::Extract::NamedRange.default_named_range(name: ref_name)
+            NamedRange.default_named_range(name: ref_name)
           ]
         end
 
-        Extract::NamedRangeProcessor.new(database_service, candidate_nrs)
+        NamedRangeProcessor.new(database_service, candidate_nrs)
       end
 
       # @return [Cure::Extract::VariableProcessor]
       def variable_processor(ref_name:)
         variables = config.template.extraction.required_variables(ref_name: ref_name)
-        Extract::VariableProcessor.new(database_service, variables || [])
+        VariableProcessor.new(database_service, variables || [])
       end
     end
   end

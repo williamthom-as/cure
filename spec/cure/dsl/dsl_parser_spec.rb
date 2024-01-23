@@ -9,6 +9,18 @@ RSpec.describe Cure::Dsl::DslHandler do
         extract do
           named_range name: "section_1", at: "B2:G6"
           named_range name: "section_2", at: "C2:H6"
+          named_range name: "section_3", at: -1
+          named_range name: "section_4" do |rows, columns|
+            columns
+              .with(source: "identifier", as: "id")
+              .with(source: "name")
+                
+            rows
+              .start(where: "a")
+              .finish(where: "a")
+              .including(where: "a")
+          end
+
           variable name: "new_field", at: "A16"
         end
       TEMPLATE
@@ -18,11 +30,19 @@ RSpec.describe Cure::Dsl::DslHandler do
 
       expect(result.extraction.class).to be(Cure::Dsl::Extraction)
 
-      expect(result.extraction.named_ranges.size).to eq(2)
+      expect(result.extraction.named_ranges.size).to eq(4)
       expect(result.extraction.named_ranges[0].name).to eq("section_1")
       expect(result.extraction.named_ranges[0].section).to eq([1, 6, 1, 5])
       expect(result.extraction.named_ranges[1].name).to eq("section_2")
       expect(result.extraction.named_ranges[1].section).to eq([2, 7, 1, 5])
+      expect(result.extraction.named_ranges[2].name).to eq("section_3")
+      expect(result.extraction.named_ranges[2].section).to eq([0, 1023, 0, 10000000])
+      expect(result.extraction.named_ranges[3].name).to eq("section_4")
+      expect(result.extraction.named_ranges[3].section).to eq([0, 1023, 0, 10000000])
+      expect(result.extraction.named_ranges[3].filter.columns.definitions.size).to eq(2)
+      expect(result.extraction.named_ranges[3].filter.rows.start_proc).to eq({where: "a", options:{}})
+      expect(result.extraction.named_ranges[3].filter.rows.finish_proc).to eq({where: "a", options:{}})
+      expect(result.extraction.named_ranges[3].filter.rows.including_proc).to eq({where: "a", options:{}})
       expect(result.extraction.variables.size).to eq(1)
       expect(result.extraction.variables[0].name).to eq("new_field")
       expect(result.extraction.variables[0].location).to eq([0, 15])

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "cure/log"
 require "cure/dsl/extraction"
 require "cure/dsl/builder"
 require "cure/dsl/validator"
@@ -12,7 +13,7 @@ require "cure/dsl/source_files"
 module Cure
   module Dsl
     class DslHandler
-
+      include Log
       def self.init(&block)
         DslHandler.new(block)
       end
@@ -39,6 +40,12 @@ module Cure
 
         dsl.instance_eval(&@proc)
         dsl
+
+      rescue StandardError => e
+        log_error "Error parsing DSL: #{e.message}"
+
+        # Raise specific error in future.
+        raise e
       end
     end
 

@@ -14,8 +14,14 @@ module Cure
         @variables = []
       end
 
-      def named_range(name:, at:, headers: nil, ref_name: nil)
-        @named_ranges << Cure::Extract::NamedRange.new(name, at, headers: headers, ref_name: ref_name)
+      def named_range(name:, at: -1, headers: nil, ref_name: nil, &block)
+        named_range = Extract::NamedRange.new(name, at, headers: headers, ref_name: ref_name)
+
+        if block_given?
+          named_range.with_filter(&block)
+        end
+
+        @named_ranges << named_range
       end
 
       def variable(name:, at:, ref_name: nil)
