@@ -10,6 +10,8 @@ module Cure
         new(name, -1)
       end
 
+      attr_accessor :filter
+
       attr_reader :name, :section, :headers, :ref_name
 
       # This is complex purely to support headers not being the 0th row.
@@ -70,12 +72,69 @@ module Cure
         @header_bounds ||= @headers[2..3]
       end
 
+      def with_filter(&block)
+        @filter = Filter.new
+
+        yield @filter.rows, @filter.columns if block_given?
+      end
+
       private
 
       def calculate_headers(headers)
         return Extract::CsvLookup.array_position_lookup(headers) if headers
 
         [@section[0], @section[1], @section[2], @section[2]]
+      end
+    end
+
+    class Filter
+
+      attr_reader :rows, :columns
+
+      def initialize
+        @rows = Rows.new
+        @columns = Columns.new
+      end
+
+      class Columns
+
+        attr_reader :definitions
+
+        def initialize
+          @definitions = []
+        end
+
+        def with(source:, as: nil)
+          @definitions << {
+            source: source,
+            as: as || source
+          }
+
+          self
+        end
+      end
+
+      class Rows
+
+        attr_accessor :start_proc, :finish_proc, :including_proc
+
+        def start(where:, options: {})
+          @start_proc = {where:, options:}
+
+          self
+        end
+
+        def finish(where:, options: {})
+          @finish_proc = {where:, options:}
+
+          self
+        end
+
+        def including(where:, options: {})
+          @including_proc = {where:, options:}
+
+          self
+        end
       end
     end
   end

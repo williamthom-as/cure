@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-require "cure/generator/imports"
 require "cure/strategy/imports"
-
+require "cure/generator/imports"
 require "cure/transformation/candidate"
 
 module Cure
@@ -47,7 +46,10 @@ module Cure
           translation = Translation.new
           translation.instance_exec(&block)
 
-          @translations << Transformation::Translation.new(translation.strategy, translation.generator)
+          @translations << Transformation::Translation.new(
+            translation.strategy,
+            translation.generator
+          )
         end
 
         def if_no_match(&block)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "json"
-require "cure/extract/named_range_processor"
+require "cure/extract/variable_processor"
 
 RSpec.describe Cure::Extract::VariableProcessor do
   before :all do
