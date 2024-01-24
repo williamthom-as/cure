@@ -7,7 +7,7 @@ require "cure/log"
 
 # This test involves removing bad data and only selected headers
 RSpec.describe Cure::Coordinator do
-  xcontext "Process and chunk a simple csv file" do
+  context "Process and chunk a simple csv file" do
     describe "#extract" do
       it "will extract required sections" do
         main = Cure::Launcher.new
@@ -15,20 +15,18 @@ RSpec.describe Cure::Coordinator do
 
         main.with_config do
           extract do
-            named_range name: "names" do |rows, headers|
-              headers {
-                column(source: "identifier", as: "id")
-              }
+            named_range name: "names" do |rows, columns|
+              columns
+                .with(source: "identifier", as: "id")
+                .with(source: "name")
 
-              rows {
-                  start where: nil, options: {}
-                  finish where: nil, options: {}
-                  includes where: nil, options: {}
-              }
+              rows.
+                including(where: proc {|row| row.any? })
             end
           end
 
           export do
+            csv file_name: "names_with_errors", directory: "/tmp/cure", named_range: "names"
             terminal title: "Exported", limit_rows: 15, named_range: "names"
           end
         end
@@ -38,11 +36,11 @@ RSpec.describe Cure::Coordinator do
         coordinator = Cure::Coordinator.new
         coordinator.process
 
-        # file_one = "/tmp/cure/simple_joins.csv"
-        # expect(File.exist? file_one).to eq(true)
-        #
-        # expected_file = "spec/cure/e2e/output/simple_joins.csv"
-        # expect(FileUtils.compare_file(file_one, expected_file)).to be_truthy
+        file_one = "/tmp/cure/names_with_errors.csv"
+        expect(File.exist? file_one).to eq(true)
+
+        expected_file = "spec/cure/e2e/output/names_with_errors.csv"
+        expect(FileUtils.compare_file(file_one, expected_file)).to be_truthy
       end
     end
   end
