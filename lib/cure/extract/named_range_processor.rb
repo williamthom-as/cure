@@ -32,15 +32,33 @@ module Cure
         @candidate_nrs.each do |nr|
           next unless nr.row_in_bounds?(row_idx)
 
+          if nr.filter.row_handler.has_content?
+            unless nr.filter.row_handler.including_proc[:where].call(csv_row)
+              nr.row_count += 1
+              next
+            end
+          end
+
           # Row is inbounds - we need to do two things, filter the content, create the table, insert the row
-          if nr.header_in_bounds?(row_idx)
+          if nr.header_in_bounds?(nr.active_row_count(row_idx))
             column_headers = csv_row[nr.section[0]..nr.section[1]]
+
+            if nr.filter.col_handler.has_content?
+              nr.filter.col_handler.set_col_positions(column_headers)
+              column_headers = nr.filter.col_handler.translate_headers(column_headers)
+            end
 
             # Create table, flush cache
             create_table(nr.name, column_headers)
             @tables_created << nr.name
 
-            @cache[nr.name].each { |val| insert_record(nr.name, val) }
+            @cache[nr.name].each do |row|
+              insert_record(
+                nr.name,
+                nr.filter.col_handler.filter_row(row)
+              )
+            end
+
             @cache[nr.name] = [] # Evict cache
 
             next
@@ -49,22 +67,25 @@ module Cure
           next unless nr.content_in_bounds?(row_idx)
 
           # 0. Remove unnecessary columns
-          # TODO: Do the thing
 
-          # 1. Cache records
-          @cache[nr.name] << csv_row[nr.section[0]..nr.section[1]].unshift(row_idx)
 
           # 2. If cache is over n records and if the table exists,
           # add it to the database.
 
+          filtered_row = nr.filter.col_handler.filter_row(
+            csv_row[nr.section[0]..nr.section[1]]
+          )
+
           if @tables_created.include?(nr.name)
+            @cache[nr.name] << filtered_row.unshift(row_idx)
+
             if @cache[nr.name].size >= 10
               insert_cache(nr.name)
               next
             end
           else
             # If the table doesnt exist, cache it for now.
-            @cache[nr.name] << csv_row[nr.section[0]..nr.section[1]].unshift(row_idx)
+            @cache[nr.name] << filtered_row.unshift(row_idx)
           end
         end
       end

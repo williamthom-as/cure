@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "cure/extract/filter"
+
 module Cure
   module Extract
     class NamedRange
@@ -10,7 +12,7 @@ module Cure
         new(name, -1)
       end
 
-      attr_accessor :filter
+      attr_accessor :filter, :row_count
 
       attr_reader :name, :section, :headers, :ref_name
 
@@ -20,10 +22,15 @@ module Cure
       # - Content bounds
       # - Header bounds
       # - Sheet bounds (headers AND content)
+
+      # @param [String] ref_name - file reference (for multiple files)
       def initialize(name, section, headers: nil, ref_name: nil)
         @name = name
+        @filter = Filter.new
         @section = Extract::CsvLookup.array_position_lookup(section)
         @headers = calculate_headers(headers)
+        @row_count = 0
+
         @ref_name = ref_name || "_default"
       end
 
@@ -72,10 +79,8 @@ module Cure
         @header_bounds ||= @headers[2..3]
       end
 
-      def with_filter(&block)
-        @filter = Filter.new
-
-        yield @filter.rows, @filter.columns if block_given?
+      def active_row_count(row_idx)
+        row_idx - @row_count
       end
 
       private
@@ -84,57 +89,6 @@ module Cure
         return Extract::CsvLookup.array_position_lookup(headers) if headers
 
         [@section[0], @section[1], @section[2], @section[2]]
-      end
-    end
-
-    class Filter
-
-      attr_reader :rows, :columns
-
-      def initialize
-        @rows = Rows.new
-        @columns = Columns.new
-      end
-
-      class Columns
-
-        attr_reader :definitions
-
-        def initialize
-          @definitions = []
-        end
-
-        def with(source:, as: nil)
-          @definitions << {
-            source: source,
-            as: as || source
-          }
-
-          self
-        end
-      end
-
-      class Rows
-
-        attr_accessor :start_proc, :finish_proc, :including_proc
-
-        def start(where:, options: {})
-          @start_proc = {where:, options:}
-
-          self
-        end
-
-        def finish(where:, options: {})
-          @finish_proc = {where:, options:}
-
-          self
-        end
-
-        def including(where:, options: {})
-          @including_proc = {where:, options:}
-
-          self
-        end
       end
     end
   end
