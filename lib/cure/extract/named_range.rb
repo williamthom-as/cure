@@ -79,10 +79,6 @@ module Cure
         @header_bounds ||= @headers[2..3]
       end
 
-      def with_filter(&block)
-        yield @filter.row_handler, @filter.col_handler if block
-      end
-
       def active_row_count(row_idx)
         row_idx - @row_count
       end

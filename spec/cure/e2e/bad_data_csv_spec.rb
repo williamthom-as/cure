@@ -15,13 +15,15 @@ RSpec.describe Cure::Coordinator do
 
         main.with_config do
           extract do
-            named_range name: "names" do |rows, columns|
-              columns
-                .with(source: "identifier", as: "id")
-                .with(source: "name")
+            named_range name: "names" do
+              columns {
+                with(source: "identifier", as: "id")
+                with(source: "name")
+              }
 
-              rows.
+              rows {
                 including(where: proc {|row| row.any? })
+              }
             end
           end
 

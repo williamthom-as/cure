@@ -11,6 +11,18 @@ module Cure
         @col_handler = ColumnHandler.new
       end
 
+      def columns(&block)
+        return unless block
+
+        @col_handler.instance_eval(&block)
+      end
+
+      def rows(&block)
+        return unless block
+
+        @row_handler.instance_eval(&block)
+      end
+
       class ColumnHandler
 
         attr_reader :definitions, :source_col_positions

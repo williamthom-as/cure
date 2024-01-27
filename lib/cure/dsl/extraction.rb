@@ -18,7 +18,7 @@ module Cure
         named_range = Extract::NamedRange.new(name, at, headers: headers, ref_name: ref_name)
 
         if block_given?
-          named_range.with_filter(&block)
+          named_range.filter.instance_eval(&block)
         end
 
         @named_ranges << named_range

@@ -4,7 +4,7 @@
 [![Gem Version](https://badge.fury.io/rb/cure.svg)](https://badge.fury.io/rb/cure)
 
 Cure provides a low-code solution for handling a wide range of tasks for importing, validating and manipulating one or
-more CSV files. Unlike other tools, Cure doesn't assume standard formatting and is designed to handle a wide range of 
+more CSV files. Unlike other tools, Cure doesn't assume standard CSV formatting and is designed to handle a wide range of 
 challenging scenarios.
 
 The library provides optional hooks for each data processing pipeline phase in:
@@ -20,7 +20,7 @@ require "cure"
 handler = Cure.init do
   sources { csv :pathname, Pathname.new("customer_data.csv") }
   
-  extract { named_range name: "_default", at: "D2:G8" }
+  extract { named_range at: "D2:G8" }
 
   transform do
     candidate column: "email" do

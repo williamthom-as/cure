@@ -10,16 +10,18 @@ RSpec.describe Cure::Dsl::DslHandler do
           named_range name: "section_1", at: "B2:G6"
           named_range name: "section_2", at: "C2:H6"
           named_range name: "section_3", at: -1
-          named_range name: "section_4" do |rows, columns|
-            columns
-              .with(source: "identifier", as: "id")
-              .with(source: "name")
+          named_range name: "section_4" do
+            columns {
+              with(source: "identifier", as: "id")
+              with(source: "name")
+            }       
                 
-            rows
-              .start(where: "a")
-              .finish(where: "a")
-              .including(where: "a")
-          end
+            rows {
+              start(where: "a")
+              finish(where: "a")
+              including(where: "a")
+            }
+          end 
 
           variable name: "new_field", at: "A16"
         end
