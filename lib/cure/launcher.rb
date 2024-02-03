@@ -96,6 +96,7 @@ module Cure
       register_config(config)
 
       init_database
+      init_history
 
       @validated = true
       self
@@ -116,6 +117,10 @@ module Cure
       @template.source_files.candidates.each do |source|
         with_csv_file(source.type, source.value, ref_name: source.ref_name)
       end
+    end
+
+    def init_history
+      Cure::History::HistoryCache.instance.reset
     end
   end
 end

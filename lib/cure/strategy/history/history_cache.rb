@@ -38,9 +38,8 @@ module Cure
 
       def initialize
         @count = 0
-        return if database_service.table_exist?(:translations)
 
-        database_service.create_table(:translations, %w[source_value value named_range column])
+        init_cache
       end
 
       # @return [String]
@@ -62,12 +61,21 @@ module Cure
 
       def reset
         @count = 0
-
-        database_service.truncate_table(:translations)
+        if database_service.table_exist?(:translations)
+          database_service.truncate_table(:translations)
+        else
+          init_cache
+        end
       end
 
       def table_count
         database_service.table_count(:translations)
+      end
+
+      def init_cache
+        return if database_service.table_exist?(:translations)
+
+        database_service.create_table(:translations, %w[source_value value named_range column])
       end
     end
   end
