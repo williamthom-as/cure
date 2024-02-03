@@ -38,7 +38,7 @@ RSpec.describe Cure::Strategy::BaseStrategy do
       strategy = Cure::Strategy::RegexStrategy.new(opts)
       strategy.clear_history
 
-      expect(strategy.history).to eq({})
+      expect(strategy.history.table_count).to eq(0)
       expect(strategy.params.regex_cg).to eq(opts[:regex_cg])
     end
   end
@@ -48,11 +48,14 @@ RSpec.describe Cure::Strategy::BaseStrategy do
       id = "arn:aws:kms:ap-southeast-2:111111111111:key/22222222-2222-2222-2222-222222222222"
       result = @regex_strategy.extract(id, nil, Cure::Generator::NumberGenerator.new({length: 10}))
       expect(result).to_not eq(id)
-      expect(@regex_strategy.history.keys).to eq(["111111111111"])
-      expect(result.include?(@regex_strategy.history&.values&.first)).to be_truthy
+
+      all_values = @regex_strategy.history.all_values
+
+      expect(all_values.first[:source_value]).to eq("111111111111")
+      expect(all_values.first[:value]).to be_truthy
 
       result_two = @full_strategy.extract("111111111111", nil, Cure::Generator::NumberGenerator.new({length: 10}))
-      expect(result_two.include?(@regex_strategy.history&.values&.first)).to be_truthy
+      expect(result_two == all_values.first[:value]).to be_truthy
 
       result_three = @match_strategy.extract("match", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
       expect(result_three).to eq("replace")

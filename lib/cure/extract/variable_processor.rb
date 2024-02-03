@@ -14,7 +14,7 @@ module Cure
       attr_reader :candidate_variables
 
       def initialize(database_service, candidate_variables)
-        super database_service
+        super(database_service)
 
         @candidate_variables = candidate_variables
         @candidate_count = candidate_variables.length
