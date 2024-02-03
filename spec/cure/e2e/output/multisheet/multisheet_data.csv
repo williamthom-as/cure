@@ -1,0 +1,7 @@
+customer_id,name,product,quantity,total_amount,payment_date
+1,WbuaQbr,Product A,2,70.0,2024-01-04
+1,WbuaQbr,Product D,1,70.0,2024-01-04
+2,WnarFzvgu,Product B,1,75.0,2024-01-05
+2,WnarFzvgu,Product E,2,75.0,2024-01-05
+3,OboWbuafba,Product C,3,140.0,2024-01-06
+3,OboWbuafba,Product F,1,140.0,2024-01-06

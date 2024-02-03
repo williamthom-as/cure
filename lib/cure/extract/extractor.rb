@@ -56,9 +56,7 @@ module Cure
         candidate_nrs = config.template.extraction.required_named_ranges(ref_name: ref_name)
 
         if candidate_nrs.empty?
-          candidate_nrs = [
-            NamedRange.default_named_range(name: ref_name)
-          ]
+          candidate_nrs = [NamedRange.default_named_range(name: ref_name)]
         end
 
         NamedRangeProcessor.new(database_service, candidate_nrs)

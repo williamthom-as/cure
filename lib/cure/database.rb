@@ -173,6 +173,12 @@ module Cure
     def list_tables
       tbl_arr = @database.tables
       tbl_arr.delete(:variables)
+
+      if tbl_arr.include?(:translations)
+        tbl_arr.delete(:translations)
+        tbl_arr.push(:translations)
+      end
+
       tbl_arr
     end
 

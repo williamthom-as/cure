@@ -13,8 +13,7 @@ module Cure
       end
 
       attr_accessor :filter, :row_count
-
-      attr_reader :name, :section, :headers, :ref_name
+      attr_reader :name, :section, :headers, :ref_name, :placeholder
 
       # This is complex purely to support headers not being the 0th row.
       # A template can specify that the headers row be completely disconnected
@@ -24,13 +23,13 @@ module Cure
       # - Sheet bounds (headers AND content)
 
       # @param [String] ref_name - file reference (for multiple files)
-      def initialize(name, section, headers: nil, ref_name: nil)
+      def initialize(name, section, headers: nil, ref_name: nil, placeholder: false)
         @name = name
         @filter = Filter.new
         @section = Extract::CsvLookup.array_position_lookup(section)
         @headers = calculate_headers(headers)
         @row_count = 0
-
+        @placeholder = placeholder
         @ref_name = ref_name || "_default"
       end
 

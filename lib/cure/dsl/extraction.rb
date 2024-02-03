@@ -14,8 +14,12 @@ module Cure
         @variables = []
       end
 
-      def named_range(name:, at: -1, headers: nil, ref_name: nil, &block)
-        named_range = Extract::NamedRange.new(name, at, headers: headers, ref_name: ref_name)
+      def named_range(name:, at: -1, headers: nil, ref_name: nil, placeholder: false, &block)
+        named_range = Extract::NamedRange.new(name, at,
+          headers: headers,
+          ref_name: ref_name,
+          placeholder: placeholder
+        )
 
         if block_given?
           named_range.filter.instance_eval(&block)
@@ -35,7 +39,7 @@ module Cure
         # for different files
         return @named_ranges if ref_name == "default"
 
-        @named_ranges.select { |nr| nr.ref_name == ref_name }
+        @named_ranges.select { |nr| nr.ref_name == ref_name && nr.placeholder == false }
       end
 
       # @param [String] ref_name

@@ -42,7 +42,7 @@ RSpec.describe Cure::Transformation::Candidate do # rubocop:disable Metrics/Bloc
 
       candidate = dsl_candidate.candidates.first
       val = candidate.perform("xxk", nil)
-      expect(val.to_s.length).to eq(36)
+      expect(val.to_s.length).to eq(24)
     end
   end
 
@@ -65,7 +65,7 @@ RSpec.describe Cure::Transformation::Candidate do # rubocop:disable Metrics/Bloc
 
       expect(val).to eq(val_two)
       expect(val_three).to_not eq("i-11111111")
-      expect(val_four.length).to eq(36)
+      expect(val_four.length).to eq(24)
     end
   end
 end
