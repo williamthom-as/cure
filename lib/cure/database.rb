@@ -10,9 +10,11 @@ module Cure
   module Database
     def database_service
       database = DatabaseSource.instance.database_service
-      raise "Init database first" unless database
+      return database if database
 
-      database
+      init_database
+
+      DatabaseSource.instance.database_service
     end
 
     def init_database
@@ -57,6 +59,14 @@ module Cure
       @database.from(:variables).where(name: property_name).get(:value)
     end
 
+    def find_translation(source_value)
+      @database.from(:translations).where(source_value: source_value).get(:value)
+    end
+
+    def all_translations
+      @database.from(:translations).all
+    end
+
     # @param [Symbol,String] tbl_name
     # @param [Array] columns
     def create_table(tbl_name, columns, auto_increment: true)
@@ -68,6 +78,16 @@ module Cure
           column col_name.to_sym, String
         end
       end
+    end
+
+    # @param [Symbol,String] tbl_name
+    def truncate_table(tbl_name)
+      @database[tbl_name.to_sym].truncate
+    end
+
+    # @param [Symbol,String] tbl_name
+    def table_count(tbl_name)
+      @database[tbl_name.to_sym].count
     end
 
     def with_transaction(&block)
@@ -134,6 +154,9 @@ module Cure
       @database.run(query, opts)
     end
 
+    # Can we decouple query from named range? Probably more difficult
+    # than it seems. But would be nice to create two queries that doesn't
+    # require two tables (named ranges).
     def with_paged_result(tbl_name, chunk_size: 100, &block)
       raise "No block given" unless block
 

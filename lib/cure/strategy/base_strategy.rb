@@ -2,47 +2,10 @@
 
 require "singleton"
 require "cure/validators"
+require "cure/strategy/history/history_cache"
 
 module Cure
   module Strategy
-    # Singleton Strategy for storing data across all processes
-    module History
-      # @return [Hash]
-      def history
-        HistoryCache.instance.history_cache
-      end
-
-      # @return [String]
-      def retrieve_history(source_value)
-        history[source_value] unless source_value.nil? || source_value == ""
-      end
-
-      # @param [String] source_value
-      # @param [String] value
-      def store_history(source_value, value)
-        history[source_value] = value unless source_value.nil? || source_value == ""
-      end
-
-      def reset_history
-        HistoryCache.instance.reset
-      end
-      alias clear_history reset_history
-
-      class HistoryCache
-        include Singleton
-
-        attr_reader :history_cache
-
-        def initialize
-          @history_cache = {}
-        end
-
-        def reset
-          @history_cache = {}
-        end
-      end
-    end
-
     class BaseStrategy
       include History
 
@@ -64,8 +27,8 @@ module Cure
       # This will retrieve the (partial) value, then generate a new replacement.
       def extract(source_value, row_ctx, generator)
         extracted_value = _retrieve_value(source_value)
-
         existing = retrieve_history(extracted_value)
+
         return _replace_value(source_value, existing) if existing && !@params.force_replace
 
         generated_value = generator.generate(source_value, row_ctx)&.to_s

@@ -41,7 +41,7 @@ module Cure
 
       # @param [String, Nil] source_value
       # @param [RowCtx] row_ctx
-      # @return [String]
+      # @return [String,nil]
       # Transforms the existing value
       def perform(source_value, row_ctx)
         value = source_value
