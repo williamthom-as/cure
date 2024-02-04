@@ -93,7 +93,12 @@ module Cure
       # @return [void]
       def call
         with_database do |db_svc|
-          db_svc.copy_column(@named_range.to_sym, @column.to_sym, @opts.fetch("to_column"))
+          to_column = @opts.fetch(:to_column)
+          db_svc.copy_column(
+            @named_range.to_sym,
+            @column.to_sym,
+            to_column
+          )
         end
       end
 

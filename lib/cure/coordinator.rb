@@ -32,8 +32,8 @@ module Cure
           build
           # 3. Validate columns
 
-          # 3. Transform each row
-          database_service.list_tables.each do |table|
+          # 4. Transform each row
+          with_tables.each do |table|
             with_transformer(table) do |transformer|
               with_exporters(table) do |exporters|
                 database_service.with_paged_result(table) do |row|
@@ -99,6 +99,10 @@ module Cure
       manager.with_processors(&block)
 
       log_info "...export complete"
+    end
+
+    def with_tables
+      config.template.exporters.processors.map { |e| e.named_range.to_sym }.uniq
     end
   end
 end

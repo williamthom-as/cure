@@ -156,7 +156,7 @@ RSpec.describe Cure::Builder::CopyBuilder do
     it "will extract required sections" do
       @coordinator.send(:extract)
 
-      builder = described_class.new("_default", "col_index", {"to_column" => "abc"})
+      builder = described_class.new("_default", "col_index", {to_column: "abc"})
       builder.call
 
       results = []

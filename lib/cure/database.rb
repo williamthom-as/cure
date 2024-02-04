@@ -162,9 +162,7 @@ module Cure
 
       query = config.template.queries.find(tbl_name)
       if query
-        @database[query.query].each do |row|
-          block.yield row
-        end
+        @database[query.query].order(:_id).paged_each(rows_per_fetch: chunk_size, &block)
       else
         @database[tbl_name.to_sym].order(:_id).paged_each(rows_per_fetch: chunk_size, &block)
       end

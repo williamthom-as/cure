@@ -47,7 +47,7 @@ RSpec.describe Cure::Coordinator do
                 c.email,
                 o.order_id,
                 o.product,
-                o.quantity;
+                o.quantity
             SQL
 
             with named_range: "translations", query: <<-SQL
