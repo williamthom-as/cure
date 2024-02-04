@@ -49,6 +49,7 @@ RSpec.describe Cure::Coordinator do
                 o.product,
                 o.quantity;
             SQL
+
             with named_range: "translations", query: <<-SQL
               SELECT
                   value as original,

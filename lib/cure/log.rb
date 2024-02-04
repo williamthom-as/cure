@@ -4,6 +4,13 @@ require "cure"
 
 module Cure
   module Log
+    # @param [String] _message
+    def log_trace(_message)
+      # Ruby default logger doesnt have trace, so my version
+      # is to just uncomment it when you need it for now.
+      # Cure.logger.trace(message)
+    end
+
     # @param [String] message
     def log_debug(message)
       Cure.logger.debug(message)

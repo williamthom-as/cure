@@ -52,9 +52,9 @@ module Cure
         end
 
         if value == source_value && @no_match_translation
-          log_debug("No translation made for #{value} [#{source_value}]")
+          log_trace("No translation made for #{value} [#{source_value}]")
           value = @no_match_translation.extract(source_value, row_ctx)
-          log_debug("Translated to #{value} from [#{source_value}]")
+          log_trace("Translated to #{value} from [#{source_value}]")
         end
 
         value

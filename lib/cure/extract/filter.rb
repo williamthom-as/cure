@@ -51,6 +51,10 @@ module Cure
           return columns_arr unless has_content?
 
           @source_col_positions.map do |position, val|
+            if position.nil?
+              raise "Cannot find header position for #{val[:source]}. Please check it exists."
+            end
+
             columns_arr[position] = val[:as]
           end
         end
