@@ -26,6 +26,8 @@ module Cure
       # @param [Hash] row
       # @return [Hash]
       def transform(row)
+        original_row = row.dup
+
         @candidates.each do |candidate|
           column = candidate.column.to_sym
 
@@ -34,7 +36,7 @@ module Cure
           existing_value = row[column]
           next if existing_value.nil? && candidate.ignore_empty
 
-          new_value = candidate.perform(existing_value, RowCtx.new(row)) # transform value
+          new_value = candidate.perform(existing_value, RowCtx.new(row, original_row: original_row)) # transform value
           row[column] = new_value
         end
 
@@ -50,10 +52,11 @@ module Cure
     # This class looks useless, but it isn't. It exists purely to give a hook to add
     # more stuff to a strategy in the future without the method signature changing
     class RowCtx
-      attr_accessor :row
+      attr_accessor :row, :original_row
 
-      def initialize(row)
+      def initialize(row, original_row: nil)
         @row = row
+        @original_row = original_row
       end
     end
   end

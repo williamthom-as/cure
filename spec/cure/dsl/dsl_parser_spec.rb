@@ -24,6 +24,7 @@ RSpec.describe Cure::Dsl::DslHandler do
           end 
 
           variable name: "new_field", at: "A16"
+          sample(rows: 5)
         end
       TEMPLATE
 
@@ -48,6 +49,7 @@ RSpec.describe Cure::Dsl::DslHandler do
       expect(result.extraction.variables.size).to eq(1)
       expect(result.extraction.variables[0].name).to eq("new_field")
       expect(result.extraction.variables[0].location).to eq([0, 15])
+      expect(result.extraction.sample_rows).to eq(5)
     end
 
     it "should return a valid validation template from dsl" do

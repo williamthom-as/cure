@@ -32,10 +32,14 @@ module Cure
       def parse_csv(file, ref_name:)
         nr_processor = named_range_processor(ref_name: ref_name)
         v_processor = variable_processor(ref_name: ref_name)
+
+        sample_rows = config.template.extraction.sample_rows
         row_count = 0
 
         database_service.with_transaction do
           CSV.foreach(file, liberal_parsing: true) do |row|
+            next if sample_rows && row_count >= sample_rows
+
             nr_processor.process_row(row_count, row)
             v_processor.process_row(row_count, row)
             row_count += 1

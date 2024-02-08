@@ -7,7 +7,7 @@ module Cure
   module Dsl
     class Extraction
 
-      attr_reader :named_ranges, :variables
+      attr_reader :named_ranges, :variables, :sample_rows
 
       def initialize
         @named_ranges = []
@@ -30,6 +30,10 @@ module Cure
 
       def variable(name:, at:, ref_name: nil)
         @variables << Cure::Extract::Variable.new(name, at, ref_name: ref_name)
+      end
+
+      def sample(rows: nil)
+        @sample_rows = rows
       end
 
       # @param [String] ref_name
