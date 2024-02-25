@@ -21,7 +21,7 @@ module Cure
       include Helpers::FileHelpers
       include Helpers::PerfHelpers
 
-      # @param [Hash] opts
+      # @return [Hash] opts
       attr_reader :opts
 
       # @param [Hash] opts
@@ -29,6 +29,8 @@ module Cure
         @opts = opts
       end
 
+      # @param [Pathname,String] file - location of file
+      # @param [String] ref_name - name of reference file
       def parse_csv(file, ref_name:)
         nr_processor = named_range_processor(ref_name: ref_name)
         v_processor = variable_processor(ref_name: ref_name)
@@ -55,6 +57,7 @@ module Cure
 
       private
 
+      # @param [String] ref_name - name of reference file
       # @return [Cure::Extract::NamedRangeProcessor]
       def named_range_processor(ref_name:)
         candidate_nrs = config.template.extraction.required_named_ranges(ref_name: ref_name)
@@ -66,6 +69,7 @@ module Cure
         NamedRangeProcessor.new(database_service, candidate_nrs)
       end
 
+      # @param [String] ref_name - name of reference file
       # @return [Cure::Extract::VariableProcessor]
       def variable_processor(ref_name:)
         variables = config.template.extraction.required_variables(ref_name: ref_name)

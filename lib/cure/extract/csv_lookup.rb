@@ -22,6 +22,7 @@ module Cure
         ]
       end
 
+      # @param [String] range
       def self.position_for_letter(range)
         result = 0
         range.upcase.scan(/[A-Z]+/).first&.each_char do |n|
@@ -33,6 +34,7 @@ module Cure
         result - 1
       end
 
+      # @param [String] range
       def self.position_for_digit(range)
         range.upcase.scan(/\d+/).first.to_i - 1
       end
