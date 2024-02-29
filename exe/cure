@@ -1,10 +1,14 @@
 #!/usr/bin/env ruby
 
 require "cure/cli/command"
+require "cure/cli/new_command"
+require "cure/cli/run_command"
+require "cure/cli/generate_command"
 
 short_hand = {
   "n" => "new",
-  "r" => "run"
+  "r" => "run",
+  "g" => "generate"
 }
 
 command = ARGV.shift

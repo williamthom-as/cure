@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+require "cure/cli/command"
+
+module Cure
+  module Cli
+    class GenerateCommand < Command
+      def initialize(args)
+        super(args)
+      end
+
+      def execute
+        log_info "Not implemented yet!"
+      end
+    end
+  end
+end
