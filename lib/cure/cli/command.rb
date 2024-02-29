@@ -64,6 +64,42 @@ module Cure
       def validate
         raise NotImplementedError
       end
+
+      protected
+
+
+      def make_directory(dir_name)
+        log_info "Creating directory #{dir_name}"
+
+        FileUtils.mkdir_p(dir_name)
+      end
+
+      def make_file(dir_name, file_name, template: nil, binding: nil)
+        file = File.join(dir_name, file_name)
+
+        log_info "Creating file #{file}"
+
+        unless template
+          FileUtils.touch(file)
+          return
+        end
+
+        content = retrieve_template(template)
+        if binding
+          erb = ERB.new(content)
+          content = erb.result_with_hash(binding)
+        end
+
+        File.open(file, "w") do |f|
+          f.write(content)
+        end
+      end
+
+      def retrieve_template(template)
+        File.read(
+          File.join(File.dirname(__FILE__), "templates", "#{template}.erb")
+        )
+      end
     end
   end
 end

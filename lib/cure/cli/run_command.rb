@@ -9,6 +9,8 @@ module Cure
         super(args)
       end
 
+      private
+
       def execute
         log_info "Not implemented yet!"
       end
