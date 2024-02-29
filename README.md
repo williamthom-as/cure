@@ -32,7 +32,7 @@ handler = Cure.init do
   export { csv file_name: "cust_transformed", directory: "/tmp/cure" }
 end
 
-handler.run
+handler.run_export
 
 # Input (customer_data.csv):                Output (cust_transformed.csv):
 #                                           
@@ -60,16 +60,20 @@ Install it yourself as:
 ## Usage
 
 ### CLI
-Cure requires a template and source CSV file to be provided.  The template file can be either JSON or YAML, and it must
-contain all the instructions you wish to perform.
 
-You can run the CLI using the following command:
+You can start a new Cure project using CLI using the following command:
 
-    $ cure -t template.rb -s source_file.csv 
+    $ cure new [name]
+
+This will create a directory to house templates, input and output directories amongst others.
+
+To perform a one-off run, you can do it manually via the CLI using the following command:
+
+    $ cure run -t template.rb -s source_file.csv 
 
 You can view help with the following command:
 
-    $ cure -h
+    $ cure help
 
 ### Try it out
 
@@ -82,7 +86,7 @@ Please do not forget to mount any volumes which may have templates that you wish
 
 Once set up and connected to your container, run:
 
-    $ cure -t template.rb -s source_file.csv 
+    $ cure run -t template.rb -s source_file.csv 
 
 ## Development
 

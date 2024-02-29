@@ -1,58 +1,17 @@
 #!/usr/bin/env ruby
-# frozen_string_literal: true
 
-# rubocop:disable Style/MixinUsage
+require "cure/cli/command"
+require "cure/cli/new_command"
+require "cure/cli/run_command"
+require "cure/cli/generate_command"
 
-require "cure"
-require "optparse"
+short_hand = {
+  "n" => "new",
+  "r" => "run",
+  "g" => "generate"
+}
 
-include Cure::Log
+command = ARGV.shift
+command = short_hand[command] || command
 
-class CureConfig
-  include Cure::Configuration
-end
-
-conf = {}
-
-opts_parser = OptionParser.new do |opts|
-  opts.banner = "Usage: cure [options]"
-
-  opts.on("-t", "--template_file=template_file", "Template definition file") do |t|
-    conf[:template_file_location] = t
-  end
-
-  opts.on("-s", "--source_file=source_file", "Source file") do |s|
-    conf[:source_file_location] = s
-  end
-
-  opts.on("-l", "--list_plugins=list_plugins", "List plugins") do
-    ObjectSpace.each_object(Class) do |klass|
-      log_info "Generator: #{klass.name}" if klass.ancestors.include?(Cure::Generator::BaseGenerator)
-      log_info "Strategy: #{klass.name}" if klass.ancestors.include?(Cure::Strategy::BaseStrategy)
-    end
-
-    exit
-  end
-
-  opts.on("-h", "--help", "Prints this help") do
-    puts opts
-    exit
-  end
-end
-
-opts_parser.parse!
-
-if conf.empty?
-  puts opts_parser
-  exit
-end
-
-log_info "Config loaded successfully, initialising environment ..."
-main = Cure.init_from_file(conf[:template_file_location])
-           .with_csv_file(:pathname, Pathname.new(conf[:source_file_location]))
-           .setup
-
-log_info "... set up complete. Beginning process"
-main.run_export
-
-# rubocop:enable Style/MixinUsage
+Cure::Cli::Command.invoke(command, ARGV)
