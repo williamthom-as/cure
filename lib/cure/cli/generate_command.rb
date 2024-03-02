@@ -21,7 +21,7 @@ module Cure
       def execute
         raise "You are not in a Cure project! Cannot create template." unless cure_project?
 
-        log_info "Creating new template: #{params[:name]}\n"
+        log_info "Creating new template: #{params[:name]}"
 
         root_dir = File.join(Dir.pwd, "templates")
         make_file(root_dir, "#{params[:name]}_template.rb", template: "new_template.rb")

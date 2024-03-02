@@ -25,7 +25,7 @@ module Cure
 
         raise "Project already exists in directory!" if File.exist?(root_dir)
 
-        log_info "Creating new project: #{@argv[0]}\n"
+        log_info "Creating new project: #{@argv[0]}"
 
         make_directory(root_dir)
         make_directory(File.join(root_dir, "input"))
