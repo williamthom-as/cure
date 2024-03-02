@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 sources do
-  csv :pathname, Pathname.new("spec/cure/e2e/input/simple_names.csv"), "names"
-  csv :pathname, Pathname.new("spec/cure/e2e/input/simple_ages.csv"), "ages"
+  csv :pathname, Pathname.new("spec/cure/e2e/input/simple_names.csv"), ref_name: "names"
+  csv :pathname, Pathname.new("spec/cure/e2e/input/simple_ages.csv"), ref_name: "ages"
 end
 
 extract do
@@ -29,7 +29,7 @@ build do
   end
 end
 
-transformations do
+transform do
   candidate column: "new_column", named_range: "section_1" do
     with_translation { replace("full").with("variable", name: "new_field") }
   end
