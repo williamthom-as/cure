@@ -8,7 +8,6 @@ require "cure/planner"
 require "cure/config"
 
 require "json"
-require "yaml"
 
 module Cure
   class Launcher
