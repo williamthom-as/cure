@@ -23,8 +23,16 @@ module Cure
 
         log_info "Creating new template: #{params[:name]}"
 
-        root_dir = File.join(Dir.pwd, "templates")
-        make_file(root_dir, "#{params[:name]}_template.rb", template: "new_template.rb")
+        template_dir = File.join(Dir.pwd, "templates")
+        runner_dir = File.join(Dir.pwd, "runners")
+
+        make_file(template_dir, "#{params[:name]}_template.rb", template: "new_template.rb")
+        make_file(
+          runner_dir,
+          "#{params[:name]}_runner.rb",
+          template: "new_template.rb",
+          binding: { class_name: params[:name].split('_').map(&:capitalize).join }
+        )
       end
 
       def validate

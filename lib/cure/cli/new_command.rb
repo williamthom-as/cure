@@ -33,6 +33,7 @@ module Cure
         make_directory(File.join(root_dir, "scripts"))
         make_directory(File.join(root_dir, "templates"))
         make_directory(File.join(root_dir, "utilities"))
+        make_directory(File.join(root_dir, "runners"))
 
         make_file(root_dir, ".gitignore", template: "gitignore")
         make_file(root_dir, ".tool-versions", template: "tool-versions")
@@ -40,6 +41,7 @@ module Cure
         make_file(root_dir, "Gemfile", template: "gemfile", binding: { version: Cure::VERSION })
         make_file("#{root_dir}/input", ".gitkeep")
         make_file("#{root_dir}/output", ".gitkeep")
+        make_file(root_dir, "main.rb")
       end
 
       # @return [void]
