@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "cure"
 require "json"
 
 module Cure
