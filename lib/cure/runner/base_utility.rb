@@ -3,10 +3,10 @@
 module Cure
   class BaseUtility
 
-    # @param [String] _source
-    # @param [Cure::Transforms::RowCtx] _ctx
-    def self.call(source, _ctx)
-      new.call(source, _ctx)
+    # @param [String] source
+    # @param [Cure::Transforms::RowCtx] ctx
+    def self.call(source, ctx)
+      new.call(source, ctx)
     end
 
     # @param [String] _source
