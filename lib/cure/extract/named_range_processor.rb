@@ -43,7 +43,7 @@ module Cure
           # Row is inbounds - we need to do two things, filter the content, create the table, insert the row
           if nr.header_in_bounds?(nr.active_row_count(row_idx))
             column_headers = csv_row[nr.section[0]..nr.section[1]] || []
-            column_headers = column_headers.map(&:strip)
+            column_headers = column_headers.map { _1&.strip }
 
             if nr.filter.col_handler.has_content?
               nr.filter.col_handler.set_col_positions(column_headers)

@@ -38,8 +38,8 @@ module Cure
     # @return [Sequel::SQLite::Database]
     attr_reader :database
 
-    # @return [TrueClass,FalseClass]
-    attr_reader :db_type
+    # @return [Cure::Dsl::DatabaseConfig::Settings]
+    attr_reader :settings
 
     def initialize
       @database = init_database
@@ -188,15 +188,13 @@ module Cure
     def init_database
       # Build from config
       # This must clean the database if its not in memory
-      @db_type = config.template.database_config.settings.db_type
+      @settings = config.template.database_config.settings
 
-      if @db_type == :in_memory
+      if @settings.db_type == :in_memory
         Sequel.connect("sqlite:/")
       else
         # File-based path
-        settings = config.template.database_config.settings
         full_file_path = File.expand_path(settings.file_path)
-
         Sequel.connect("sqlite://#{full_file_path}")
       end
     end
