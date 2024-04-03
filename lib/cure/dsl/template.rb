@@ -9,6 +9,7 @@ require "cure/dsl/exporters"
 require "cure/dsl/queries"
 require "cure/dsl/metadata"
 require "cure/dsl/source_files"
+require "cure/dsl/database_config"
 
 module Cure
   module Dsl
@@ -82,6 +83,9 @@ module Cure
       # @return [Dsl::SourceFiles]
       attr_reader :source_files
 
+      # @return [Dsl::DatabaseConfig]
+      attr_reader :database_config
+
       def initialize
         @source_files = SourceFiles.new
         @extraction = Extraction.new
@@ -91,9 +95,14 @@ module Cure
         @exporters = Exporters.new
         @queries = Queries.new
         @meta_data = Metadata.new
+        @database_config = DatabaseConfig.new
       end
 
       private
+
+      def database(&block)
+        @database_config.instance_exec(&block)
+      end
 
       def sources(&block)
         @source_files.instance_exec(&block)

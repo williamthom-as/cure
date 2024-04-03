@@ -201,6 +201,21 @@ RSpec.describe Cure::Dsl::DslHandler do
       expect(result.source_files.candidates.size).to eq(2)
     end
 
+    it "should return database config from dsl" do
+      doc = <<-TEMPLATE
+        database do
+          persisted(file_path: "/tmp/dir/database_run")
+        end
+      TEMPLATE
+
+      template = described_class.init_from_content(doc, "test_file")
+      result = template.generate
+
+      expect(result.database_config.class).to eq(Cure::Dsl::DatabaseConfig)
+      expect(result.database_config.settings.file_path).to eq("/tmp/dir/database_run")
+      expect(result.database_config.settings.drop_table_on_initialise).to eq(false) # default
+    end
+
     it "should run from block" do
       template = described_class.init do
         extract do

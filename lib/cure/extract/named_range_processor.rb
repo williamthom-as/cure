@@ -14,6 +14,7 @@ module Cure
       # @return [Array<Extraction::NamedRange>] named_ranges
       attr_reader :candidate_nrs
 
+      # @param [Cure::DatabaseService] database_service
       def initialize(database_service, candidate_nrs)
         @candidate_nrs = candidate_nrs
         @cache = init_cache
