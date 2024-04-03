@@ -1,7 +1,7 @@
 Date,2010-01-01,,,,,
 Purchaser,Lean Davis,,,,,
 ,,,,,,
-vendor,line_item,sku,item,cost_per_kilo,amount_in_kilo,total_cost
+vendor, line_item, sku,item, cost_per_kilo,amount_in_kilo,total_cost
 ABC123,1,78632478,apple,1.5,2,3
 DEF567,2,12319082,oarnge,2.5,2,5
 DEF567,3,90834222,pear,0.5,3,1.5

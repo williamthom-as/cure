@@ -42,6 +42,18 @@ module Cure
           CSV.foreach(file, liberal_parsing: true) do |row|
             next if sample_rows && row_count >= sample_rows
 
+            # Clean away garbage.
+            row = row.map do |field|
+              if field
+                field.gsub("\uFEFF", "")
+                     .gsub("\r\n", "\n")
+                     .gsub("\u00A0", "")
+                     .gsub(/[\x00-\x1F]/, "")
+              else
+                field
+              end
+            end
+
             nr_processor.process_row(row_count, row)
             v_processor.process_row(row_count, row)
             row_count += 1
