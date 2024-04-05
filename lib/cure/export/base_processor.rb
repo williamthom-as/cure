@@ -121,10 +121,10 @@ module Cure
       def process(row)
         chunked_file_handler do |csv_file|
           if @processed.zero? || (@processed % @chunk_size).zero? || (@processed % @chunk_size).zero?
-            csv_file.write(row.keys.to_csv)
+            csv_file&.write(row.keys.to_csv)
           end
 
-          csv_file.write(row.values.to_csv)
+          csv_file&.write(row.values.to_csv)
         end
       end
 
@@ -162,7 +162,7 @@ module Cure
         raise "No block" unless block
 
         if @processed.zero? || (@processed % @chunk_size).zero?
-          @current_csv_file&.close
+          @current_csv_file.close if @current_csv_file
 
           @current_chunk += 1
           log_info "Writing file to #{current_file_path}"
@@ -181,7 +181,7 @@ module Cure
       attr_reader :proc
 
       def process_row(row)
-        @proc.call(row)
+        @proc.call(row, @named_range)
       end
 
       def setup

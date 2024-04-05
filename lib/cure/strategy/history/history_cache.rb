@@ -50,9 +50,12 @@ module Cure
       def insert(source_value, value, named_range: nil, column: nil)
         @count += 1
 
-        database_service.insert_row(:translations, [
-          @count, source_value, value, named_range, column
-        ])
+        # ID Changes here.
+        database_service.insert_row(
+          :translations,
+          [source_value, value, named_range, column],
+          columns: %w[source_value value named_range column]
+        )
       end
 
       def all_values
@@ -61,8 +64,13 @@ module Cure
 
       def reset
         @count = 0
+
         if database_service.table_exist?(:translations)
-          database_service.truncate_table(:translations)
+          # Need to think about this ... what should be the default action... for now:
+
+          if database_service.settings.trunc_translations_table_on_initialise
+            database_service.truncate_table(:translations)
+          end
         else
           init_cache
         end

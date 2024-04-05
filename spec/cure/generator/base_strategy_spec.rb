@@ -265,7 +265,7 @@ RSpec.describe Cure::Generator::VariableGenerator do
     mc = MockClass.new
     mc.init_database
     mc.database_service.create_table(:variables, %w[name value])
-    mc.database_service.insert_row(:variables, %w[1 variable test])
+    mc.database_service.insert_row(:variables, %w[variable test], columns: %w[name value])
   end
 
   describe "#generate" do

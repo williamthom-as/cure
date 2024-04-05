@@ -75,12 +75,32 @@ module Cure
     def create_table(tbl_name, columns, auto_increment: true)
       tbl_name = tbl_name.to_sym if tbl_name.class != Symbol
 
+      if table_exist?(tbl_name)
+        unless @settings.allow_existing_table
+          raise "Table already exists: #{tbl_name}. Use named ranges if you want different tables" /
+                  " or set allow_existing_table to true."
+        end
+
+        if @settings.drop_table_on_initialise
+          drop_table(tbl_name)
+        elsif @settings.trunc_table_on_initialise
+          truncate_table(tbl_name)
+        end
+
+        return
+      end
+
       @database.create_table tbl_name do
         primary_key :_id, auto_increment: auto_increment
         columns.each do |col_name|
           column col_name.to_sym, String
         end
       end
+    end
+
+    # @param [Symbol,String] tbl_name
+    def drop_table(tbl_name)
+      @database[tbl_name.to_sym].truncate
     end
 
     # @param [Symbol,String] tbl_name
@@ -108,14 +128,24 @@ module Cure
 
     # @param [Symbol,String] tbl_name
     # @param [Array<String>] row
-    def insert_row(tbl_name, row)
-      @database[tbl_name.to_sym].insert(row)
+    def insert_row(tbl_name, row, columns: nil)
+      unless columns
+        columns = @database[tbl_name.to_sym].columns
+        columns.delete(:_id)
+      end
+
+      @database[tbl_name.to_sym].insert(columns, row)
     end
 
     # @param [Symbol,String] tbl_name
     # @param [Array<String>] rows
-    def insert_batched_rows(tbl_name, rows)
-      @database[tbl_name.to_sym].import(@database[tbl_name.to_sym].columns, rows)
+    def insert_batched_rows(tbl_name, rows, columns: nil)
+      unless columns
+        columns = @database[tbl_name.to_sym].columns
+        columns.delete(:_id)
+      end
+
+      @database[tbl_name.to_sym].import(columns, rows)
     end
 
     def add_column(tbl_name, new_column, default: "")
@@ -169,6 +199,10 @@ module Cure
       else
         @database[tbl_name.to_sym].order(:_id).paged_each(rows_per_fetch: chunk_size, &block)
       end
+
+    rescue SQLite3::SQLException => e
+      resolve_msg = "Error attempting to retrieve table: #{tbl_name}. Please check your named ranges in template."
+      raise "#{resolve_msg} Error: #{e.message}"
     end
 
     def list_tables
@@ -194,6 +228,8 @@ module Cure
         Sequel.connect("sqlite:/")
       else
         # File-based path
+        raise "Please set file path for persisted database" unless settings.file_path
+
         full_file_path = File.expand_path(settings.file_path)
         Sequel.connect("sqlite://#{full_file_path}")
       end

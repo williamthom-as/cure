@@ -31,7 +31,7 @@ module Cure
         @database_service.create_table(tbl_name.to_sym, candidate_column_names)
       end
 
-      # @param [String] tbl_name
+      # @param [String,Symbol] tbl_name
       # @param [Array<Object>] values
       def insert_record(tbl_name, values)
         @database_service.insert_row(tbl_name.to_sym, values)

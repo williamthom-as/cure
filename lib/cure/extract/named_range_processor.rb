@@ -79,7 +79,7 @@ module Cure
           )
 
           if @tables_created.include?(nr.name)
-            @cache[nr.name] << filtered_row.unshift(row_idx)
+            @cache[nr.name] << filtered_row
 
             if @cache[nr.name].size >= 10
               insert_cache(nr.name)
@@ -87,7 +87,7 @@ module Cure
             end
           else
             # If the table doesnt exist, cache it for now.
-            @cache[nr.name] << filtered_row.unshift(row_idx)
+            @cache[nr.name] << filtered_row
           end
         end
       end

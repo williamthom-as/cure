@@ -205,6 +205,7 @@ RSpec.describe Cure::Dsl::DslHandler do
       doc = <<-TEMPLATE
         database do
           persisted(file_path: "/tmp/dir/database_run")
+          drop_table_on_initialise true
         end
       TEMPLATE
 
@@ -213,7 +214,7 @@ RSpec.describe Cure::Dsl::DslHandler do
 
       expect(result.database_config.class).to eq(Cure::Dsl::DatabaseConfig)
       expect(result.database_config.settings.file_path).to eq("/tmp/dir/database_run")
-      expect(result.database_config.settings.drop_table_on_initialise).to eq(false) # default
+      expect(result.database_config.settings.drop_table_on_initialise).to eq(true) # default
     end
 
     it "should run from block" do
