@@ -99,7 +99,7 @@ module Cure
 
       def initialize(title:, widget_type:)
         @title = title
-        @widget_ype = widget_type
+        @widget_type = widget_type
         @data = {}
         @options = {}
       end
