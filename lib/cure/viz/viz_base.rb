@@ -105,7 +105,7 @@ module Cure
       end
 
       # @param [Hash] options
-      def options(options)
+      def panel_options(options)
         @options = options
       end
 
