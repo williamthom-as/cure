@@ -104,10 +104,9 @@ module Cure
         @options = {}
       end
 
-      # @param [String] width - full, or double.
-      def with_width(width)
-        @options[:width_class] = width
-        self
+      # @param [Hash] options
+      def options(options)
+        @options = options
       end
 
       def to_h
@@ -122,6 +121,8 @@ module Cure
       LINE_CHART = "line-chart"
       PIE_CHART = "pie-chart"
       TABLE = "table"
+      MARKDOWN = "markdown"
+
     end
 
     class TableWidget < BaseWidget
@@ -136,6 +137,17 @@ module Cure
 
       def columns(columns)
         @data[:columns] = columns
+      end
+    end
+
+    class MarkdownWidget < BaseWidget
+
+      def initialize(title:)
+        super(title: title, widget_type: WidgetTypes::MARKDOWN)
+      end
+
+      def content(content)
+        @data[:content] = content
       end
     end
 
