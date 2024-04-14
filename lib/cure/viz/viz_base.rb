@@ -62,6 +62,14 @@ module Cure
         self
       end
 
+      def add_markdown_panel(title:, &block)
+        panel = MarkdownWidget.new(title: title)
+        panel.instance_eval(&block)
+
+        @panels << panel
+        self
+      end
+
       def add_chart_panel(title:, chart_type:, &block)
         panel = ChartWidget.new(title: title, widget_type: chart_type)
         panel.instance_eval(&block)
