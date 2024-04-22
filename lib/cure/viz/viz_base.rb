@@ -168,8 +168,12 @@ module Cure
         @data[:labels] = labels
       end
 
-      def values(values)
-        @data[:values] = values
+      def dataset(title, dataset)
+        unless @data.has_key? :dataset
+          @data[:dataset] = []
+        end
+
+        @data[:dataset] << { label: title, data: dataset }
       end
 
       def options(options)
