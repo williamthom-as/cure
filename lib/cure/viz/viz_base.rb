@@ -168,12 +168,15 @@ module Cure
         @data[:labels] = labels
       end
 
-      def datasets(title, dataset)
+      def dataset(title, dataset, chart_type: nil)
         unless @data.has_key? :datasets
           @data[:datasets] = []
         end
 
-        @data[:datasets] << { label: title, data: dataset }
+        definition = { label: title, data: dataset }
+        definition[:type] = chart_type if chart_type
+
+        @data[:datasets] << definition
       end
 
       def options(options)
