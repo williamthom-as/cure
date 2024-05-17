@@ -3,6 +3,17 @@
 ![run tests](https://github.com/williamthom-as/cure/actions/workflows/rspec.yml/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/cure.svg)](https://badge.fury.io/rb/cure)
 
+### What does it do?
+
+- ⚒️ Extract data from one or more CSV file(s).
+- 🔬 Manipulate and join or separate CSVs using SQL expressions.
+- 🧼 Clean, transform, query and export to CSV(s) or other formats.
+- 📃 Automate these actions using low code templates.
+- 📈 Query and extract insights into a standalone self-hosted BI dashboards.
+- 🗄️ Use version control to maintain and share your project with others.
+
+-----
+
 Cure provides a low-code solution for handling a wide range of tasks for importing, validating and manipulating one or
 more CSV files. Unlike other tools, Cure doesn't assume standard CSV formatting and is designed to handle a wide range of 
 challenging scenarios.
