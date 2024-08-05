@@ -195,7 +195,7 @@ module Cure
 
       query = config.template.queries.find(tbl_name)
       if query
-        query_str = query.query#.strip.chomp(";") # sequel can't end in ;, but its natural to add it incidentally.
+        query_str = query.query.strip.chomp(";") # sequel can't end in ;, but its natural to add it incidentally.
         @database[query_str].order(:_id).paged_each(rows_per_fetch: chunk_size, &block)
       else
         @database[tbl_name.to_sym].order(:_id).paged_each(rows_per_fetch: chunk_size, &block)
