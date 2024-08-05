@@ -26,7 +26,7 @@ RSpec.describe Cure::Coordinator do
                 name, 
                 age 
               FROM _default
-              INNER JOIN _default_1 on _default.identifier = _default_1.identifier
+              INNER JOIN _default_1 on _default.identifier = _default_1.identifier;
             SQL
           end
 
