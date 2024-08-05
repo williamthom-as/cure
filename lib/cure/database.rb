@@ -195,14 +195,13 @@ module Cure
 
       query = config.template.queries.find(tbl_name)
       if query
-        query_str = query.query.strip.chomp(";") # sequel can't end in ;, but its natural to add it incidentally.
+        query_str = query.query#.strip.chomp(";") # sequel can't end in ;, but its natural to add it incidentally.
         @database[query_str].order(:_id).paged_each(rows_per_fetch: chunk_size, &block)
       else
         @database[tbl_name.to_sym].order(:_id).paged_each(rows_per_fetch: chunk_size, &block)
       end
-
-    rescue SQLite3::SQLException => e
-      resolve_msg = "Error attempting to retrieve table: #{tbl_name}. Please check your named ranges in template."
+    rescue Sequel::DatabaseError, SQLite3::SQLException => e
+      resolve_msg = "Error attempting to query table: #{tbl_name}. Please check your query."
       raise "#{resolve_msg} Error: #{e.message}"
     end
 
