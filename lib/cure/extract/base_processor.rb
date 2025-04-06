@@ -25,7 +25,8 @@ module Cure
       def create_table(tbl_name, columns)
         candidate_column_names = []
         columns.each_with_index do |col, idx|
-          candidate_column_names << (col || "col_#{idx}")
+          col = "col_#{idx}" if col == nil || col == ""
+          candidate_column_names << col
         end
 
         @database_service.create_table(tbl_name.to_sym, candidate_column_names)
