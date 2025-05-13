@@ -77,7 +77,7 @@ module Cure
 
       if table_exist?(tbl_name)
         unless @settings.allow_existing_table
-          raise "Table already exists: #{tbl_name}. Use named ranges if you want different tables" /
+          raise "Table already exists: #{tbl_name}. Use named ranges if you want different tables" \
                   " or set allow_existing_table to true."
         end
 
