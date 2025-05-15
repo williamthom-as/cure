@@ -36,7 +36,11 @@ module Cure
           existing_value = row[column]
           next if existing_value.nil? && candidate.ignore_empty
 
-          new_value = candidate.perform(existing_value, RowCtx.new(row, original_row: original_row)) # transform value
+          # transform value
+          new_value = candidate.perform(
+            existing_value,
+            RowCtx.new(row, original_row: original_row)
+          )
           row[column] = new_value
         end
 

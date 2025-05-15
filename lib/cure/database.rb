@@ -62,8 +62,13 @@ module Cure
       @database.from(:variables).where(name: property_name).get(:value)
     end
 
-    def find_translation(source_value)
-      @database.from(:translations).where(source_value: source_value).get(:value)
+    def find_translation(source_value, from_columns:)
+      query = @database.from(:translations).where(source_value: source_value)
+      if from_columns.is_a?(Array) && !from_columns.empty?
+        query = query.where(column: from_columns)
+      end
+
+      query.get(:value)
     end
 
     def all_translations

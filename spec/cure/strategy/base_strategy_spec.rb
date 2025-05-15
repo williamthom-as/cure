@@ -46,7 +46,7 @@ RSpec.describe Cure::Strategy::BaseStrategy do
   describe "#extract" do
     it "should extract valid value, and use history for similarity" do
       id = "arn:aws:kms:ap-southeast-2:111111111111:key/22222222-2222-2222-2222-222222222222"
-      result = @regex_strategy.extract(id, nil, Cure::Generator::NumberGenerator.new({length: 10}))
+      result = @regex_strategy.extract("column", id, nil, Cure::Generator::NumberGenerator.new({length: 10}))
       expect(result).to_not eq(id)
 
       all_values = @regex_strategy.history.all_values
@@ -54,38 +54,38 @@ RSpec.describe Cure::Strategy::BaseStrategy do
       expect(all_values.first[:source_value]).to eq("111111111111")
       expect(all_values.first[:value]).to be_truthy
 
-      result_two = @full_strategy.extract("111111111111", nil, Cure::Generator::NumberGenerator.new({length: 10}))
+      result_two = @full_strategy.extract("column", "111111111111", nil, Cure::Generator::NumberGenerator.new({length: 10}))
       expect(result_two == all_values.first[:value]).to be_truthy
 
-      result_three = @match_strategy.extract("match", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
+      result_three = @match_strategy.extract("column","match", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
       expect(result_three).to eq("replace")
 
-      result_four = @start_strategy.extract("start_with", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
+      result_four = @start_strategy.extract("column","start_with", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
       expect(result_four).to eq("replace")
 
-      result_five = @start_strategy.extract("no_match", nil, Cure::Generator::NumberGenerator.new({length: 10}))
+      result_five = @start_strategy.extract("column","no_match", nil, Cure::Generator::NumberGenerator.new({length: 10}))
       expect(result_five).to eq(nil)
 
-      result_six = @end_strategy.extract("with_end", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
+      result_six = @end_strategy.extract("column","with_end", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
       expect(result_six).to eq("replace")
 
-      result_seven = @end_strategy.extract("no_match", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
+      result_seven = @end_strategy.extract("column","no_match", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
       expect(result_seven).to eq(nil)
 
-      result_eight = @append_strategy.extract("after-this", nil, Cure::Generator::StaticGenerator.new({value: "-after"}))
+      result_eight = @append_strategy.extract("column","after-this", nil, Cure::Generator::StaticGenerator.new({value: "-after"}))
       expect(result_eight).to eq("after-this-after")
 
-      result_nine = @contain_strategy.extract("hidden-contain-this", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
+      result_nine = @contain_strategy.extract("column","hidden-contain-this", nil, Cure::Generator::StaticGenerator.new({value: "replace"}))
       expect(result_nine).to eq("hidden-replace-this")
 
-      result_ten = @prepend_strategy.extract("before-this", nil, Cure::Generator::StaticGenerator.new({value: "front-"}))
+      result_ten = @prepend_strategy.extract("column","before-this", nil, Cure::Generator::StaticGenerator.new({value: "front-"}))
       expect(result_ten).to eq("front-before-this")
     end
   end
 
   describe "#_retrieve_value" do
     it "should raise if called on base class" do
-      expect { @base_strategy.extract("abc", nil, Cure::Generator::RedactGenerator.new) }.to raise_error(NotImplementedError)
+      expect { @base_strategy.extract("column","abc", nil, Cure::Generator::RedactGenerator.new) }.to raise_error(NotImplementedError)
     end
   end
 
@@ -100,7 +100,7 @@ RSpec.describe Cure::Strategy::BaseStrategy do
       start_strategy = Cure::Strategy::StartWithStrategy.new({match: "my_val_", replace_partial: true})
       expect(start_strategy.params.valid?).to eq(true)
 
-      result = start_strategy.extract("my_val_replace_me", nil, Cure::Generator::NumberGenerator.new({length: 10}))
+      result = start_strategy.extract("column","my_val_replace_me", nil, Cure::Generator::NumberGenerator.new({length: 10}))
 
       expect(result.length).to eq(10 + "my_val_".length)
       expect(result.start_with?("my_val_")).to be_truthy
@@ -108,7 +108,7 @@ RSpec.describe Cure::Strategy::BaseStrategy do
 
     it "should replace the end if partial is set" do
       end_strategy = Cure::Strategy::EndWithStrategy.new({match: "_my_val", replace_partial: true})
-      result = end_strategy.extract("replace_me_my_val", nil, Cure::Generator::NumberGenerator.new({length: 10}))
+      result = end_strategy.extract("column","replace_me_my_val", nil, Cure::Generator::NumberGenerator.new({length: 10}))
 
       expect(result.length).to eq(10 + "my_val_".length)
       expect(result.end_with?("_my_val")).to be_truthy
@@ -116,13 +116,13 @@ RSpec.describe Cure::Strategy::BaseStrategy do
 
     it "should replace the entire if no partial is set" do
       end_strategy = Cure::Strategy::EndWithStrategy.new({match: "_my_val", replace_partial: "false"})
-      result = end_strategy.extract("replace_me_my_val", nil, Cure::Generator::NumberGenerator.new({length: 10}))
+      result = end_strategy.extract("column","replace_me_my_val", nil, Cure::Generator::NumberGenerator.new({length: 10}))
 
       expect(result.length).to eq(10)
       expect(result.end_with?("_my_val")).to be_falsey
 
       end_strategy_one = Cure::Strategy::EndWithStrategy.new({match: "_my_val"})
-      result1 = end_strategy_one.extract("replace_me_my_val", nil, Cure::Generator::NumberGenerator.new({length: 10}))
+      result1 = end_strategy_one.extract("column","replace_me_my_val", nil, Cure::Generator::NumberGenerator.new({length: 10}))
 
       expect(result1.length).to eq(10)
       expect(result1.end_with?("_my_val")).to be_falsey
@@ -130,11 +130,11 @@ RSpec.describe Cure::Strategy::BaseStrategy do
 
     it "should run" do
       strat = Cure::Strategy::SplitStrategy.new({token: ":", index: 4})
-      result = strat.extract("arn:aws:apigateway:us-east-1::/restapis/abcdef/stages/dev",
+      result = strat.extract("column","arn:aws:apigateway:us-east-1::/restapis/abcdef/stages/dev",
                              nil,
                              Cure::Generator::NumberGenerator.new({length: 10}))
       expect(result).to eq("arn:aws:apigateway:us-east-1::/restapis/abcdef/stages/dev")
-      result_two = strat.extract("arn:aws:apigateway:us-east-1:abcdef:/restapis/abcdef/stages/dev",
+      result_two = strat.extract("column","arn:aws:apigateway:us-east-1:abcdef:/restapis/abcdef/stages/dev",
                                  nil,
                                  Cure::Generator::RedactGenerator.new({length: 3}))
       expect(result_two).to eq("arn:aws:apigateway:us-east-1:xxx:/restapis/abcdef/stages/dev")

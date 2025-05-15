@@ -12,16 +12,21 @@ module Cure
       HistoryCache.instance
     end
 
+    # @param [String, nil] _source_column
+    # @param [String, nil] source_value
     # @return [String]
-    def retrieve_history(source_value)
-      history.search(source_value) unless source_value.nil? || source_value == ""
+    def retrieve_history(_source_column, source_value, from_columns: [])
+      return if source_value.nil? || source_value == ""
+
+      history.search(source_value, from_columns: from_columns)
     end
 
-    # @param [String] source_value
-    # @param [String] value
-    def store_history(source_value, value)
+    # @param [String, nil] source_column
+    # @param [String, nil] source_value
+    # @param [String, nil] generated_value
+    def store_history(source_column, source_value, generated_value)
       unless source_value.nil? || source_value == ""
-        history.insert(source_value, value)
+        history.insert(source_value, generated_value, column: source_column)
       end
     end
 
@@ -43,8 +48,8 @@ module Cure
       end
 
       # @return [String]
-      def search(source_value, _named_range: nil, _column: nil)
-        database_service.find_translation(source_value)
+      def search(source_value, _named_range: nil, from_columns: nil)
+        database_service.find_translation(source_value, from_columns: from_columns)
       end
 
       def insert(source_value, value, named_range: nil, column: nil)
