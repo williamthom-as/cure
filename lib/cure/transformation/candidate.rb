@@ -30,7 +30,11 @@ module Cure
 
       attr_reader :ignore_empty
 
-      def initialize(column, named_range: Cure::Extraction.default_named_range, options: {})
+      def initialize(
+        column,
+        named_range: Cure::Extraction.default_named_range,
+        options: {}
+      )
         @column = column
         @named_range = named_range
         @ignore_empty = options.fetch(:ignore_empty, false)
@@ -39,21 +43,22 @@ module Cure
         @no_match_translation = nil
       end
 
-      # @param [String, Nil] source_value
+      # @param [String,nil] source_value
       # @param [RowCtx] row_ctx
+      #
       # @return [String,nil]
       # Transforms the existing value
       def perform(source_value, row_ctx)
         value = source_value
 
         @translations.each do |translation|
-          temp = translation.extract(value, row_ctx)
+          temp = translation.extract(@column, value, row_ctx)
           value = temp if temp
         end
 
         if value == source_value && @no_match_translation
           log_trace("No translation made for #{value} [#{source_value}]")
-          value = @no_match_translation.extract(source_value, row_ctx)
+          value = @no_match_translation.extract(@column, source_value, row_ctx)
           log_trace("Translated to #{value} from [#{source_value}]")
         end
 
@@ -87,10 +92,11 @@ module Cure
         @generator = generator
       end
 
-      # @param [String] source_value
+      # @param [String] source_column
+      # @param [String,nil] source_value
       # @return [String]
-      def extract(source_value, row_ctx)
-        @strategy.extract(source_value, row_ctx, @generator)
+      def extract(source_column, source_value, row_ctx)
+        @strategy.extract(source_column, source_value, row_ctx, @generator)
       end
     end
   end
