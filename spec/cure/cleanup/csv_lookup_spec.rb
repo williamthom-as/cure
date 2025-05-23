@@ -31,6 +31,14 @@ RSpec.describe Cure::Extract::CsvLookup do
       arr = described_class.array_position_lookup("A:B")
       expect(arr).to eq([0, 1, 0, 10000000])
     end
+
+    it "should raise on bad formats" do
+      %w[A1:B1:1 TEST1:B1 FOO].each do |bad_format|
+        expect {
+          described_class.array_position_lookup(bad_format)
+        }.to raise_error(ArgumentError, /Invalid position format: '#{bad_format}'/)
+      end
+    end
   end
 
   describe "#position_for_letter" do

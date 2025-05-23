@@ -6,14 +6,20 @@ module Cure
 
       X_MAX_LIMIT = 1_023
       Y_MAX_LIMIT = 10_000_000
-      \
+      INVALID_FORMAT_REGEX = /^(?![A-Z]{1,3}(\d+)?:[A-Z]{1,3}(\d+)?$).*/
+
       # @param [String,Integer] position - [Ex A1:B1, A1:B1, A2:B2, A:B2, A:B]
       # @return [Array] [column_start_idx, column_end_idx, row_start_idx, row_end_idx]
       def self.array_position_lookup(position)
         return [0, X_MAX_LIMIT, 0, Y_MAX_LIMIT] if position.is_a?(Integer) && position == -1 # Whole sheet
 
+        if position.upcase.match?(INVALID_FORMAT_REGEX)
+          raise ArgumentError,
+            "Invalid position format: '#{position}'. Expected format like 'A1:B10', 'A:B', 'AMJ1:C100'," \
+              "where column is 1-3 letters and row part is optional digits."
+        end
+
         start, finish, *_excess = position.split(":")
-        raise "Invalid format" unless start || finish
 
         [
           position_for_letter(start),
