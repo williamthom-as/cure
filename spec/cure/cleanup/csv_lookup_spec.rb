@@ -19,8 +19,16 @@ RSpec.describe Cure::Extract::CsvLookup do
       expect(arr).to eq([0, 1_023, 0, 10000000])
     end
 
-    it "should handle missing digits as max values" do
+    it "should handle missing finish digits as max values" do
       arr = described_class.array_position_lookup("A1:B")
+      expect(arr).to eq([0, 1, 0, 10000000])
+
+      arr_2 = described_class.array_position_lookup("A:B1")
+      expect(arr_2).to eq([0, 1, 0, 0])
+    end
+
+    it "should handle missing start digits as max values" do
+      arr = described_class.array_position_lookup("A:B")
       expect(arr).to eq([0, 1, 0, 10000000])
     end
   end
