@@ -4,21 +4,28 @@ module Cure
   module Extract
     class CsvLookup
 
-      # @param [String,Integer] position - [Ex A1:B1, A1:B1,A2:B2]
+      X_MAX_LIMIT = 1_023
+      Y_MAX_LIMIT = 10_000_000
+      INVALID_FORMAT_REGEX = /^(?![A-Z]{1,3}(\d+)?:[A-Z]{1,3}(\d+)?$).*/
+
+      # @param [String,Integer] position - [Ex A1:B1, A1:B1, A2:B2, A:B2, A:B]
       # @return [Array] [column_start_idx, column_end_idx, row_start_idx, row_end_idx]
       def self.array_position_lookup(position)
-        # This is a better way, still trying to figure out a better way but -1 doesn't work for ranges.
-        # return [0, -1, 0, -1] if position.is_a?(Integer) && position == -1
-        return [0, 1_023, 0, 10_000_000] if position.is_a?(Integer) && position == -1 # Whole sheet
+        return [0, X_MAX_LIMIT, 0, Y_MAX_LIMIT] if position.is_a?(Integer) && position == -1 # Whole sheet
+
+        if position.upcase.match?(INVALID_FORMAT_REGEX)
+          raise ArgumentError,
+            "Invalid position format: '#{position}'. Expected format like 'A1:B10', 'A:B', 'AMJ1:C100'," \
+              "where column is 1-3 letters and row part is optional digits."
+        end
 
         start, finish, *_excess = position.split(":")
-        raise "Invalid format" unless start || finish
 
         [
           position_for_letter(start),
           position_for_letter(finish),
-          position_for_digit(start),
-          position_for_digit(finish)
+          position_for_digit(start, if_digit_nil: 0),
+          position_for_digit(finish, if_digit_nil: Y_MAX_LIMIT)
         ]
       end
 
@@ -35,8 +42,11 @@ module Cure
       end
 
       # @param [String] range
-      def self.position_for_digit(range)
-        range.upcase.scan(/\d+/).first.to_i - 1
+      def self.position_for_digit(range, if_digit_nil: nil)
+        digit = range.upcase.scan(/\d+/).first
+        return digit.to_i - 1 if digit && digit != ""
+
+        if_digit_nil
       end
     end
   end

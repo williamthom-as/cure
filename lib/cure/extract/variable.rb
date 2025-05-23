@@ -7,8 +7,10 @@ module Cure
 
       def initialize(name, location, ref_name: "_default")
         @name = name
-        @location = [Extract::CsvLookup.position_for_letter(location),
-                     Extract::CsvLookup.position_for_digit(location)]
+        @location = [
+          Extract::CsvLookup.position_for_letter(location),
+          Extract::CsvLookup.position_for_digit(location, if_digit_nil: 1_023)
+        ]
         @ref_name = ref_name
       end
 

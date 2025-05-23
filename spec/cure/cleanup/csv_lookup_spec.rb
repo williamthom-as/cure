@@ -18,6 +18,27 @@ RSpec.describe Cure::Extract::CsvLookup do
       arr = described_class.array_position_lookup(-1)
       expect(arr).to eq([0, 1_023, 0, 10000000])
     end
+
+    it "should handle missing finish digits as max values" do
+      arr = described_class.array_position_lookup("A1:B")
+      expect(arr).to eq([0, 1, 0, 10000000])
+
+      arr_2 = described_class.array_position_lookup("A:B1")
+      expect(arr_2).to eq([0, 1, 0, 0])
+    end
+
+    it "should handle missing start digits as max values" do
+      arr = described_class.array_position_lookup("A:B")
+      expect(arr).to eq([0, 1, 0, 10000000])
+    end
+
+    it "should raise on bad formats" do
+      %w[A1:B1:1 TEST1:B1 FOO].each do |bad_format|
+        expect {
+          described_class.array_position_lookup(bad_format)
+        }.to raise_error(ArgumentError, /Invalid position format: '#{bad_format}'/)
+      end
+    end
   end
 
   describe "#position_for_letter" do
@@ -32,6 +53,21 @@ RSpec.describe Cure::Extract::CsvLookup do
     it "should find position for a multi-character column" do
       arr = described_class.position_for_letter("AMJ")
       expect(arr).to eq(1023)
+    end
+  end
+
+  describe "#position_for_digit" do
+    it "should find position for a single-digit row" do
+      val = described_class.position_for_digit("1")
+      expect(val).to eq(0)
+
+      val_2 = described_class.position_for_digit("3")
+      expect(val_2).to eq(2)
+    end
+
+    it "should find position for a multi-digit row" do
+      arr = described_class.position_for_digit("100")
+      expect(arr).to eq(99)
     end
   end
 end
