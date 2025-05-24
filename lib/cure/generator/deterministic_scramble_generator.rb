@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "cure/generator/base_generator"
+require "digest"
 
 module Cure
   module Generator
@@ -21,7 +22,7 @@ module Cure
       end
 
       def _describe
-        "Will deterministically randomise ."
+        "Will deterministically randomise a number."
       end
     end
 
@@ -29,14 +30,17 @@ module Cure
 
       def initialize(key:, magnitude:)
         @key = key.to_s
-        @seed = Digest::SHA265.hexdigest(@key).to_i(16)
+        @seed = Digest::SHA256.hexdigest(@key).to_i(16)
         @magnitude = magnitude
       end
 
       def call(source, _row_ctx)
-        return source if source.nil? || source.empty? || numeric?(source)
+        return source if source.nil? || source.empty?
 
         value = source.to_f
+
+        return unless numeric?(value)
+
         digest = Digest::SHA256.hexdigest(@key + source.to_s)
         prng = Random.new(@seed + digest.to_i(16))
 
@@ -66,9 +70,9 @@ module Cure
         else
           result.to_i.to_s
         end
-
       rescue
-        # If we can't parse the source value as a number, return it
+        # If we can't parse the source value as a number,
+        # we generally return as is
         source
       end
 
