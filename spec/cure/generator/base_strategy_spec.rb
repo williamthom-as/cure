@@ -316,3 +316,16 @@ RSpec.describe Cure::Generator::EvalGenerator do
     end
   end
 end
+
+RSpec.describe Cure::Generator::DeterministicScrambleGenerator do
+  before :all do
+    @generator = described_class.new({ key: "test", magnitude: :hundredths })
+  end
+
+  describe "#generate" do
+    it "should generate a replacement" do
+      expect(@generator.generate("113.12", nil)).to eq("113.09")
+      expect(@generator.describe).to eq("Will deterministically randomise a number.")
+    end
+  end
+end
