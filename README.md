@@ -14,9 +14,11 @@
 
 -----
 
-Cure provides a low-code solution for handling a wide range of tasks for importing, validating and manipulating one or
-more CSV files. Unlike other tools, Cure doesn't assume standard CSV formatting and is designed to handle a wide range of 
-challenging scenarios.
+Cure provides a (DSL configured) 'pipeline' approach to manipulating CSVs; reading in files, isolating relevant data, 
+restructuring it (if necessary), applying a variety of transformations, and then outputing the results.
+
+It includes the ability to use named ranges and variables for flexible handling of CSVs that may not have a simple 
+tabular structure throughout the entire file (headers not in first row, split content blocks for example).
 
 The library provides optional hooks for each data processing pipeline phase in:
 
