@@ -5,12 +5,12 @@
 
 ### What does it do?
 
-- ⚒️ Extract data from one or more CSV file(s).
-- 🔬 Manipulate and join or separate CSVs using SQL expressions.
-- 🧼 Clean, transform, query and export to CSV(s) or other formats.
-- 📃 Automate these actions using low code templates.
-- 📈 Query and extract insights into a standalone self-hosted BI dashboards.
-- 🗄️ Use version control to maintain and share your project with others.
+- Extract data from one or more CSV files.
+- Clean, transform, query and export CSVs (or other formats).
+- Manipulate and join or separate CSVs using SQL expressions.
+- Automate these actions using low code templates.
+- Query and extract insights into a standalone self-hosted BI dashboards.
+- Use version control to maintain and share your project with others.
 
 -----
 
