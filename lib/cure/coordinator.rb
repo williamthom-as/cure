@@ -80,7 +80,7 @@ module Cure
     def with_transformer(named_range, &block)
       raise "No block passed" unless block
 
-      log_info "Beginning the transformation process..."
+      log_info "Beginning the transformation process for [#{named_range}]..."
       candidates = config.template.transformations.candidates.select { |c| c.named_range == named_range.to_s }
       transformer = Cure::Transformation::Transform.new(candidates)
       yield transformer
@@ -92,7 +92,7 @@ module Cure
     def with_exporters(named_range, &block)
       raise "No block passed" unless block
 
-      log_info "Beginning export process..."
+      log_info "Beginning export process for [#{named_range}]..."
       processors = config.template.exporters.processors.select { |c| c.named_range.to_s == named_range.to_s }
       manager = Cure::Export::Manager.new(named_range, processors)
 
